@@ -1,0 +1,2 @@
+import Link from 'next/link';import {signup} from '../actions'
+export default function Register(){return <div className="auth panel"><h1>Create account</h1><form action={signup}><label>Name</label><input name="name" required/><label>Email</label><input name="email" type="email" required/><label>Password</label><input name="password" type="password" minLength={8} required/><button className="button">Create account</button></form><p className="muted">Already registered? <Link href="/auth/login">Sign in</Link></p></div>}

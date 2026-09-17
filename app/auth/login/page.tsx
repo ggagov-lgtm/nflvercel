@@ -1,0 +1,2 @@
+import Link from 'next/link';import {login} from '../actions'
+export default function Login(){return <div className="auth panel"><h1>Sign in</h1><form action={login}><label>Email</label><input name="email" type="email" required/><label>Password</label><input name="password" type="password" required/><button className="button">Sign in</button></form><p className="muted">No account? <Link href="/auth/register">Register</Link></p></div>}

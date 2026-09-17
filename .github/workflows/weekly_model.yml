@@ -1,0 +1,32 @@
+name: NFL Weekly Model
+on:
+  workflow_dispatch:
+    inputs:
+      season: {description: Season, required: true, default: '2026'}
+      week: {description: Week, required: true, default: '2'}
+  schedule:
+    - cron: '5 5 * * 2'
+jobs:
+  model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install -r python/requirements.txt
+      - name: Determine week and run
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          INPUT_SEASON: ${{ inputs.season }}
+          INPUT_WEEK: ${{ inputs.week }}
+        run: |
+          if [ -n "$INPUT_WEEK" ]; then python python/weekly_run.py --season "$INPUT_SEASON" --week "$INPUT_WEEK"; else
+            python - <<'PY'
+          import datetime as d, subprocess, requests
+          now=d.datetime.now(d.timezone.utc)
+          data=requests.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard',timeout=20).json()
+          season=int(data.get('season',{}).get('year',now.year)); week=int(data.get('week',{}).get('number',1))
+          subprocess.check_call(['python','python/weekly_run.py','--season',str(season),'--week',str(week)])
+          PY
+          fi
