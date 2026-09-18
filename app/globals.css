@@ -785,3 +785,7 @@
 .pickComparison{margin-top:5px;padding-top:4px}
 .pickComparison small{font-size:6px}
 .pickComparison b{font-size:8px;line-height:1.1}
+
+.recommendationLine{display:flex;align-items:center;gap:6px}
+.recommendationLine>strong{font-size:13px;line-height:1.2}
+.probInfo{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid #7890a3;border-radius:50%;font-size:9px;font-weight:900;font-style:normal;color:#a9bac8;cursor:help;flex:0 0 14px}
