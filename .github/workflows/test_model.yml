@@ -17,17 +17,25 @@ jobs:
       - name: Install NumPy
         run: pip install numpy==2.2.1
 
+      - name: Show environment
+        run: |
+          python --version
+          pwd
+          ls -la
+          ls -la python/src
+
       - name: Test production simulation
-        env:
-          PYTHONPATH: python
+        working-directory: python
         run: |
           python - <<'PY'
           import sys
           import numpy as np
-          from src.production_model import simulate_game
 
           print("Python:", sys.version)
           print("NumPy:", np.__version__)
+          print("sys.path:", sys.path)
+
+          from src.production_model import simulate_game
 
           r = simulate_game(
               expected_margin=5.25,
@@ -39,6 +47,10 @@ jobs:
               simulations=50000,
               seed=123,
           )
+
+          print()
+          print("RESULT")
+          print("=" * 60)
 
           for k in [
               "pred_home",
@@ -52,10 +64,14 @@ jobs:
           ]:
               print(f"{k:25} {r[k]}")
 
-          assert r["pred_home"] > 0
-          assert r["pred_away"] > 0
-          assert 4.0 < r["model_margin"] < 6.5
-          assert 52.0 < r["model_total"] < 56.5
+          print()
+          print("VALIDATION")
+          print("=" * 60)
+
+          assert r["pred_home"] > 0, r
+          assert r["pred_away"] > 0, r
+          assert 4.0 < r["model_margin"] < 6.5, r
+          assert 52.0 < r["model_total"] < 56.5, r
 
           print("SIMULATION TEST PASSED")
           PY
