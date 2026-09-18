@@ -149,6 +149,40 @@ def get_market(event_id):
         return None, f"ESPN odds error: {e}"
 
 
+def recent_team_games(team, season, week, limit=3):
+    """Return compact, strictly pre-target-week results for analyst context."""
+    rows = []
+    for w in range(max(1, week - 4), week):
+        try:
+            data = scoreboard(season, w)
+        except Exception:
+            continue
+        for event in data.get("events", []):
+            comps = event.get("competitions") or []
+            if not comps:
+                continue
+            comp = comps[0]
+            competitors = comp.get("competitors") or []
+            mine = next((x for x in competitors if (x.get("team") or {}).get("abbreviation") == team), None)
+            opp = next((x for x in competitors if x is not mine), None)
+            if not mine or not opp:
+                continue
+            try:
+                team_score = int(mine.get("score") or 0)
+                opp_score = int(opp.get("score") or 0)
+            except (TypeError, ValueError):
+                continue
+            rows.append({
+                "week": w,
+                "opponent": (opp.get("team") or {}).get("abbreviation"),
+                "home_away": "home" if mine.get("homeAway") == "home" else "away",
+                "team_score": team_score,
+                "opponent_score": opp_score,
+                "result": "W" if team_score > opp_score else "L" if team_score < opp_score else "T",
+            })
+    return rows[-limit:]
+
+
 def latest_starter_map(current_df, target_week):
     """
     Production-safe QB starter estimate.
@@ -1264,6 +1298,27 @@ def run(season, week, dry_run=False):
         result["context"] = (
             context_features
         )
+        # Narrative evidence is frozen with the prediction. It is
+        # display/audit metadata only and does not alter model inputs.
+        result["analysis_context"] = {
+            "home_team": home,
+            "away_team": away,
+            "home_recent_games": recent_team_games(home, season, week),
+            "away_recent_games": recent_team_games(away, season, week),
+            "home_qb": qb_meta.get("home_qb_name"),
+            "away_qb": qb_meta.get("away_qb_name"),
+            "injuries": injury_players,
+            "weather": {
+                "indoor": bool(context_features.get("venue_indoor", 0)),
+                "temperature": context_features.get("temperature"),
+                "wind_gust": context_features.get("wind_gust"),
+                "precipitation_probability": context_features.get("precipitation_probability"),
+            },
+            "rest": {
+                "home_days": context_features.get("home_rest_days"),
+                "away_days": context_features.get("away_rest_days"),
+            },
+        }
 
         # -----------------------------------------------------
         # Display
