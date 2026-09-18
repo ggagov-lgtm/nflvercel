@@ -324,6 +324,39 @@ export default async function Page() {
     return { winner: top3(winner), spread: top3(spread), total: top3(total), overall: top3(overall) };
   })();
 
+  const weeklyNumberOne = weeklyTopPicks.overall[0] || null;
+  const weeklyNumberOneState = weeklyNumberOne
+    ? gameStates.get(String(weeklyNumberOne.eventId))?.state || "pre"
+    : "pre";
+  const weeklyNumberOneResult =
+    weeklyNumberOne && weeklyNumberOneState === "post"
+      ? (() => {
+          const p = preds.find((row) => String(row.event_id) === String(weeklyNumberOne.eventId));
+          const live = p ? gameStates.get(String(p.event_id)) : null;
+          if (!p || !live) return null;
+          const x = p.model || {};
+          const m = p.market || {};
+          const finalHome = Number(live.homeScore);
+          const finalAway = Number(live.awayScore);
+          if (weeklyNumberOne.category === "Winner") {
+            const selectedHome = weeklyNumberOne.selection === p.game?.home?.abbr;
+            return finalHome === finalAway ? "PUSH" : (selectedHome === (finalHome > finalAway) ? "WIN" : "LOSS");
+          }
+          if (weeklyNumberOne.category === "Point Spread") {
+            const marketMargin = Number(x.market_margin ?? m.market_margin);
+            const diff = finalHome - finalAway - marketMargin;
+            if (Math.abs(diff) < 0.0001) return "PUSH";
+            const selectedHome = weeklyNumberOne.selection.startsWith(p.game?.home?.abbr || "__");
+            return selectedHome === (diff > 0) ? "WIN" : "LOSS";
+          }
+          const marketTotal = Number(x.market_total ?? m.total);
+          const diff = finalHome + finalAway - marketTotal;
+          if (Math.abs(diff) < 0.0001) return "PUSH";
+          const selectedOver = weeklyNumberOne.selection.startsWith("OVER");
+          return selectedOver === (diff > 0) ? "WIN" : "LOSS";
+        })()
+      : null;
+
   const weekProgress = preds
     .map((p) => {
       const live = gameStates.get(String(p.event_id));
@@ -397,8 +430,11 @@ export default async function Page() {
             <div className="summaryPanel">
               <div className="summaryLabel">TOP GUESS SUCCESS<button type="button" className="infoTip" aria-label="Explain top guess success" data-tip="How often the model’s single highest-probability prediction for each completed game was correct.">i</button></div>
               <div className="donutWrap">
-                <div className="donut" style={{"--value": `${Math.max(0, Math.min(100, Number(completedPerformance.topRate || 0) * 100))}%`} as React.CSSProperties}>
-                  <div><b>{pct(completedPerformance.topRate)}</b><span>{completedPerformance.topWins} of {completedPerformance.topWins + completedPerformance.topLosses} correct</span></div>
+                <div className={`donut ${!weeklyNumberOneResult ? "donutPending" : weeklyNumberOneResult === "LOSS" ? "donutLoss" : ""}`} style={{"--value": weeklyNumberOneResult ? "100%" : "0%"} as React.CSSProperties}>
+                  <div>
+                    <b>{weeklyNumberOneResult === "WIN" ? "100%" : weeklyNumberOneResult === "LOSS" ? "0%" : weeklyNumberOneResult === "PUSH" ? "PUSH" : "PENDING"}</b>
+                    <span>{weeklyNumberOne ? `${weeklyNumberOne.selection} · ${pct(weeklyNumberOne.probability)}` : "No #1 prediction"}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -406,8 +442,8 @@ export default async function Page() {
             <div className="summaryPanel">
               <div className="summaryLabel">TOP PREDICTION SUCCESS — SEASON<button type="button" className="infoTip" aria-label="Explain season top prediction percentage" data-tip="Success rate of the model’s #1 prediction using completed games only for the season.">i</button></div>
               <div className="donutWrap">
-                <div className="donut donutBlue" style={{"--value": `${Math.max(0, Math.min(100, Number(seasonTopPerformance.rate || 0) * 100))}%`} as React.CSSProperties}>
-                  <div><b>{pct(seasonTopPerformance.rate)}</b><span>{seasonTopPerformance.wins} of {seasonTopPerformance.games} correct</span></div>
+                <div className={`donut donutBlue ${seasonTopPerformance.games === 0 ? "donutPending" : ""}`} style={{"--value": seasonTopPerformance.games ? `${Math.max(0, Math.min(100, Number(seasonTopPerformance.rate || 0) * 100))}%` : "0%"} as React.CSSProperties}>
+                  <div><b>{seasonTopPerformance.games ? pct(seasonTopPerformance.rate) : "N/A"}</b><span>{seasonTopPerformance.games ? `${seasonTopPerformance.wins} of ${seasonTopPerformance.games} correct` : "No completed games"}</span></div>
                 </div>
               </div>
             </div>
@@ -415,8 +451,8 @@ export default async function Page() {
             <div className="summaryPanel">
               <div className="summaryLabel">TOP PREDICTION SUCCESS — THIS WEEK<button type="button" className="infoTip" aria-label="Explain weekly top prediction percentage" data-tip="Success rate of the model’s #1 prediction using completed games only for the displayed week.">i</button></div>
               <div className="donutWrap">
-                <div className="donut donutPurple" style={{"--value": `${Math.max(0, Math.min(100, Number(completedPerformance.topRate || 0) * 100))}%`} as React.CSSProperties}>
-                  <div><b>{pct(completedPerformance.topRate)}</b><span>{completedPerformance.topWins} of {completedPerformance.topWins + completedPerformance.topLosses} correct</span></div>
+                <div className={`donut donutPurple ${completedPerformance.topWins + completedPerformance.topLosses === 0 ? "donutPending" : ""}`} style={{"--value": completedPerformance.topWins + completedPerformance.topLosses ? `${Math.max(0, Math.min(100, Number(completedPerformance.topRate || 0) * 100))}%` : "0%"} as React.CSSProperties}>
+                  <div><b>{completedPerformance.topWins + completedPerformance.topLosses ? pct(completedPerformance.topRate) : "N/A"}</b><span>{completedPerformance.topWins + completedPerformance.topLosses ? `${completedPerformance.topWins} of ${completedPerformance.topWins + completedPerformance.topLosses} correct` : "No completed games"}</span></div>
                 </div>
               </div>
             </div>
