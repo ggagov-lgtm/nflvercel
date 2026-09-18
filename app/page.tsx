@@ -352,59 +352,42 @@ export default async function Page() {
 
   return (
     <main className="dashboard">
-      <section className="hero">
-        <div>
-          <div className="eyebrow">
-            NFL QUANTITATIVE ENGINE
+      <section className="dashboardIntro">
+        <div className="introIdentity">
+          <span className="introSeason">NFL · {displayLatest?.season || "—"}</span>
+          <h1>Week {displayLatest?.week || "—"}</h1>
+          <p>Market-anchored quantitative predictions · locked before kickoff</p>
+        </div>
+
+        <div className="introOperations">
+          <div className="introProgress">
+            <div className="introProgressHead">
+              <strong>Week Progress</strong>
+              <span>{progressFinal} of {weekProgress.length} final</span>
+            </div>
+            <div className="introSegments">
+              {weekProgress.map((game) => (
+                <span
+                  key={game.eventId}
+                  className={`introSegment ${game.state === "post" ? "segmentFinal" : game.state === "in" ? "segmentLive" : "segmentUpcoming"}`}
+                  title={`${game.matchup} · ${game.state === "post" ? "Final" : game.state === "in" ? "In Progress" : "Upcoming"}`}
+                />
+              ))}
+            </div>
+            <div className="introProgressMeta">
+              <span><i className="progressFinalDot" />{progressFinal} Final</span>
+              <span><i className="progressLiveDot" />{progressLive} In Progress</span>
+              <span><i className="progressUpcomingDot" />{progressUpcoming} Upcoming</span>
+            </div>
           </div>
 
-          <h1>
-            {displayLatest
-              ? `${displayLatest.season} · Week ${displayLatest.week}`
-              : "NFL Quant Model"}
-          </h1>
-
-          <p className="heroText">
-            Market-anchored football modeling, contextual
-            adjustments and Monte Carlo simulation.
-          </p>
-        </div>
-
-        <div className="heroStatus">
-          <div className="statusDot" />
-          <div>
-            <strong>
-              {previewMode
-                ? "Week 2 Model Preview"
-                : latest
-                  ? "Predictions Locked"
-                  : "Awaiting First Official Run"}
-            </strong>
-            <span>
-              {simulationCount.toLocaleString()} simulations/game
-            </span>
+          <div className="introModelStatus">
+            <span className="statusDot" />
+            <div>
+              <strong>{previewMode ? "Model Preview" : latest ? "Predictions Locked" : "Awaiting First Run"}</strong>
+              <span>{modelVersion} · {simulationCount.toLocaleString()} simulations</span>
+            </div>
           </div>
-        </div>
-      </section>
-
-      <section className="weekProgress" aria-label="Week progress">
-        <div className="weekProgressHead">
-          <strong>WEEK {displayLatest?.week || "—"} PROGRESS</strong>
-          <span>{progressFinal} of {weekProgress.length} Final</span>
-        </div>
-        <div className="weekSegments">
-          {weekProgress.map((game) => (
-            <span
-              key={game.eventId}
-              className={`weekSegment ${game.state === "post" ? "segmentFinal" : game.state === "in" ? "segmentLive" : "segmentUpcoming"}`}
-              title={`${game.matchup} · ${game.state === "post" ? "Final" : game.state === "in" ? "In Progress" : "Upcoming"}`}
-            />
-          ))}
-        </div>
-        <div className="weekProgressLegend">
-          <span><i className="progressFinalDot" />{progressFinal} Final</span>
-          <span><i className="progressLiveDot" />{progressLive} In Progress</span>
-          <span><i className="progressUpcomingDot" />{progressUpcoming} Upcoming</span>
         </div>
       </section>
 
