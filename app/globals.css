@@ -725,12 +725,3 @@
 .brandWords em{font-style:normal;color:var(--green)}
 .brandWords small{margin-top:6px;color:#a9b8ca;font-size:7px;font-weight:800;letter-spacing:.20em}
 @media(max-width:760px){.brandWords strong{font-size:14px}.brandWords small{display:none}.pfqMark{width:58px;height:38px;flex-basis:58px}.quantBars{transform:scale(.78);transform-origin:left bottom}.footballLaces{font-size:10px}.top{align-items:flex-start}.nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px}}
-
-/* Historical week selector */
-.introRight{display:flex;align-items:stretch;gap:10px}
-.weekSelector{display:flex;align-items:center;gap:7px;padding:8px 10px;background:#091522;border:1px solid var(--line);border-radius:10px}
-.weekSelector label{font-size:8px;font-weight:900;letter-spacing:.14em;color:#788ba2}
-.weekSelector select{appearance:none;min-width:92px;padding:8px 26px 8px 10px;border:1px solid #31465f;border-radius:7px;background:#0c1a29;color:#f4f7fb;font-weight:800;background-image:linear-gradient(45deg,transparent 50%,#91a0b5 50%),linear-gradient(135deg,#91a0b5 50%,transparent 50%);background-position:calc(100% - 13px) 50%,calc(100% - 9px) 50%;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
-.weekSelector button{padding:8px 9px;border:1px solid #2b9c63;border-radius:7px;background:#153b2c;color:#69e6a0;font-size:10px;font-weight:900;cursor:pointer}
-.weekSelector button:hover{background:#1d523c}
-@media(max-width:900px){.introRight{width:100%;flex-wrap:wrap}.weekSelector{flex:1}.introModelStatus{flex:1}}
