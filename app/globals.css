@@ -592,3 +592,17 @@
 .progressLiveDot{background:#7d8793}
 .progressUpcomingDot{border:1px solid #536176;background:transparent}
 @media(max-width:700px){.weekSegments{gap:2px}.weekProgressLegend{gap:9px}}
+
+
+/* Keep all four weekly top-pick categories in one compact row */
+.topPicksGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.topPicksCard header{padding:9px 10px 7px}
+.topPicksRows{padding:4px 8px 7px}
+.topPickRow{grid-template-columns:15px 24px minmax(0,1fr) auto;gap:5px;min-height:40px}
+.topPickRow img{width:22px!important;height:22px!important;max-width:22px!important;max-height:22px!important}
+.topRank{font-size:12px}
+.topPickText strong{font-size:10px}
+.topPickText span{font-size:7px}
+.topProbability{font-size:12px}
+@media(max-width:900px){.topPicksGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:560px){.topPicksGrid{grid-template-columns:1fr!important}}
