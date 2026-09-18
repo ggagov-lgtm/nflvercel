@@ -764,3 +764,11 @@
 .analysisNote{margin:10px 2px 0;color:#61758a;font-size:9px}
 @media(max-width:1100px){.gameRow{grid-template-columns:105px minmax(150px,1.3fr) repeat(3,minmax(100px,.8fr)) minmax(105px,.8fr) 25px}.gameRow .rowMetric:nth-of-type(4){display:none}.analysisLead{grid-template-columns:1fr}.factorGrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.gameRow{grid-template-columns:90px 1fr 100px 24px}.gameRow .rowMetric{display:none}.gameRow .rowTopPick{display:block}.rowTeam img{width:24px;height:24px}.gameExpansion{padding:11px}.analysisPicks{grid-template-columns:1fr}.factorGrid,.marketDetail{grid-template-columns:1fr}.marketDetail div{border-right:0;border-bottom:1px solid #22384c}.marketDetail div:last-child{border-bottom:0}}
+
+/* Keep expanded prediction ranking colors identical to the board legend */
+.analysisPickBest{border-color:#35d07f80;background:linear-gradient(180deg,#173d31,#0b1d19)}
+.analysisPickBest strong,.analysisPickBest b{color:#35d07f}
+.analysisPickSecond{border-color:#739e7d66;background:linear-gradient(180deg,#172a25,#0c1817)}
+.analysisPickSecond strong,.analysisPickSecond b{color:#9ab8a0}
+.analysisPickThird{border-color:#53606f;background:#111a24}
+.analysisPickThird strong,.analysisPickThird b{color:#a4afbc}
