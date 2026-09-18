@@ -694,3 +694,12 @@
 .introModelStatus span{margin-top:2px;color:var(--muted);font-size:8px}
 @media(max-width:1000px){.dashboardIntro{grid-template-columns:1fr;gap:10px}.introOperations{grid-template-columns:minmax(0,1fr) auto}}
 @media(max-width:650px){.dashboardIntro{padding:12px}.introOperations{grid-template-columns:1fr}.introModelStatus{padding:8px 0 0;border-left:0;border-top:1px solid #26384b}.introIdentity p{white-space:normal}.introSegments{gap:2px}}
+
+
+/* Precision alignment for model summary */
+.summaryPrimaryThree .summaryPanel{display:grid;grid-template-rows:40px 1fr;align-items:start}
+.summaryPrimaryThree .summaryLabel{display:flex;align-items:flex-start;justify-content:center;gap:3px;min-height:40px;text-align:center;line-height:1.25}
+.summaryPrimaryThree .donutWrap{height:auto;min-height:128px;align-self:center}
+.summarySecondary .miniMetric>div:last-child{min-width:0;flex:1}
+.summarySecondary .miniMetric>div:last-child>span{display:flex;align-items:center;gap:2px}
+.summarySecondary .infoTip{width:13px;height:13px;margin-left:4px;font-size:8px;flex:0 0 13px}
