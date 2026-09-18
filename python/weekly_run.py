@@ -149,20 +149,6 @@ def get_market(event_id):
         return None, f"ESPN odds error: {e}"
 
 
-def prediction_exists(db, season, week, event_id):
-    response = (
-        db.table("predictions")
-        .select("id,event_id,locked_at")
-        .eq("season", season)
-        .eq("week", week)
-        .eq("event_id", event_id)
-        .limit(1)
-        .execute()
-    )
-
-    return bool(response.data)
-
-
 def latest_starter_map(current_df, target_week):
     """
     Production-safe QB starter estimate.
@@ -906,6 +892,133 @@ def run(season, week, dry_run=False):
     warnings_count = 0
     pending_rows = []
 
+    # ---------------------------------------------------------
+    # Official-week prediction state preflight
+    #
+    # Production weeks are immutable complete sets:
+    #
+    #   0 existing   -> create the complete week
+    #   all existing -> clean idempotent rerun
+    #   partial      -> integrity error; never fill piecemeal
+    # ---------------------------------------------------------
+
+    if not dry_run:
+
+        schedule_event_ids = {
+            str(game["event_id"])
+            for game in games
+        }
+
+        existing_response = (
+            db.table("predictions")
+            .select("event_id,locked_at")
+            .eq("season", season)
+            .eq("week", week)
+            .execute()
+        )
+
+        existing_rows = (
+            existing_response.data or []
+        )
+
+        existing_event_ids = {
+            str(row["event_id"])
+            for row in existing_rows
+        }
+
+        if existing_event_ids:
+
+            if (
+                len(existing_event_ids) == len(games)
+                and existing_event_ids
+                == schedule_event_ids
+            ):
+
+                skipped = len(games)
+
+                message = (
+                    f"{season} Week {week} already has "
+                    f"a complete locked prediction set "
+                    f"({skipped}/{len(games)} games). "
+                    f"Idempotent rerun: no predictions "
+                    f"were changed."
+                )
+
+                print()
+                print(message)
+
+                db.table(
+                    "pipeline_runs"
+                ).insert({
+                    "run_type": "WEEKLY_MODEL",
+                    "season": season,
+                    "week": week,
+                    "started_at": started_at,
+                    "completed_at": utc_now(),
+                    "status": "OK",
+                    "message": message,
+                    "model_version": MODEL_VERSION,
+                    "games_expected": len(games),
+                    "games_processed": 0,
+                    "errors": 0,
+                    "warnings": 0,
+                }).execute()
+
+                log_health(
+                    db,
+                    "NFL Model",
+                    "OK",
+                    message,
+                    dry_run,
+                )
+
+                print()
+                print("=" * 78)
+                print("WEEK ALREADY COMPLETE - NO CHANGES")
+                print("=" * 78)
+
+                return
+
+            message = (
+                f"Prediction integrity error for "
+                f"{season} Week {week}: database contains "
+                f"{len(existing_event_ids)} prediction(s), "
+                f"but the official schedule contains "
+                f"{len(schedule_event_ids)} games. "
+                f"Partial or mismatched prediction sets "
+                f"cannot be extended automatically."
+            )
+
+            print()
+            print(message)
+
+            db.table(
+                "pipeline_runs"
+            ).insert({
+                "run_type": "WEEKLY_MODEL",
+                "season": season,
+                "week": week,
+                "started_at": started_at,
+                "completed_at": utc_now(),
+                "status": "ERROR",
+                "message": message,
+                "model_version": MODEL_VERSION,
+                "games_expected": len(games),
+                "games_processed": 0,
+                "errors": 1,
+                "warnings": 0,
+            }).execute()
+
+            log_health(
+                db,
+                "NFL Model",
+                "ERROR",
+                message,
+                dry_run,
+            )
+
+            raise RuntimeError(message)
+
     print()
     print("=" * 78)
     print("WEEKLY PREDICTIONS")
@@ -927,33 +1040,6 @@ def run(season, week, dry_run=False):
             f"{away} @ {home} "
             f"[{event_id}]"
         )
-
-        if not dry_run:
-
-            try:
-                if prediction_exists(
-                    db,
-                    season,
-                    week,
-                    event_id,
-                ):
-                    skipped += 1
-                    warnings_count += 1
-
-                    print(
-                        "SKIPPED - prediction "
-                        "already locked"
-                    )
-
-                    continue
-
-            except Exception as e:
-                errors += 1
-                print(
-                    "ERROR checking prediction:",
-                    e,
-                )
-                continue
 
         # -----------------------------------------------------
         # Market
