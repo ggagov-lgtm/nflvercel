@@ -752,9 +752,25 @@ export default async function Page() {
                     <span className="sectionKicker">LOCKED MODEL PREDICTION</span>
                     <div className="analysisScore"><b>{g.away?.abbr} {num(x.pred_away)}</b><em>—</em><b>{g.home?.abbr} {num(x.pred_home)}</b></div>
                     <div className="analysisPicks">
-                      {picks.map((pick,rank)=><div key={pick.key} className={`analysisPick ${rank===0?"analysisPickBest":rank===1?"analysisPickSecond":"analysisPickThird"} ${resultClass(pick.result)}`}>
-                        <span>{pick.label}</span><strong>{pick.selection}</strong><b>{pct(pick.probability)}</b>{isFinal&&pick.result?<small>{resultLabel(pick.result)}</small>:null}
-                      </div>)}
+                      {picks.map((pick,rank)=>{
+                        const modelRecommendation = pick.key === "ml"
+                          ? `${pick.selection} WIN`
+                          : pick.key === "spread"
+                            ? `TAKE ${pick.selection} (Model ${signed(spreadHome ? -modelMargin : modelMargin)})`
+                            : `TAKE ${isOver ? "OVER" : "UNDER"} (Model ${num(modelTotal)})`;
+                        const sportsbookLine = pick.key === "ml"
+                          ? `${pick.selection} ${pick.market}`
+                          : pick.key === "spread"
+                            ? `${pick.selection} ${signed(spreadHome ? -marketMargin : marketMargin)}`
+                            : `${isOver ? "OVER" : "UNDER"} ${num(marketTotal)}`;
+                        return <div key={pick.key} className={`analysisPick ${rank===0?"analysisPickBest":rank===1?"analysisPickSecond":"analysisPickThird"} ${resultClass(pick.result)}`}>
+                          <span>{pick.label}</span>
+                          <strong>{modelRecommendation}</strong>
+                          <div className="pickComparison"><small>MODEL</small><b>{pct(pick.probability)}</b></div>
+                          <div className="pickComparison"><small>SPORTSBOOK</small><b>{sportsbookLine}</b></div>
+                          {isFinal&&pick.result?<small className="pickOutcome">{resultLabel(pick.result)}</small>:null}
+                        </div>
+                      })}
                     </div>
                   </div>
                   <div className="whyModel">
@@ -776,12 +792,6 @@ export default async function Page() {
                   <div className="factorCard"><div className="factorIcon">◎</div><div><span>CONTEXT</span><strong>{Math.abs(contextAdj||0)<.1?"Minimal model impact":`${signed(contextAdj)} margin impact`}</strong><small>Locked game-context adjustment</small></div></div>
                 </div>
 
-                <div className="marketDetail">
-                  <div><span>MODEL POINT DIFFERENCE</span><b>{signed(modelMargin)}</b></div>
-                  <div><span>SPORTSBOOK POINT DIFFERENCE</span><b>{signed(marketMargin)}</b></div>
-                  <div><span>MODEL TOTAL POINTS</span><b>{num(modelTotal)}</b></div>
-                  <div><span>SPORTSBOOK TOTAL POINTS</span><b>{num(marketTotal)}</b></div>
-                </div>
                 <p className="analysisNote">The explanation uses values stored with the locked prediction. It does not change because of live or final game information.</p>
               </div>
             </details>
