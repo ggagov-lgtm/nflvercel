@@ -772,3 +772,9 @@
 .analysisPickSecond strong,.analysisPickSecond b{color:#9ab8a0}
 .analysisPickThird{border-color:#53606f;background:#111a24}
 .analysisPickThird strong,.analysisPickThird b{color:#a4afbc}
+
+/* Prediction boxes now carry the model-vs-sportsbook comparison */
+.pickComparison{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;padding-top:6px;border-top:1px solid #ffffff12}
+.pickComparison small{font-size:7px;font-weight:900;letter-spacing:.08em;color:#71869a}
+.pickComparison b{margin:0;font-size:10px;color:#dce8f3;text-align:right}
+.analysisPick .pickOutcome{margin-top:7px;font-weight:900}
