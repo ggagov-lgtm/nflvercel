@@ -1,0 +1,36 @@
+name: Week 2 Display Generation
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: python/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r python/requirements.txt
+
+      - name: Generate Week 2 predictions
+        run: |
+          python python/weekly_run.py \
+            --season 2026 \
+            --week 2 \
+            --dry-run \
+            | tee week2_github_final.log
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: week2-github-final
+          path: week2_github_final.log
