@@ -376,41 +376,52 @@ export default async function Page() {
         </div>
       </section>
 
-      <section className="performance">
-        <div className="metric">
-          <span>WINNER PREDICTION SUCCESS</span>
-          <b>{pct(completedPerformance.mlRate)}</b>
-          <small>{completedPerformance.mlWins}–{completedPerformance.mlLosses} · {completedPerformance.finals} Final{completedPerformance.finals === 1 ? "" : "s"}</small>
+      <section className="modelSummary">
+        <div className="summaryHead">
+          <div><span className="sectionKicker">MODEL SUMMARY</span><h2>Completed-game performance</h2></div>
+          <small>{completedPerformance.finals} of {preds.length} games completed</small>
         </div>
-
-        <div className="metric">
-          <span>POINT SPREAD SUCCESS</span>
-          <b>{pct(completedPerformance.spreadRate)}</b>
-          <small>{completedPerformance.spreadWins}–{completedPerformance.spreadLosses} · Completed only</small>
-        </div>
-
-        <div className="metric">
-          <span>OVER / UNDER SUCCESS</span>
-          <b>{pct(completedPerformance.totalRate)}</b>
-          <small>{completedPerformance.totalWins}–{completedPerformance.totalLosses} · Completed only</small>
-        </div>
-
-        <div className="metric">
-          <span>#1 PICK SUCCESS</span>
-          <b>{pct(completedPerformance.topRate)}</b>
-          <small>{completedPerformance.topWins}–{completedPerformance.topLosses} · Highest confidence</small>
-        </div>
-
-        <div className="metric">
-          <span>AVERAGE SCORE ERROR</span>
-          <b>{num(completedPerformance.scoreMae)}</b>
-          <small>{completedPerformance.finals} completed game{completedPerformance.finals === 1 ? "" : "s"}</small>
-        </div>
-
-        <div className="metric">
-          <span>MODEL</span>
-          <b>{modelVersion}</b>
-          <small>Live week performance</small>
+        <div className="summaryGrid">
+          <div className="summaryPrimary">
+            <div className="summaryPanel">
+              <div className="summaryLabel">#1 PREDICTION ACCURACY</div>
+              <div className="donutWrap">
+                <div className="donut" style={{"--value": `${Math.max(0, Math.min(100, Number(completedPerformance.topRate || 0) * 100))}%`} as React.CSSProperties}>
+                  <div><b>{pct(completedPerformance.topRate)}</b><span>{completedPerformance.topWins} of {completedPerformance.topWins + completedPerformance.topLosses} correct</span></div>
+                </div>
+              </div>
+            </div>
+            <div className="summaryPanel">
+              <div className="summaryLabel">TOP PREDICTION PERCENTAGE BY GAME</div>
+              <div className="confidenceBars">
+                {preds.map((p, index) => {
+                  const x=p.model||{};
+                  const values=[Number(x.home_win_prob),Number(x.away_win_prob),Number(x.home_cover_prob),Number(x.away_cover_prob),Number(x.over_prob),Number(x.under_prob)].filter(Number.isFinite);
+                  const best=values.length?Math.max(...values):0;
+                  return <div className="confidenceBarItem" key={p.id} title={`Game ${index+1}: ${pct(best)}`}>
+                    <span className="confidenceValue">{pct(best)}</span>
+                    <i style={{height:`${Math.max(4,best*100)}%`}} />
+                    <small>{index+1}</small>
+                  </div>;
+                })}
+              </div>
+              <div className="confidenceCaption">Game order · highest model probability for each game</div>
+            </div>
+          </div>
+          <div className="summarySecondary">
+            {[
+              ["WINNER PREDICTION SUCCESS",completedPerformance.mlRate,completedPerformance.mlWins,completedPerformance.mlLosses],
+              ["POINT SPREAD SUCCESS",completedPerformance.spreadRate,completedPerformance.spreadWins,completedPerformance.spreadLosses],
+              ["OVER / UNDER SUCCESS",completedPerformance.totalRate,completedPerformance.totalWins,completedPerformance.totalLosses],
+            ].map(([label,rate,wins,losses])=><div className="miniMetric" key={String(label)}>
+              <div className="miniDonut" style={{"--value":`${Math.max(0,Math.min(100,Number(rate||0)*100))}%`} as React.CSSProperties} />
+              <div><span>{String(label)}</span><b>{pct(rate)}</b><small>{Number(wins)}–{Number(losses)} · Completed only</small></div>
+            </div>)}
+            <div className="miniMetric errorMetric">
+              <div className="errorIcon">▥</div>
+              <div><span>AVERAGE SCORE ERROR</span><b>{num(completedPerformance.scoreMae)}</b><small>{completedPerformance.finals} completed game{completedPerformance.finals===1?"":"s"} · Lower is better</small></div>
+            </div>
+          </div>
         </div>
       </section>
 
