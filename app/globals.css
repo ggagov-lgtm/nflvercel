@@ -703,3 +703,10 @@
 .summarySecondary .miniMetric>div:last-child{min-width:0;flex:1}
 .summarySecondary .miniMetric>div:last-child>span{display:flex;align-items:center;gap:2px}
 .summarySecondary .infoTip{width:13px;height:13px;margin-left:4px;font-size:8px;flex:0 0 13px}
+
+
+/* Empty/pending gauges never imply a result */
+.donut.donutPending{background:conic-gradient(#3c536a 0 100%)}
+.donut.donutPending b{color:#aab6c3}
+.donut.donutLoss{background:conic-gradient(#e55b67 0 100%)}
+.donut.donutLoss b{color:#e55b67}
