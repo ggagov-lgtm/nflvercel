@@ -30,3 +30,21 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+
+# Local model experiments / diagnostics
+python/backtest_feature_selection.py
+python/backtest_models.py
+python/backtest_qb_features.py
+python/backtest_residual.py
+python/check_espn_injuries.py
+python/check_game_context.py
+python/check_qb_starters.py
+python/final_2025_confirmation.py
+
+# Local backups
+backups/
+python/requirements_before_supabase_upgrade.txt
+python/src/model.py.backup_v1
+python/weekly_run.py.backup
+python/weekly_run_before_expanding_training.py
+python/weekly_run_v1_before_v2.py
