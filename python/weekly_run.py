@@ -13,7 +13,10 @@ from supabase import create_client
 from src.espn import scoreboard, parse_games, odds
 from src.features import load_pbp
 from src.matchup import build_matchup_features
-from src.training import build_pregame_metrics
+from src.training import (
+    build_pregame_metrics,
+    build_current_season_training,
+)
 from src.qb_features import (
     identify_starters,
     qb_stat_line,
@@ -314,7 +317,7 @@ def production_qb_features(
     return features, metadata
 
 
-def train_models():
+def train_models(target_season: int, target_week: int):
     """
     Train the frozen v2 football/QB architecture.
 
@@ -329,9 +332,39 @@ def train_models():
 
     df = pd.read_parquet(TRAINING_DATA)
 
+    # Frozen historical base through 2025.
     train = df[
-        df["season"].between(2022, 2024)
+        df["season"].between(2022, 2025)
     ].copy()
+
+    # Add completed target-season games strictly before
+    # the week we are predicting.
+    if target_season >= 2026 and target_week > 1:
+        print(
+            f"Building incremental {target_season} "
+            f"training data before Week {target_week}..."
+        )
+
+        incremental = build_current_season_training(
+            season=target_season,
+            target_week=target_week,
+        )
+
+        if len(incremental):
+            train = pd.concat(
+                [train, incremental],
+                ignore_index=True,
+                sort=False,
+            )
+
+            print(
+                f"Added {len(incremental)} "
+                f"{target_season} training games"
+            )
+
+    print(
+        f"Production training rows: {len(train)}"
+    )
 
     id_cols = {
         "game_id",
@@ -406,9 +439,14 @@ def train_models():
 
     print("Building historical QB training features...")
 
+    qb_end_season = max(
+        2025,
+        target_season,
+    )
+
     pbp = {
         year: load_pbp(year)
-        for year in range(2021, 2025)
+        for year in range(2021, qb_end_season + 1)
     }
 
     from src.qb_features import (
@@ -417,13 +455,21 @@ def train_models():
 
     qb_rows = []
 
-    for season in range(2022, 2025):
+    training_seasons = sorted(
+        int(x)
+        for x in train["season"].dropna().unique()
+    )
+
+    for season in training_seasons:
 
         print(f"  QB training season {season}")
 
         current = pbp[season]
         prior = pbp[season - 1]
 
+        # identify_starters() is used only to identify the
+        # starter for each historical game. QB statistics
+        # themselves remain pregame/leakage-safe.
         starter_map = identify_starters(
             current
         )
@@ -571,7 +617,10 @@ def run(season, week, dry_run=False):
     # Train frozen v2 architecture
     # ---------------------------------------------------------
 
-    trained = train_models()
+    trained = train_models(
+        target_season=season,
+        target_week=week,
+    )
 
     # ---------------------------------------------------------
     # Current production feature state

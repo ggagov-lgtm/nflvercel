@@ -267,3 +267,101 @@ def build_training_dataset(
                 rows.append(row)
 
     return pd.DataFrame(rows)
+
+
+def build_current_season_training(
+    season: int,
+    target_week: int,
+):
+    """
+    Build leakage-safe training rows for completed games
+    in the current season strictly before target_week.
+
+    Example:
+        season=2026, target_week=2
+        -> returns Week 1 training rows only.
+    """
+
+    if target_week <= 1:
+        return pd.DataFrame()
+
+    current = load_pbp(season)
+    prior = load_pbp(season - 1)
+
+    games = get_games(current)
+
+    games = games[
+        games["week"] < target_week
+    ].copy()
+
+    rows = []
+
+    for week in sorted(games["week"].unique()):
+
+        week = int(week)
+
+        metrics = build_pregame_metrics(
+            current_df=current,
+            prior_df=prior,
+            week=week,
+        )
+
+        week_games = games[
+            games["week"] == week
+        ]
+
+        print(
+            f"  Current-season training "
+            f"{season} Week {week}: "
+            f"{len(week_games)} games"
+        )
+
+        for _, game in week_games.iterrows():
+
+            home = game["home_team"]
+            away = game["away_team"]
+
+            if (
+                home not in metrics.index
+                or away not in metrics.index
+            ):
+                print(
+                    "    SKIP:",
+                    away,
+                    "@",
+                    home,
+                    "missing metrics",
+                )
+                continue
+
+            features = build_matchup_features(
+                home_team=home,
+                away_team=away,
+                team_metrics=metrics,
+                market=None,
+            )
+
+            row = {
+                "game_id": game["game_id"],
+                "season": int(game["season"]),
+                "week": week,
+                "home_team": home,
+                "away_team": away,
+                "target_home_score": float(
+                    game["home_score"]
+                ),
+                "target_away_score": float(
+                    game["away_score"]
+                ),
+                "target_margin": float(
+                    game["margin"]
+                ),
+                "target_total": float(
+                    game["total"]
+                ),
+            }
+
+            row.update(features)
+            rows.append(row)
+
+    return pd.DataFrame(rows)
