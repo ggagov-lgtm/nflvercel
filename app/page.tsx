@@ -400,7 +400,6 @@ export default async function Page() {
           <div className="summaryPrimary summaryPrimaryThree">
             <div className="summaryPanel">
               <div className="summaryLabel">TOP GUESS SUCCESS<button type="button" className="infoTip" aria-label="Explain top guess success" data-tip="How often the model’s single highest-probability prediction for each completed game was correct.">i</button></div>
-              <div className="summarySubtext">Results of the model’s #1 prediction on completed games</div>
               <div className="donutWrap">
                 <div className="donut" style={{"--value": `${Math.max(0, Math.min(100, Number(completedPerformance.topRate || 0) * 100))}%`} as React.CSSProperties}>
                   <div><b>{pct(completedPerformance.topRate)}</b><span>{completedPerformance.topWins} of {completedPerformance.topWins + completedPerformance.topLosses} correct</span></div>
@@ -410,7 +409,6 @@ export default async function Page() {
 
             <div className="summaryPanel">
               <div className="summaryLabel">TOP PREDICTION PERCENTAGE — SEASON<button type="button" className="infoTip" aria-label="Explain season top prediction percentage" data-tip="Average probability of the model’s highest-confidence prediction in every locked game this season.">i</button></div>
-              <div className="summarySubtext">Average #1 prediction probability across the {displayLatest?.season || ""} season</div>
               <div className="donutWrap">
                 <div className="donut donutBlue" style={{"--value": `${Math.max(0, Math.min(100, Number(seasonTopProbability || 0) * 100))}%`} as React.CSSProperties}>
                   <div><b>{pct(seasonTopProbability)}</b><span>{seasonPreds.length} game{seasonPreds.length===1?"":"s"} included</span></div>
@@ -420,7 +418,6 @@ export default async function Page() {
 
             <div className="summaryPanel">
               <div className="summaryLabel">TOP PREDICTION PERCENTAGE — THIS WEEK<button type="button" className="infoTip" aria-label="Explain weekly top prediction percentage" data-tip="Average probability of the model’s highest-confidence prediction for every game in the displayed week.">i</button></div>
-              <div className="summarySubtext">Average #1 prediction probability for Week {displayLatest?.week || "—"}</div>
               <div className="donutWrap">
                 <div className="donut donutPurple" style={{"--value": `${Math.max(0, Math.min(100, Number(weekTopProbability || 0) * 100))}%`} as React.CSSProperties}>
                   <div><b>{pct(weekTopProbability)}</b><span>{preds.length} game{preds.length===1?"":"s"} included</span></div>
@@ -435,11 +432,11 @@ export default async function Page() {
               ["OVER / UNDER SUCCESS",completedPerformance.totalRate,completedPerformance.totalWins,completedPerformance.totalLosses],
             ].map(([label,rate,wins,losses])=><div className="miniMetric" key={String(label)}>
               <div className="miniDonut" style={{"--value":`${Math.max(0,Math.min(100,Number(rate||0)*100))}%`} as React.CSSProperties} />
-              <div><span>{String(label)}</span><b>{pct(rate)}</b><small>{Number(wins)}–{Number(losses)} · Completed only</small></div>
+              <div><span>{String(label)}<button type="button" className="infoTip" aria-label={`Explain ${String(label).toLowerCase()}`} data-tip={String(label)==="WINNER PREDICTION SUCCESS" ? "Percentage of completed winner predictions that were correct." : String(label)==="POINT SPREAD SUCCESS" ? "Percentage of completed point-spread predictions that covered the sportsbook line. Pushes are excluded." : "Percentage of completed over / under predictions that correctly predicted the sportsbook total. Pushes are excluded."}>i</button></span><b>{pct(rate)}</b><small>{Number(wins)}–{Number(losses)} · Completed only</small></div>
             </div>)}
             <div className="miniMetric errorMetric">
               <div className="errorIcon">▥</div>
-              <div><span>AVERAGE SCORE ERROR</span><b>{num(completedPerformance.scoreMae)}</b><small>{completedPerformance.finals} completed game{completedPerformance.finals===1?"":"s"} · Lower is better</small></div>
+              <div><span>AVERAGE SCORE ERROR<button type="button" className="infoTip" aria-label="Explain average score error" data-tip="Average absolute difference between the model’s predicted team scores and the actual final scores. Lower is better.">i</button></span><b>{num(completedPerformance.scoreMae)}</b><small>{completedPerformance.finals} completed game{completedPerformance.finals===1?"":"s"} · Lower is better</small></div>
             </div>
           </div>
         </div>
