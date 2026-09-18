@@ -34,6 +34,18 @@ TRAINING_DATA = "python/data/training_2022_2025.parquet"
 FOOTBALL_WEIGHT = 0.10
 TOP_FEATURES = 100
 
+# ESPN and nflverse use different abbreviations for a few teams.
+# Keep ESPN codes for display/database; use these aliases only for
+# nflverse-derived football and QB features.
+NFLVERSE_TEAM_MAP = {
+    "WSH": "WAS",
+    "LAR": "LA",
+}
+
+
+def nflverse_team(team: str) -> str:
+    return NFLVERSE_TEAM_MAP.get(team, team)
+
 warnings.filterwarnings(
     "ignore",
     message="DataFrame is highly fragmented",
@@ -680,9 +692,14 @@ def run(season, week, dry_run=False):
 
         try:
 
+            # Translate ESPN abbreviations to nflverse abbreviations
+            # only for nflverse-derived model features.
+            model_home = nflverse_team(home)
+            model_away = nflverse_team(away)
+
             football = build_matchup_features(
-                home_team=home,
-                away_team=away,
+                home_team=model_home,
+                away_team=model_away,
                 team_metrics=team_metrics,
                 market=None,
             )
@@ -692,8 +709,8 @@ def run(season, week, dry_run=False):
                     current_df=current_pbp,
                     prior_df=prior_pbp,
                     week=week,
-                    home_team=home,
-                    away_team=away,
+                    home_team=model_home,
+                    away_team=model_away,
                     starter_lookup=starter_lookup,
                 )
             )
