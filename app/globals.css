@@ -643,3 +643,13 @@
 .errorIcon{font-size:35px;color:#388ff2;width:48px;text-align:center}
 @media(max-width:1050px){.summaryGrid{grid-template-columns:1fr}.summaryPrimary{grid-template-columns:1fr 2fr}}
 @media(max-width:700px){.summaryPrimary,.summarySecondary{grid-template-columns:1fr}.summaryHead{display:block}.summaryHead small{display:block;margin-top:5px}.confidenceValue{display:none}}
+
+
+/* Summary explanations and completed-game confidence bars */
+.confidenceBarItem.confidenceCompleted i{background:#667382;opacity:.65}
+.confidenceBarItem.confidenceCompleted .confidenceValue,.confidenceBarItem.confidenceCompleted small{color:#6f7b89}
+.infoTip{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;margin-left:6px;padding:0;border:1px solid #75869b;border-radius:50%;background:transparent;color:#aebdce;font:700 9px/1 sans-serif;cursor:help;vertical-align:middle;position:relative}
+.infoTip:hover,.infoTip:focus{border-color:#d8e5f2;color:#fff;outline:none}
+.infoTip:after{content:attr(data-tip);position:absolute;z-index:50;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);width:230px;padding:8px 9px;border:1px solid #40536a;border-radius:7px;background:#07111d;color:#dce7f3;font:400 10px/1.35 sans-serif;text-align:left;box-shadow:0 8px 22px #0008;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s}
+.infoTip:hover:after,.infoTip:focus:after{opacity:1;visibility:visible}
+@media(max-width:700px){.infoTip:after{left:auto;right:-8px;transform:none;width:200px}}
