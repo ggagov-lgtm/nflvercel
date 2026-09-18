@@ -150,38 +150,6 @@ export default async function Page() {
     ? await getEspnGameStates(displayLatest.season, displayLatest.week)
     : new Map<string, LiveGame>();
 
-  // Season-wide locked predictions are used only for the season confidence summary.
-  // The display-only Week 2 preview is included when there are no official predictions yet.
-  let seasonPreds: Pred[] = [];
-  if (displayLatest) {
-    const { data: seasonData } = await s
-      .from("predictions")
-      .select("*")
-      .eq("season", displayLatest.season)
-      .order("week", { ascending: true })
-      .order("locked_at", { ascending: true });
-    seasonPreds = (seasonData || []) as Pred[];
-  }
-  if (!seasonPreds.length) seasonPreds = preds;
-
-  const topPredictionProbability = (p: Pred) => {
-    const x = p.model || {};
-    const values = [
-      Number(x.home_win_prob), Number(x.away_win_prob),
-      Number(x.home_cover_prob), Number(x.away_cover_prob),
-      Number(x.over_prob), Number(x.under_prob),
-    ].filter(Number.isFinite);
-    return values.length ? Math.max(...values) : NaN;
-  };
-
-  const averageTopProbability = (rows: Pred[]) => {
-    const values = rows.map(topPredictionProbability).filter(Number.isFinite);
-    return values.length ? values.reduce((a, b) => a + b, 0) / values.length : null;
-  };
-
-  const weekTopProbability = averageTopProbability(preds);
-  const seasonTopProbability = averageTopProbability(seasonPreds);
-
   const completedPerformance = (() => {
     let finals = 0;
     let mlWins = 0, mlLosses = 0;
@@ -261,6 +229,34 @@ export default async function Page() {
       totalWins, totalLosses, totalRate: rate(totalWins, totalLosses),
       topWins, topLosses, topRate: rate(topWins, topLosses),
       scoreMae: scoreGames ? scoreError / scoreGames : null,
+    };
+  })();
+
+  let priorSeasonTopWins = 0;
+  let priorSeasonTopLosses = 0;
+  if (displayLatest && !previewMode) {
+    const { data: settled } = await s
+      .from("prediction_settlements")
+      .select("top_pick_result,predictions!inner(season,week)")
+      .eq("predictions.season", displayLatest.season)
+      .lt("predictions.week", displayLatest.week);
+    for (const row of settled || []) {
+      if (row.top_pick_result === "WIN") priorSeasonTopWins += 1;
+      if (row.top_pick_result === "LOSS") priorSeasonTopLosses += 1;
+    }
+  }
+
+  const seasonTopPerformance = (() => {
+    // Current displayed week is graded from live ESPN finals. Prior official weeks
+    // come from the settlement table so only completed, settled games are counted.
+    return {
+      wins: priorSeasonTopWins + completedPerformance.topWins,
+      losses: priorSeasonTopLosses + completedPerformance.topLosses,
+      rate: (priorSeasonTopWins + priorSeasonTopLosses + completedPerformance.topWins + completedPerformance.topLosses)
+        ? (priorSeasonTopWins + completedPerformance.topWins) /
+          (priorSeasonTopWins + priorSeasonTopLosses + completedPerformance.topWins + completedPerformance.topLosses)
+        : null,
+      games: priorSeasonTopWins + priorSeasonTopLosses + completedPerformance.topWins + completedPerformance.topLosses,
     };
   })();
 
@@ -408,19 +404,19 @@ export default async function Page() {
             </div>
 
             <div className="summaryPanel">
-              <div className="summaryLabel">TOP PREDICTION PERCENTAGE — SEASON<button type="button" className="infoTip" aria-label="Explain season top prediction percentage" data-tip="Average probability of the model’s highest-confidence prediction in every locked game this season.">i</button></div>
+              <div className="summaryLabel">TOP PREDICTION SUCCESS — SEASON<button type="button" className="infoTip" aria-label="Explain season top prediction percentage" data-tip="Success rate of the model’s #1 prediction using completed games only for the season.">i</button></div>
               <div className="donutWrap">
-                <div className="donut donutBlue" style={{"--value": `${Math.max(0, Math.min(100, Number(seasonTopProbability || 0) * 100))}%`} as React.CSSProperties}>
-                  <div><b>{pct(seasonTopProbability)}</b><span>{seasonPreds.length} game{seasonPreds.length===1?"":"s"} included</span></div>
+                <div className="donut donutBlue" style={{"--value": `${Math.max(0, Math.min(100, Number(seasonTopPerformance.rate || 0) * 100))}%`} as React.CSSProperties}>
+                  <div><b>{pct(seasonTopPerformance.rate)}</b><span>{seasonTopPerformance.wins} of {seasonTopPerformance.games} correct</span></div>
                 </div>
               </div>
             </div>
 
             <div className="summaryPanel">
-              <div className="summaryLabel">TOP PREDICTION PERCENTAGE — THIS WEEK<button type="button" className="infoTip" aria-label="Explain weekly top prediction percentage" data-tip="Average probability of the model’s highest-confidence prediction for every game in the displayed week.">i</button></div>
+              <div className="summaryLabel">TOP PREDICTION SUCCESS — THIS WEEK<button type="button" className="infoTip" aria-label="Explain weekly top prediction percentage" data-tip="Success rate of the model’s #1 prediction using completed games only for the displayed week.">i</button></div>
               <div className="donutWrap">
-                <div className="donut donutPurple" style={{"--value": `${Math.max(0, Math.min(100, Number(weekTopProbability || 0) * 100))}%`} as React.CSSProperties}>
-                  <div><b>{pct(weekTopProbability)}</b><span>{preds.length} game{preds.length===1?"":"s"} included</span></div>
+                <div className="donut donutPurple" style={{"--value": `${Math.max(0, Math.min(100, Number(completedPerformance.topRate || 0) * 100))}%`} as React.CSSProperties}>
+                  <div><b>{pct(completedPerformance.topRate)}</b><span>{completedPerformance.topWins} of {completedPerformance.topWins + completedPerformance.topLosses} correct</span></div>
                 </div>
               </div>
             </div>
