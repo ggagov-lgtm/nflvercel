@@ -710,3 +710,18 @@
 .donut.donutPending b{color:#aab6c3}
 .donut.donutLoss{background:conic-gradient(#e55b67 0 100%)}
 .donut.donutLoss b{color:#e55b67}
+
+
+/* PRO FOOTBALL QUANT brand lockup — compact Option 3 mark */
+.brandLockup{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none;min-width:0}
+.pfqMark{position:relative;display:block;width:78px;height:48px;flex:0 0 78px}
+.footballArc{position:absolute;inset:2px 4px 3px 2px;border-top:3px solid #f4f7fb;border-right:3px solid #f4f7fb;border-radius:70% 55% 65% 20%;transform:skewX(-12deg)}
+.footballLaces{position:absolute;top:7px;left:19px;color:#f4f7fb;font-size:13px;font-weight:900;letter-spacing:0;transform:rotate(-16deg);z-index:2}
+.quantBars{position:absolute;left:12px;bottom:4px;height:34px;display:flex;align-items:flex-end;gap:5px;z-index:1}
+.quantBars i{display:block;width:9px;background:linear-gradient(180deg,#66ed95,#22bd68);clip-path:polygon(18% 14%,100% 0,100% 100%,0 100%,0 28%)}
+.quantBars i:nth-child(1){height:12px}.quantBars i:nth-child(2){height:20px}.quantBars i:nth-child(3){height:28px}.quantBars i:nth-child(4){height:36px}
+.brandWords{display:flex;flex-direction:column;line-height:1;white-space:nowrap}
+.brandWords strong{font-size:18px;letter-spacing:.035em;font-weight:900}
+.brandWords em{font-style:normal;color:var(--green)}
+.brandWords small{margin-top:6px;color:#a9b8ca;font-size:7px;font-weight:800;letter-spacing:.20em}
+@media(max-width:760px){.brandWords strong{font-size:14px}.brandWords small{display:none}.pfqMark{width:58px;height:38px;flex-basis:58px}.quantBars{transform:scale(.78);transform-origin:left bottom}.footballLaces{font-size:10px}.top{align-items:flex-start}.nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px}}
