@@ -796,9 +796,9 @@ def run(season, week, dry_run=False):
         )
 
         if market_error:
-            errors += 1
+            warnings_count += 1
             print(
-                f"MARKET ERROR: {market_error}"
+                f"MARKET WARNING: {market_error}"
             )
             continue
 
