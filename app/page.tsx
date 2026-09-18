@@ -731,7 +731,7 @@ export default async function Page() {
                     <span className="sectionKicker">LOCKED MODEL PREDICTION</span>
                     <div className="analysisScore"><b>{g.away?.abbr} {num(x.pred_away)}</b><em>—</em><b>{g.home?.abbr} {num(x.pred_home)}</b></div>
                     <div className="analysisPicks">
-                      {picks.map((pick,rank)=><div key={pick.key} className={`analysisPick ${rank===0?"analysisPickTop":""} ${resultClass(pick.result)}`}>
+                      {picks.map((pick,rank)=><div key={pick.key} className={`analysisPick ${rank===0?"analysisPickBest":rank===1?"analysisPickSecond":"analysisPickThird"} ${resultClass(pick.result)}`}>
                         <span>{pick.label}</span><strong>{pick.selection}</strong><b>{pct(pick.probability)}</b>{isFinal&&pick.result?<small>{resultLabel(pick.result)}</small>:null}
                       </div>)}
                     </div>
