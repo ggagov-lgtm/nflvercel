@@ -1,0 +1,61 @@
+name: Test Production Model
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install NumPy
+        run: pip install numpy==2.2.1
+
+      - name: Test production simulation
+        env:
+          PYTHONPATH: python
+        run: |
+          python - <<'PY'
+          import sys
+          import numpy as np
+          from src.production_model import simulate_game
+
+          print("Python:", sys.version)
+          print("NumPy:", np.__version__)
+
+          r = simulate_game(
+              expected_margin=5.25,
+              expected_total=54.25,
+              market_margin=5.5,
+              market_total=54.5,
+              home_ml=-238,
+              away_ml=195,
+              simulations=50000,
+              seed=123,
+          )
+
+          for k in [
+              "pred_home",
+              "pred_away",
+              "model_margin",
+              "model_total",
+              "home_win_prob",
+              "away_win_prob",
+              "home_cover_prob",
+              "over_prob",
+          ]:
+              print(f"{k:25} {r[k]}")
+
+          assert r["pred_home"] > 0
+          assert r["pred_away"] > 0
+          assert 4.0 < r["model_margin"] < 6.5
+          assert 52.0 < r["model_total"] < 56.5
+
+          print("SIMULATION TEST PASSED")
+          PY
