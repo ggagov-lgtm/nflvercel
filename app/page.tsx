@@ -770,7 +770,7 @@ export default async function Page() {
                             : `${isOver ? "OVER" : "UNDER"} ${num(marketTotal)}`;
                         return <div key={pick.key} className={`analysisPick ${rank===0?"analysisPickBest":rank===1?"analysisPickSecond":"analysisPickThird"} ${resultClass(pick.result)}`}>
                           <span>{pick.label}</span>
-                          <div className="recommendationLine"><strong>{modelRecommendation}</strong><span className="probInfo" title="Probability is the model’s estimated chance that this recommended selection will win." aria-label="Probability information">i</span></div>
+                          <div className="recommendationLine"><strong>{modelRecommendation}</strong></div>
                           <div className="pickComparison"><small>MODEL</small><b>{modelLine}</b></div>
                           <div className="pickComparison"><small>SPORTSBOOK</small><b>{sportsbookLine}</b></div>
                           {isFinal&&pick.result?<small className="pickOutcome">{resultLabel(pick.result)}</small>:null}
