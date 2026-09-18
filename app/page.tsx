@@ -232,6 +232,70 @@ export default async function Page() {
     };
   })();
 
+  const weeklyTopPicks = (() => {
+    const winner: AnyObj[] = [];
+    const spread: AnyObj[] = [];
+    const total: AnyObj[] = [];
+    const overall: AnyObj[] = [];
+
+    for (const p of preds) {
+      const g = p.game || {};
+      const m = p.market || {};
+      const x = p.model || {};
+      const state = gameStates.get(String(p.event_id))?.state || "pre";
+      if (state === "post") continue;
+
+      const hp = Number(x.home_win_prob);
+      const ap = Number(x.away_win_prob);
+      const homeML = hp >= ap;
+      const mlProb = homeML ? hp : ap;
+      const mlTeam = homeML ? g.home : g.away;
+      const ml = {
+        eventId: p.event_id, category: "Winner", probability: mlProb,
+        selection: mlTeam?.abbr || "—", logo: mlTeam?.logo || "",
+        matchup: `${g.away?.abbr || "AWAY"} at ${g.home?.abbr || "HOME"}`,
+      };
+
+      const hc = Number(x.home_cover_prob);
+      const ac = Number(x.away_cover_prob);
+      const spreadHome = hc >= ac;
+      const spreadProb = spreadHome ? hc : ac;
+      const spreadTeam = spreadHome ? g.home : g.away;
+      const marketMargin = Number(x.market_margin);
+      const selectedLine = Number.isFinite(marketMargin)
+        ? (spreadHome ? -marketMargin : marketMargin)
+        : NaN;
+      const sp = {
+        eventId: p.event_id, category: "Point Spread", probability: spreadProb,
+        selection: `${spreadTeam?.abbr || "—"} ${Number.isFinite(selectedLine) ? signed(selectedLine) : ""}`.trim(),
+        logo: spreadTeam?.logo || "",
+        matchup: `${g.away?.abbr || "AWAY"} at ${g.home?.abbr || "HOME"}`,
+      };
+
+      const overProb = Number(x.over_prob);
+      const underProb = Number(x.under_prob);
+      const isOver = overProb >= underProb;
+      const totalProb = isOver ? overProb : underProb;
+      const marketTotal = Number(x.market_total ?? m.total);
+      const totalTeam = homeML ? g.home : g.away;
+      const tot = {
+        eventId: p.event_id, category: "Over / Under", probability: totalProb,
+        selection: `${isOver ? "OVER" : "UNDER"} ${Number.isFinite(marketTotal) ? marketTotal.toFixed(1) : "—"}`,
+        logo: totalTeam?.logo || "",
+        matchup: `${g.away?.abbr || "AWAY"} at ${g.home?.abbr || "HOME"}`,
+      };
+
+      winner.push(ml); spread.push(sp); total.push(tot);
+      overall.push(ml, sp, tot);
+    }
+
+    const top3 = (rows: AnyObj[]) =>
+      rows.filter(r => Number.isFinite(r.probability))
+        .sort((a, b) => b.probability - a.probability).slice(0, 3);
+
+    return { winner: top3(winner), spread: top3(spread), total: top3(total), overall: top3(overall) };
+  })();
+
   const modelVersion =
     preds[0]?.model_version || "v2.0.0";
 
@@ -310,6 +374,46 @@ export default async function Page() {
           <span>MODEL</span>
           <b>{modelVersion}</b>
           <small>Live week performance</small>
+        </div>
+      </section>
+
+      <section className="topPicksSection">
+        <div className="topPicksTitle">
+          <div>
+            <span className="sectionKicker">TOP PICKS THIS WEEK</span>
+            <h2>Highest-probability model predictions</h2>
+          </div>
+          <small>Upcoming and live games only · completed games automatically drop out</small>
+        </div>
+
+        <div className="topPicksGrid">
+          {[
+            { title: "Top 3 Winner Picks", subtitle: "Most likely game winners", rows: weeklyTopPicks.winner, className: "topWinner" },
+            { title: "Top 3 Point Spread Picks", subtitle: "Most likely to cover the point spread", rows: weeklyTopPicks.spread, className: "topSpread" },
+            { title: "Top 3 Over / Under Picks", subtitle: "Highest probability total-points predictions", rows: weeklyTopPicks.total, className: "topTotal" },
+            { title: "Top 3 Overall Picks", subtitle: "Highest confidence across all categories", rows: weeklyTopPicks.overall, className: "topOverall" },
+          ].map((group) => (
+            <article className={`topPicksCard ${group.className}`} key={group.title}>
+              <header>
+                <strong>{group.title}</strong>
+                <span>{group.subtitle}</span>
+              </header>
+              <div className="topPicksRows">
+                {group.rows.map((pick, index) => (
+                  <div className="topPickRow" key={`${group.title}-${pick.eventId}-${pick.category}`}>
+                    <b className="topRank">{index + 1}</b>
+                    {pick.logo ? <img src={pick.logo} alt="" /> : null}
+                    <div className="topPickText">
+                      <strong>{pick.selection}</strong>
+                      <span>{pick.matchup}{group.className === "topOverall" ? ` · ${pick.category}` : ""}</span>
+                    </div>
+                    <b className="topProbability">{pct(pick.probability)}</b>
+                  </div>
+                ))}
+                {!group.rows.length && <div className="noTopPicks">No upcoming picks</div>}
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
