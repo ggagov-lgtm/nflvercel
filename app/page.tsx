@@ -384,7 +384,7 @@ export default async function Page() {
         <div className="summaryGrid">
           <div className="summaryPrimary">
             <div className="summaryPanel">
-              <div className="summaryLabel">#1 PREDICTION ACCURACY</div>
+              <div className="summaryLabel">#1 PREDICTION ACCURACY<button type="button" className="infoTip" aria-label="Explain #1 prediction accuracy" data-tip="How often the model’s single highest-probability prediction for each completed game was correct.">i</button></div>
               <div className="donutWrap">
                 <div className="donut" style={{"--value": `${Math.max(0, Math.min(100, Number(completedPerformance.topRate || 0) * 100))}%`} as React.CSSProperties}>
                   <div><b>{pct(completedPerformance.topRate)}</b><span>{completedPerformance.topWins} of {completedPerformance.topWins + completedPerformance.topLosses} correct</span></div>
@@ -392,13 +392,14 @@ export default async function Page() {
               </div>
             </div>
             <div className="summaryPanel">
-              <div className="summaryLabel">TOP PREDICTION PERCENTAGE BY GAME</div>
+              <div className="summaryLabel">TOP PREDICTION PERCENTAGE BY GAME<button type="button" className="infoTip" aria-label="Explain top prediction percentage by game" data-tip="The highest probability assigned by the model among the winner, point spread, and over / under predictions for each game. Completed games are shown in gray.">i</button></div>
               <div className="confidenceBars">
                 {preds.map((p, index) => {
                   const x=p.model||{};
                   const values=[Number(x.home_win_prob),Number(x.away_win_prob),Number(x.home_cover_prob),Number(x.away_cover_prob),Number(x.over_prob),Number(x.under_prob)].filter(Number.isFinite);
                   const best=values.length?Math.max(...values):0;
-                  return <div className="confidenceBarItem" key={p.id} title={`Game ${index+1}: ${pct(best)}`}>
+                  const completed = gameStates.get(String(p.event_id))?.state === "post";
+                  return <div className={`confidenceBarItem ${completed ? "confidenceCompleted" : ""}`} key={p.id} title={`Game ${index+1}: ${pct(best)}${completed ? " · Final" : ""}`}>
                     <span className="confidenceValue">{pct(best)}</span>
                     <i style={{height:`${Math.max(4,best*100)}%`}} />
                     <small>{index+1}</small>
