@@ -694,194 +694,76 @@ export default async function Page() {
               Number(a.probability)
           );
 
+          const topPick = picks[0];
+          const favoredTeam = homeML ? g.home?.abbr : g.away?.abbr;
+          const injuryAdj = Number(x.injury_margin_adjustment);
+          const contextAdj = Number(x.context_margin_adjustment);
+          const weatherAdj = Number(x.weather_total_adjustment);
+          const marketGap = Number.isFinite(modelMargin) && Number.isFinite(marketMargin)
+            ? Math.abs(modelMargin - marketMargin) : null;
+          const explanation = [
+            `The model projects ${favoredTeam || "the selected team"} as the more likely winner at ${pct(mlProb)}, with a projected score of ${num(x.pred_away)}–${num(x.pred_home)}.`,
+            marketGap != null ? `Its projected point difference is ${num(modelMargin)}, compared with the captured sportsbook point difference of ${num(marketMargin)}, a ${num(marketGap)}-point difference between model and market.` : "",
+            Number.isFinite(injuryAdj) && Math.abs(injuryAdj) >= .1 ? `The locked injury adjustment contributes ${signed(injuryAdj)} points to the model margin.` : "",
+            Number.isFinite(weatherAdj) && Math.abs(weatherAdj) >= .1 ? `Weather changes the projected total by ${signed(weatherAdj)} points.` : "Weather is not producing a material scoring adjustment in the locked model.",
+          ].filter(Boolean).join(" ");
+
           return (
-            <article
-              className={`gameCard ${isFinal ? "gameFinal" : ""} ${isLive ? "gameLive" : ""}`}
-              key={p.id}
-            >
-              <header className="gameTop">
-                <div>
-                  <span className="gameTime">
-                    {isLive ? live?.detail || "LIVE" : isFinal ? `FINAL · ${dateLabel(displayDate)}` : dateLabel(displayDate)}
-                  </span>
-                  <span className="book">
-                    {m.provider || "ESPN"}
-                  </span>
+            <details className={`gameRowCard ${isFinal ? "gameFinal" : ""} ${isLive ? "gameLive" : ""}`} key={p.id}>
+              <summary className="gameRow">
+                <div className="rowWhen"><strong>{isLive ? "● LIVE" : isFinal ? "FINAL" : dateLabel(displayDate).split(",")[0]}</strong><span>{isLive ? live?.detail : dateLabel(displayDate)}</span></div>
+                <div className="rowMatchup">
+                  <span className="rowTeam"><img src={g.away?.logo || ""} alt="" /><b>{g.away?.abbr || "AWAY"}</b></span>
+                  <em>@</em>
+                  <span className="rowTeam"><img src={g.home?.logo || ""} alt="" /><b>{g.home?.abbr || "HOME"}</b></span>
                 </div>
+                <div className="rowMetric"><span>WIN PROBABILITY</span><b>{favoredTeam} {pct(mlProb)}</b></div>
+                <div className="rowMetric rowScore"><span>{isFinal ? "FINAL / MODEL" : isLive ? "LIVE / MODEL" : "MODEL SCORE"}</span><b>{isFinal || isLive ? `${live?.awayScore ?? "—"}–${live?.homeScore ?? "—"} / ${num(x.pred_away)}–${num(x.pred_home)}` : `${num(x.pred_away)}–${num(x.pred_home)}`}</b></div>
+                <div className="rowMetric"><span>POINT SPREAD</span><b>{spreadTeam} · {pct(spreadProb)}</b></div>
+                <div className="rowMetric"><span>OVER / UNDER</span><b>{isOver ? "OVER" : "UNDER"} · {pct(totalProb)}</b></div>
+                <div className="rowTopPick"><span>TOP PICK</span><b>{topPick.selection}</b><small>{pct(topPick.probability)}</small></div>
+                <div className="rowChevron" aria-hidden="true">⌄</div>
+              </summary>
 
-                <span className="locked">
-                  {isLive ? "● LIVE" : isFinal ? "FINAL" : previewMode ? "PREVIEW" : "🔒 LOCKED"}
-                </span>
-              </header>
-
-              <div className="matchup">
-                <div className="teamBlock">
-                  <img
-                    src={g.away?.logo || ""}
-                    alt=""
-                  />
-                  <div>
-                    <strong>
-                      {g.away?.abbr || "AWAY"}
-                    </strong>
-                    <span>
-                      {g.away?.name || ""}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="projection">
-                  {isFinal || isLive ? (
-                    <>
-                      <span>{isFinal ? "FINAL SCORE" : "LIVE SCORE"}</span>
-                      <div className="actualScore">
-                        <b>{finalAway ?? live?.awayScore ?? "—"}</b>
-                        <em>—</em>
-                        <b>{finalHome ?? live?.homeScore ?? "—"}</b>
-                      </div>
-                      <small className="modelWas">
-                        Model {num(x.pred_away)} — {num(x.pred_home)}
-                      </small>
-                    </>
-                  ) : (
-                    <>
-                      <span>MODEL SCORE</span>
-                      <div className="upcomingModelScore">
-                        <b>{num(x.pred_away)}</b>
-                        <em>—</em>
-                        <b>{num(x.pred_home)}</b>
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                <div className="teamBlock teamHome">
-                  <div>
-                    <strong>
-                      {g.home?.abbr || "HOME"}
-                    </strong>
-                    <span>
-                      {g.home?.name || ""}
-                    </span>
-                  </div>
-                  <img
-                    src={g.home?.logo || ""}
-                    alt=""
-                  />
-                </div>
-              </div>
-
-              <div className="modelStrip">
-                <div>
-                  <span>MODEL POINT DIFFERENCE</span>
-                  <strong>
-                    {signed(x.model_margin)}
-                  </strong>
-                </div>
-
-                <div>
-                  <span>SPORTSBOOK POINT DIFFERENCE</span>
-                  <strong>
-                    {signed(x.market_margin)}
-                  </strong>
-                </div>
-
-                <div>
-                  <span>MODEL TOTAL POINTS</span>
-                  <strong>
-                    {num(x.model_total)}
-                  </strong>
-                </div>
-
-                <div>
-                  <span>SPORTSBOOK TOTAL POINTS</span>
-                  <strong>
-                    {num(x.market_total ?? m.total)}
-                  </strong>
-                </div>
-              </div>
-
-              <div className="picks">
-                {picks.map((pick, rank) => (
-                  <div
-                    className={`${confidenceClass(rank)} ${resultClass(pick.result)}`}
-                    key={pick.key}
-                  >
-                    <div className="pickHead">
-                      <span>{pick.label}</span>
-                      <b>{isFinal && pick.result ? resultLabel(pick.result) : `#${rank + 1}`}</b>
-                    </div>
-
-                    <strong className="selection">
-                      {pick.selection}
-                    </strong>
-
-                    <div className="pickStats">
-                      <div>
-                        <span>Probability</span>
-                        <b>
-                          {pct(pick.probability)}
-                        </b>
-                      </div>
-
-                      <div>
-                        <span>
-                          {pick.key === "ml"
-                            ? "Prob. Edge"
-                            : "Point Edge"}
-                        </span>
-                        <b>
-                          {pick.key === "ml"
-                            ? pct(pick.edge)
-                            : signed(pick.edge)}
-                        </b>
-                      </div>
-
-                      <div>
-                        <span>Market</span>
-                        <b>{pick.market}</b>
-                      </div>
+              <div className="gameExpansion">
+                <div className="analysisLead">
+                  <div className="analysisPrediction">
+                    <span className="sectionKicker">LOCKED MODEL PREDICTION</span>
+                    <div className="analysisScore"><b>{g.away?.abbr} {num(x.pred_away)}</b><em>—</em><b>{g.home?.abbr} {num(x.pred_home)}</b></div>
+                    <div className="analysisPicks">
+                      {picks.map((pick,rank)=><div key={pick.key} className={`analysisPick ${rank===0?"analysisPickTop":""} ${resultClass(pick.result)}`}>
+                        <span>{pick.label}</span><strong>{pick.selection}</strong><b>{pct(pick.probability)}</b>{isFinal&&pick.result?<small>{resultLabel(pick.result)}</small>:null}
+                      </div>)}
                     </div>
                   </div>
-                ))}
-              </div>
-
-              {isFinal && picks[0]?.result && (
-                <div className={`topPickResult ${resultClass(picks[0].result)}`}>
-                  #1 PICK · {picks[0].selection} · {pct(picks[0].probability)} · {resultLabel(picks[0].result)}
+                  <div className="whyModel">
+                    <span className="sectionKicker">WHY THE MODEL LIKES THIS PREDICTION</span>
+                    <p>{explanation}</p>
+                    <div className="driverChips">
+                      <span>Model vs Market <b>{marketGap==null?"—":`${num(marketGap)} pts`}</b></span>
+                      <span>Injury Adjustment <b>{signed(injuryAdj)}</b></span>
+                      <span>Context Adjustment <b>{signed(contextAdj)}</b></span>
+                      <span>Simulations <b>{Number(x.simulations || simulationCount).toLocaleString()}</b></span>
+                    </div>
+                  </div>
                 </div>
-              )}
 
-              <footer className="gameFooter">
-                <span>
-                  Injury adj{" "}
-                  {signed(
-                    x.injury_margin_adjustment
-                  )}
-                </span>
+                <div className="factorGrid">
+                  <div className="factorCard weatherFactor"><div className="factorIcon">☁︎</div><div><span>WEATHER</span><strong>{Math.abs(weatherAdj||0)<.1?"Minimal model impact":`${signed(weatherAdj)} total-point impact`}</strong><small>Locked pregame adjustment</small></div></div>
+                  <div className="factorCard"><div className="factorIcon">✚</div><div><span>INJURIES</span><strong>{Math.abs(injuryAdj||0)<.1?"Minimal model impact":`${signed(injuryAdj)} margin impact`}</strong><small>Locked pregame adjustment</small></div></div>
+                  <div className="factorCard"><div className="factorIcon">↗</div><div><span>MODEL VS MARKET</span><strong>{marketGap==null?"No comparison":`${num(marketGap)} point difference`}</strong><small>Model margin vs captured line</small></div></div>
+                  <div className="factorCard"><div className="factorIcon">◎</div><div><span>CONTEXT</span><strong>{Math.abs(contextAdj||0)<.1?"Minimal model impact":`${signed(contextAdj)} margin impact`}</strong><small>Locked game-context adjustment</small></div></div>
+                </div>
 
-                <span>
-                  Context{" "}
-                  {signed(
-                    x.context_margin_adjustment
-                  )}
-                </span>
-
-                <span>
-                  Weather{" "}
-                  {signed(
-                    x.weather_total_adjustment
-                  )}
-                </span>
-
-                <span>
-                  {Number(
-                    x.simulations || simulationCount
-                  ).toLocaleString()}{" "}
-                  simulations
-                </span>
-              </footer>
-            </article>
+                <div className="marketDetail">
+                  <div><span>MODEL POINT DIFFERENCE</span><b>{signed(modelMargin)}</b></div>
+                  <div><span>SPORTSBOOK POINT DIFFERENCE</span><b>{signed(marketMargin)}</b></div>
+                  <div><span>MODEL TOTAL POINTS</span><b>{num(modelTotal)}</b></div>
+                  <div><span>SPORTSBOOK TOTAL POINTS</span><b>{num(marketTotal)}</b></div>
+                </div>
+                <p className="analysisNote">The explanation uses values stored with the locked prediction. It does not change because of live or final game information.</p>
+              </div>
+            </details>
           );
         })}
       </section>
