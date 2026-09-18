@@ -667,3 +667,30 @@
 .donutPurple b{color:#9a5cff}
 @media(max-width:1250px){.summaryPrimary.summaryPrimaryThree{grid-template-columns:repeat(3,minmax(150px,1fr))}}
 @media(max-width:700px){.summaryPrimary.summaryPrimaryThree{grid-template-columns:1fr}}
+
+
+/* Compact dashboard command header */
+.dashboardIntro{display:grid;grid-template-columns:minmax(250px,.75fr) minmax(520px,1.25fr);align-items:center;gap:28px;margin:6px 0 14px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(110deg,#0b1a2b 0%,#0a1725 58%,#08131f 100%)}
+.introIdentity{min-width:0}
+.introSeason{display:block;color:var(--green);font-size:9px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.introIdentity h1{margin:2px 0 2px;font-size:29px;line-height:1.05;letter-spacing:-.035em}
+.introIdentity p{margin:0;color:var(--muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.introOperations{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;min-width:0}
+.introProgress{min-width:0}
+.introProgressHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.introProgressHead strong{font-size:10px}
+.introProgressHead span{color:#b8c7d8;font-size:9px}
+.introSegments{display:grid;grid-template-columns:repeat(16,minmax(6px,1fr));gap:3px}
+.introSegment{height:7px;border-radius:2px;border:1px solid #34475b;background:transparent}
+.introSegment.segmentFinal{background:var(--green);border-color:var(--green)}
+.introSegment.segmentLive{background:#7d8793;border-color:#9aa4af}
+.introProgressMeta{display:flex;gap:11px;flex-wrap:wrap;margin-top:5px;color:var(--muted);font-size:8px}
+.introProgressMeta span{display:flex;align-items:center;gap:4px}
+.introProgressMeta i{display:inline-block;width:6px;height:6px;border-radius:2px}
+.introModelStatus{display:flex;align-items:center;gap:8px;padding-left:14px;border-left:1px solid #26384b;white-space:nowrap}
+.introModelStatus .statusDot{width:8px;height:8px;flex:0 0 8px}
+.introModelStatus strong,.introModelStatus span{display:block}
+.introModelStatus strong{font-size:10px}
+.introModelStatus span{margin-top:2px;color:var(--muted);font-size:8px}
+@media(max-width:1000px){.dashboardIntro{grid-template-columns:1fr;gap:10px}.introOperations{grid-template-columns:minmax(0,1fr) auto}}
+@media(max-width:650px){.dashboardIntro{padding:12px}.introOperations{grid-template-columns:1fr}.introModelStatus{padding:8px 0 0;border-left:0;border-top:1px solid #26384b}.introIdentity p{white-space:normal}.introSegments{gap:2px}}
