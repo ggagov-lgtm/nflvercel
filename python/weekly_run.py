@@ -555,6 +555,17 @@ def train_models(target_season: int, target_week: int):
         f"{len(qb_cols)} QB features"
     )
 
+    training_max_season = int(
+        train["season"].max()
+    )
+
+    training_max_week = int(
+        train.loc[
+            train["season"] == training_max_season,
+            "week",
+        ].max()
+    )
+
     return {
         "football_features": top100,
         "qb_features": qb_cols,
@@ -562,6 +573,9 @@ def train_models(target_season: int, target_week: int):
         "imputer": model_imputer,
         "margin_model": margin_model,
         "total_model": total_model,
+        "training_rows": int(len(train)),
+        "training_through_season": training_max_season,
+        "training_through_week": training_max_week,
     }
 
 
@@ -985,6 +999,21 @@ def run(season, week, dry_run=False):
             )
 
             continue
+
+        # Record exactly what training information produced
+        # this prediction. Stored inside model JSONB so historical
+        # predictions remain fully auditable.
+        result["training_rows"] = trained["training_rows"]
+        result["training_through_season"] = (
+            trained["training_through_season"]
+        )
+        result["training_through_week"] = (
+            trained["training_through_week"]
+        )
+        result["training_cutoff"] = (
+            f'{trained["training_through_season"]}-'
+            f'W{trained["training_through_week"]}'
+        )
 
         timestamp = utc_now()
 
