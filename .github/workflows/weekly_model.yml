@@ -1,32 +1,131 @@
 name: NFL Weekly Model
+
 on:
   workflow_dispatch:
     inputs:
-      season: {description: Season, required: true, default: '2026'}
-      week: {description: Week, required: true, default: '2'}
+      season:
+        description: Season
+        required: true
+        default: '2026'
+      week:
+        description: Week
+        required: true
+        default: '2'
+
+  # GitHub schedules are UTC.
+  # 05:00 UTC = midnight Central during CDT.
+  # 06:00 UTC = midnight Central during CST.
+  # The timezone gate below determines which invocation proceeds.
   schedule:
-    - cron: '5 5 * * 2'
+    - cron: '0 5 * * 2'
+    - cron: '0 6 * * 2'
+
 jobs:
   model:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
-        with: {python-version: '3.12'}
-      - run: pip install -r python/requirements.txt
-      - name: Determine week and run
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r python/requirements.txt
+
+      - name: Determine whether scheduled run should proceed
+        id: gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          python - <<'PY'
+          import os
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          event = os.environ["EVENT_NAME"]
+
+          # Manual workflow_dispatch always proceeds.
+          if event == "workflow_dispatch":
+              proceed = True
+              reason = "manual workflow dispatch"
+          else:
+              now = datetime.now(
+                  ZoneInfo("America/Chicago")
+              )
+
+              proceed = (
+                  now.weekday() == 1
+                  and now.hour == 0
+              )
+
+              reason = (
+                  f"Chicago time: "
+                  f"{now.isoformat()}"
+              )
+
+          print("Proceed:", proceed)
+          print(reason)
+
+          with open(
+              os.environ["GITHUB_OUTPUT"],
+              "a",
+          ) as f:
+              f.write(
+                  "proceed="
+                  + ("true" if proceed else "false")
+                  + "\n"
+              )
+          PY
+
+      - name: Run weekly NFL model
+        if: steps.gate.outputs.proceed == 'true'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           INPUT_SEASON: ${{ inputs.season }}
           INPUT_WEEK: ${{ inputs.week }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          if [ -n "$INPUT_WEEK" ]; then python python/weekly_run.py --season "$INPUT_SEASON" --week "$INPUT_WEEK"; else
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+
+            python python/weekly_run.py \
+              --season "$INPUT_SEASON" \
+              --week "$INPUT_WEEK"
+
+          else
+
             python - <<'PY'
-          import datetime as d, subprocess, requests
-          now=d.datetime.now(d.timezone.utc)
-          data=requests.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard',timeout=20).json()
-          season=int(data.get('season',{}).get('year',now.year)); week=int(data.get('week',{}).get('number',1))
-          subprocess.check_call(['python','python/weekly_run.py','--season',str(season),'--week',str(week)])
+          import subprocess
+          import requests
+
+          data = requests.get(
+              "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+              timeout=20,
+          ).json()
+
+          season = int(
+              data.get("season", {}).get("year")
+          )
+
+          week = int(
+              data.get("week", {}).get("number")
+          )
+
+          print(
+              f"ESPN current NFL week: "
+              f"{season} Week {week}"
+          )
+
+          subprocess.check_call([
+              "python",
+              "python/weekly_run.py",
+              "--season",
+              str(season),
+              "--week",
+              str(week),
+          ])
           PY
+
           fi
