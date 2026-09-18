@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { currentUser } from "@/lib/auth";
+import week2Preview from "@/data/week2-preview.json";
 
 type AnyObj = Record<string, any>;
 
@@ -85,6 +86,8 @@ export default async function Page() {
     .maybeSingle();
 
   let preds: Pred[] = [];
+  let displayLatest: { season: number; week: number } | null = latest;
+  let previewMode = false;
 
   if (latest) {
     const { data } = await s
@@ -95,6 +98,10 @@ export default async function Page() {
       .order("locked_at");
 
     preds = (data || []) as Pred[];
+  } else {
+    preds = week2Preview.games as unknown as Pred[];
+    displayLatest = { season: week2Preview.season, week: week2Preview.week };
+    previewMode = true;
   }
 
   const modelVersion =
@@ -112,8 +119,8 @@ export default async function Page() {
           </div>
 
           <h1>
-            {latest
-              ? `${latest.season} · Week ${latest.week}`
+            {displayLatest
+              ? `${displayLatest.season} · Week ${displayLatest.week}`
               : "NFL Quant Model"}
           </h1>
 
@@ -127,9 +134,11 @@ export default async function Page() {
           <div className="statusDot" />
           <div>
             <strong>
-              {latest
-                ? "Predictions Locked"
-                : "Awaiting First Official Run"}
+              {previewMode
+                ? "Week 2 Model Preview"
+                : latest
+                  ? "Predictions Locked"
+                  : "Awaiting First Official Run"}
             </strong>
             <span>
               {simulationCount.toLocaleString()} simulations/game
@@ -182,9 +191,11 @@ export default async function Page() {
             WEEKLY BOARD
           </span>
           <h2>
-            {latest
-              ? `${preds.length} Locked Games`
-              : "No locked predictions yet"}
+            {previewMode
+              ? `${preds.length} Display-Only Games`
+              : latest
+                ? `${preds.length} Locked Games`
+                : "No locked predictions yet"}
           </h2>
         </div>
 
@@ -328,7 +339,7 @@ export default async function Page() {
                 </div>
 
                 <span className="locked">
-                  🔒 LOCKED
+                  {previewMode ? "PREVIEW" : "🔒 LOCKED"}
                 </span>
               </header>
 
