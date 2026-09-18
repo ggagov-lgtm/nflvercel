@@ -64,6 +64,55 @@ function confidenceClass(rank: number) {
   return "pick pickThird";
 }
 
+type LiveGame = {
+  date?: string;
+  state: "pre" | "in" | "post";
+  detail?: string;
+  homeScore?: number;
+  awayScore?: number;
+};
+
+async function getEspnGameStates(season: number, week: number) {
+  try {
+    const url =
+      `https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=${season}&week=${week}&seasontype=2`;
+    const res = await fetch(url, { next: { revalidate: 60 } });
+    if (!res.ok) return new Map<string, LiveGame>();
+    const json = await res.json();
+    const out = new Map<string, LiveGame>();
+
+    for (const event of json.events || []) {
+      const comp = event.competitions?.[0];
+      const home = comp?.competitors?.find((x: AnyObj) => x.homeAway === "home");
+      const away = comp?.competitors?.find((x: AnyObj) => x.homeAway === "away");
+      out.set(String(event.id), {
+        date: event.date,
+        state: event.status?.type?.state || "pre",
+        detail: event.status?.type?.shortDetail || event.status?.type?.detail,
+        homeScore: Number.isFinite(Number(home?.score)) ? Number(home.score) : undefined,
+        awayScore: Number.isFinite(Number(away?.score)) ? Number(away.score) : undefined,
+      });
+    }
+    return out;
+  } catch {
+    return new Map<string, LiveGame>();
+  }
+}
+
+function resultClass(result?: string) {
+  if (result === "WIN") return "resultWin";
+  if (result === "LOSS") return "resultLoss";
+  if (result === "PUSH") return "resultPush";
+  return "";
+}
+
+function resultLabel(result?: string) {
+  if (result === "WIN") return "✓ WON";
+  if (result === "LOSS") return "✕ LOST";
+  if (result === "PUSH") return "— PUSH";
+  return "";
+}
+
 export default async function Page() {
   const user = await currentUser();
   if (!user) redirect("/auth/login");
@@ -103,6 +152,10 @@ export default async function Page() {
     displayLatest = { season: week2Preview.season, week: week2Preview.week };
     previewMode = true;
   }
+
+  const gameStates = displayLatest
+    ? await getEspnGameStates(displayLatest.season, displayLatest.week)
+    : new Map<string, LiveGame>();
 
   const modelVersion =
     preds[0]?.model_version || "v2.0.0";
@@ -231,6 +284,11 @@ export default async function Page() {
           const g = p.game || {};
           const m = p.market || {};
           const x = p.model || {};
+          const live = gameStates.get(String(p.event_id));
+          const state = live?.state || "pre";
+          const isLive = state === "in";
+          const isFinal = state === "post";
+          const displayDate = live?.date || g.date;
 
           const hp = Number(x.home_win_prob);
           const ap = Number(x.away_win_prob);
@@ -283,6 +341,37 @@ export default async function Page() {
             ? modelTotal - marketTotal
             : marketTotal - modelTotal;
 
+          const finalHome = live?.homeScore;
+          const finalAway = live?.awayScore;
+          const finalMargin =
+            isFinal && finalHome != null && finalAway != null
+              ? finalHome - finalAway
+              : null;
+          const finalTotal =
+            isFinal && finalHome != null && finalAway != null
+              ? finalHome + finalAway
+              : null;
+
+          const gradeML = () => {
+            if (!isFinal || finalMargin == null) return undefined;
+            if (finalMargin === 0) return "PUSH";
+            const actualHomeWin = finalMargin > 0;
+            return actualHomeWin === homeML ? "WIN" : "LOSS";
+          };
+
+          const gradeSpread = () => {
+            if (!isFinal || finalMargin == null || !Number.isFinite(marketMargin)) return undefined;
+            const diff = finalMargin - marketMargin;
+            if (diff === 0) return "PUSH";
+            return (spreadHome ? diff > 0 : diff < 0) ? "WIN" : "LOSS";
+          };
+
+          const gradeTotal = () => {
+            if (!isFinal || finalTotal == null || !Number.isFinite(marketTotal)) return undefined;
+            if (finalTotal === marketTotal) return "PUSH";
+            return (isOver ? finalTotal > marketTotal : finalTotal < marketTotal) ? "WIN" : "LOSS";
+          };
+
           const picks = [
             {
               key: "ml",
@@ -293,6 +382,7 @@ export default async function Page() {
               market: homeML
                 ? american(m.home_ml)
                 : american(m.away_ml),
+              result: gradeML(),
             },
             {
               key: "spread",
@@ -304,6 +394,7 @@ export default async function Page() {
                 Number.isFinite(Number(m.spread))
                   ? signed(m.spread)
                   : "—",
+              result: gradeSpread(),
             },
             {
               key: "total",
@@ -319,6 +410,7 @@ export default async function Page() {
                 Number.isFinite(marketTotal)
                   ? marketTotal.toFixed(1)
                   : "—",
+              result: gradeTotal(),
             },
           ].sort(
             (a, b) =>
@@ -327,11 +419,14 @@ export default async function Page() {
           );
 
           return (
-            <article className="gameCard" key={p.id}>
+            <article
+              className={`gameCard ${isFinal ? "gameFinal" : ""} ${isLive ? "gameLive" : ""}`}
+              key={p.id}
+            >
               <header className="gameTop">
                 <div>
                   <span className="gameTime">
-                    {dateLabel(g.date)}
+                    {isLive ? live?.detail || "LIVE" : isFinal ? `FINAL · ${dateLabel(displayDate)}` : dateLabel(displayDate)}
                   </span>
                   <span className="book">
                     {m.provider || "ESPN"}
@@ -339,7 +434,7 @@ export default async function Page() {
                 </div>
 
                 <span className="locked">
-                  {previewMode ? "PREVIEW" : "🔒 LOCKED"}
+                  {isLive ? "● LIVE" : isFinal ? "FINAL" : previewMode ? "PREVIEW" : "🔒 LOCKED"}
                 </span>
               </header>
 
@@ -360,12 +455,28 @@ export default async function Page() {
                 </div>
 
                 <div className="projection">
-                  <span>MODEL SCORE</span>
-                  <div>
-                    <b>{num(x.pred_away)}</b>
-                    <em>—</em>
-                    <b>{num(x.pred_home)}</b>
-                  </div>
+                  {isFinal || isLive ? (
+                    <>
+                      <span>{isFinal ? "FINAL SCORE" : "LIVE SCORE"}</span>
+                      <div className="actualScore">
+                        <b>{finalAway ?? live?.awayScore ?? "—"}</b>
+                        <em>—</em>
+                        <b>{finalHome ?? live?.homeScore ?? "—"}</b>
+                      </div>
+                      <small className="modelWas">
+                        Model {num(x.pred_away)} — {num(x.pred_home)}
+                      </small>
+                    </>
+                  ) : (
+                    <>
+                      <span>MODEL SCORE</span>
+                      <div className="upcomingModelScore">
+                        <b>{num(x.pred_away)}</b>
+                        <em>—</em>
+                        <b>{num(x.pred_home)}</b>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="teamBlock teamHome">
@@ -417,12 +528,12 @@ export default async function Page() {
               <div className="picks">
                 {picks.map((pick, rank) => (
                   <div
-                    className={confidenceClass(rank)}
+                    className={`${confidenceClass(rank)} ${resultClass(pick.result)}`}
                     key={pick.key}
                   >
                     <div className="pickHead">
                       <span>{pick.label}</span>
-                      <b>#{rank + 1}</b>
+                      <b>{isFinal && pick.result ? resultLabel(pick.result) : `#${rank + 1}`}</b>
                     </div>
 
                     <strong className="selection">
@@ -458,6 +569,12 @@ export default async function Page() {
                   </div>
                 ))}
               </div>
+
+              {isFinal && picks[0]?.result && (
+                <div className={`topPickResult ${resultClass(picks[0].result)}`}>
+                  #1 PICK · {picks[0].selection} · {pct(picks[0].probability)} · {resultLabel(picks[0].result)}
+                </div>
+              )}
 
               <footer className="gameFooter">
                 <span>
