@@ -1,4 +1,496 @@
-import { redirect } from 'next/navigation';import {createClient} from '@/lib/supabase/server';import {currentUser} from '@/lib/auth'
-type Pred={id:string,season:number,week:number,event_id:string,game:Record<string,any>,market:Record<string,any>,model:Record<string,any>,model_version:string,locked_at:string}
-function pct(x:any){return x==null?'N/A':`${(Number(x)*100).toFixed(1)}%`}
-export default async function Page(){const user=await currentUser();if(!user)redirect('/auth/login');const s=await createClient();const {data:perf}=await s.from('model_performance_season').select('*').order('season',{ascending:false}).limit(1).maybeSingle();const {data:latest}=await s.from('predictions').select('season,week').order('season',{ascending:false}).order('week',{ascending:false}).limit(1).maybeSingle();let preds:Pred[]=[];if(latest){const {data}=await s.from('predictions').select('*').eq('season',latest.season).eq('week',latest.week).order('locked_at');preds=(data||[]) as Pred[]}return <main><div className="performance"><div className="metric"><span className="muted">SEASON ML</span><b>{pct(perf?.ml_accuracy)}</b></div><div className="metric"><span className="muted">SPREAD</span><b>{pct(perf?.spread_accuracy)}</b></div><div className="metric"><span className="muted">TOTAL</span><b>{pct(perf?.total_accuracy)}</b></div><div className="metric"><span className="muted">#1 PICKS</span><b>{pct(perf?.top_pick_accuracy)}</b></div><div className="metric"><span className="muted">SCORE MAE</span><b>{perf?.score_mae?.toFixed?.(1)??'N/A'}</b></div><div className="metric"><span className="muted">MODEL</span><b>{preds[0]?.model_version||'v1.0.0'}</b></div></div><div className="top"><h2>{latest?`Week ${latest.week} • ${latest.season}`:'No locked week yet'}</h2><span className="muted">50,000 simulations/game • 🔒 Locked</span></div><div className="games">{preds.map(p=>{const g=p.game,m=p.market,x=p.model;const hp=Number(x.home_win_prob);const home=hp>=.5;const spreadHome=Number(x.home_cover_prob)>=.5;const over=Number(x.over_prob)>=.5;return <article className="panel" key={p.id}><div className="gamehead"><div><div className="team"><img src={g.away.logo||''}/>{g.away.abbr}</div><div className="team"><img src={g.home.logo||''}/>{g.home.abbr}</div></div><div className="score">{Number(x.pred_away).toFixed(1)}<br/>{Number(x.pred_home).toFixed(1)}</div></div><div className="markets"><div className="market"><span className="muted">MONEYLINE</span><br/><strong>{home?g.home.abbr:g.away.abbr}</strong><br/>{pct(home?hp:1-hp)}</div><div className="market"><span className="muted">SPREAD</span><br/><strong>{spreadHome?g.home.abbr:g.away.abbr}</strong><br/>{pct(spreadHome?x.home_cover_prob:1-Number(x.home_cover_prob))}</div><div className="market"><span className="muted">TOTAL</span><br/><strong>{over?'OVER':'UNDER'} {m.total}</strong><br/>{pct(over?x.over_prob:1-Number(x.over_prob))}</div></div><p className="muted">{m.provider||'ESPN'} • Spread {m.spread??'N/A'} • Total {m.total??'N/A'}</p></article>})}</div></main>}
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { currentUser } from "@/lib/auth";
+
+type AnyObj = Record<string, any>;
+
+type Pred = {
+  id: string;
+  season: number;
+  week: number;
+  event_id: string;
+  game: AnyObj;
+  market: AnyObj;
+  model: AnyObj;
+  model_version: string;
+  prediction_run_at: string;
+  locked_at: string;
+};
+
+function pct(v: any) {
+  const n = Number(v);
+  return Number.isFinite(n) ? `${(n * 100).toFixed(1)}%` : "—";
+}
+
+function num(v: any, digits = 1) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n.toFixed(digits) : "—";
+}
+
+function signed(v: any, digits = 1) {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return "—";
+  return `${n > 0 ? "+" : ""}${n.toFixed(digits)}`;
+}
+
+function american(v: any) {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return "—";
+  return n > 0 ? `+${n}` : `${n}`;
+}
+
+function dateLabel(v?: string) {
+  if (!v) return "Schedule pending";
+
+  try {
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone: "America/Chicago",
+      timeZoneName: "short",
+    }).format(new Date(v));
+  } catch {
+    return v;
+  }
+}
+
+function confidenceClass(rank: number) {
+  if (rank === 0) return "pick pickBest";
+  if (rank === 1) return "pick pickSecond";
+  return "pick pickThird";
+}
+
+export default async function Page() {
+  const user = await currentUser();
+  if (!user) redirect("/auth/login");
+
+  const s = await createClient();
+
+  const { data: perf } = await s
+    .from("model_performance_season")
+    .select("*")
+    .order("season", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const { data: latest } = await s
+    .from("predictions")
+    .select("season,week")
+    .order("season", { ascending: false })
+    .order("week", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  let preds: Pred[] = [];
+
+  if (latest) {
+    const { data } = await s
+      .from("predictions")
+      .select("*")
+      .eq("season", latest.season)
+      .eq("week", latest.week)
+      .order("locked_at");
+
+    preds = (data || []) as Pred[];
+  }
+
+  const modelVersion =
+    preds[0]?.model_version || "v2.0.0";
+
+  const simulationCount =
+    preds[0]?.model?.simulations || 50000;
+
+  return (
+    <main className="dashboard">
+      <section className="hero">
+        <div>
+          <div className="eyebrow">
+            NFL QUANTITATIVE ENGINE
+          </div>
+
+          <h1>
+            {latest
+              ? `${latest.season} · Week ${latest.week}`
+              : "NFL Quant Model"}
+          </h1>
+
+          <p className="heroText">
+            Market-anchored football modeling, contextual
+            adjustments and Monte Carlo simulation.
+          </p>
+        </div>
+
+        <div className="heroStatus">
+          <div className="statusDot" />
+          <div>
+            <strong>
+              {latest
+                ? "Predictions Locked"
+                : "Awaiting First Official Run"}
+            </strong>
+            <span>
+              {simulationCount.toLocaleString()} simulations/game
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section className="performance">
+        <div className="metric">
+          <span>ML ACCURACY</span>
+          <b>{pct(perf?.ml_accuracy)}</b>
+          <small>Season</small>
+        </div>
+
+        <div className="metric">
+          <span>ATS ACCURACY</span>
+          <b>{pct(perf?.spread_accuracy)}</b>
+          <small>Spread</small>
+        </div>
+
+        <div className="metric">
+          <span>TOTAL ACCURACY</span>
+          <b>{pct(perf?.total_accuracy)}</b>
+          <small>O/U</small>
+        </div>
+
+        <div className="metric">
+          <span>#1 PICK</span>
+          <b>{pct(perf?.top_pick_accuracy)}</b>
+          <small>Highest confidence</small>
+        </div>
+
+        <div className="metric">
+          <span>SCORE MAE</span>
+          <b>{num(perf?.score_mae)}</b>
+          <small>Points</small>
+        </div>
+
+        <div className="metric">
+          <span>MODEL</span>
+          <b>{modelVersion}</b>
+          <small>Frozen architecture</small>
+        </div>
+      </section>
+
+      <section className="sectionBar">
+        <div>
+          <span className="sectionKicker">
+            WEEKLY BOARD
+          </span>
+          <h2>
+            {latest
+              ? `${preds.length} Locked Games`
+              : "No locked predictions yet"}
+          </h2>
+        </div>
+
+        <div className="legend">
+          <span>
+            <i className="legendBest" />
+            Highest
+          </span>
+          <span>
+            <i className="legendSecond" />
+            Second
+          </span>
+          <span>
+            <i className="legendThird" />
+            Third
+          </span>
+        </div>
+      </section>
+
+      {!preds.length && (
+        <section className="emptyState panel">
+          <div className="lockIcon">🔒</div>
+          <h2>Production pipeline ready</h2>
+          <p>
+            The dashboard will populate automatically after
+            the first official weekly model run.
+          </p>
+        </section>
+      )}
+
+      <section className="games">
+        {preds.map((p) => {
+          const g = p.game || {};
+          const m = p.market || {};
+          const x = p.model || {};
+
+          const hp = Number(x.home_win_prob);
+          const ap = Number(x.away_win_prob);
+
+          const homeML = hp >= ap;
+          const mlProb = homeML ? hp : ap;
+          const mlTeam = homeML
+            ? g.home?.abbr
+            : g.away?.abbr;
+
+          const fairHome =
+            Number(x.market_fair_home_prob);
+          const fairAway =
+            Number(x.market_fair_away_prob);
+
+          const mlEdge = homeML
+            ? hp - fairHome
+            : ap - fairAway;
+
+          const hc = Number(x.home_cover_prob);
+          const ac = Number(x.away_cover_prob);
+          const spreadHome = hc >= ac;
+          const spreadProb = spreadHome ? hc : ac;
+          const spreadTeam = spreadHome
+            ? g.home?.abbr
+            : g.away?.abbr;
+
+          const overProb = Number(x.over_prob);
+          const underProb = Number(x.under_prob);
+          const isOver = overProb >= underProb;
+          const totalProb = isOver
+            ? overProb
+            : underProb;
+
+          const marketMargin =
+            Number(x.market_margin);
+          const modelMargin =
+            Number(x.model_margin);
+
+          const spreadEdge = spreadHome
+            ? modelMargin - marketMargin
+            : marketMargin - modelMargin;
+
+          const marketTotal =
+            Number(x.market_total ?? m.total);
+          const modelTotal =
+            Number(x.model_total);
+
+          const totalEdge = isOver
+            ? modelTotal - marketTotal
+            : marketTotal - modelTotal;
+
+          const picks = [
+            {
+              key: "ml",
+              label: "MONEYLINE",
+              selection: mlTeam || "—",
+              probability: mlProb,
+              edge: mlEdge,
+              market: homeML
+                ? american(m.home_ml)
+                : american(m.away_ml),
+            },
+            {
+              key: "spread",
+              label: "SPREAD",
+              selection: spreadTeam || "—",
+              probability: spreadProb,
+              edge: spreadEdge,
+              market:
+                Number.isFinite(Number(m.spread))
+                  ? signed(m.spread)
+                  : "—",
+            },
+            {
+              key: "total",
+              label: "TOTAL",
+              selection: `${isOver ? "OVER" : "UNDER"} ${
+                Number.isFinite(marketTotal)
+                  ? marketTotal.toFixed(1)
+                  : "—"
+              }`,
+              probability: totalProb,
+              edge: totalEdge,
+              market:
+                Number.isFinite(marketTotal)
+                  ? marketTotal.toFixed(1)
+                  : "—",
+            },
+          ].sort(
+            (a, b) =>
+              Number(b.probability) -
+              Number(a.probability)
+          );
+
+          return (
+            <article className="gameCard" key={p.id}>
+              <header className="gameTop">
+                <div>
+                  <span className="gameTime">
+                    {dateLabel(g.date)}
+                  </span>
+                  <span className="book">
+                    {m.provider || "ESPN"}
+                  </span>
+                </div>
+
+                <span className="locked">
+                  🔒 LOCKED
+                </span>
+              </header>
+
+              <div className="matchup">
+                <div className="teamBlock">
+                  <img
+                    src={g.away?.logo || ""}
+                    alt=""
+                  />
+                  <div>
+                    <strong>
+                      {g.away?.abbr || "AWAY"}
+                    </strong>
+                    <span>
+                      {g.away?.name || ""}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="projection">
+                  <span>MODEL SCORE</span>
+                  <div>
+                    <b>{num(x.pred_away)}</b>
+                    <em>—</em>
+                    <b>{num(x.pred_home)}</b>
+                  </div>
+                </div>
+
+                <div className="teamBlock teamHome">
+                  <div>
+                    <strong>
+                      {g.home?.abbr || "HOME"}
+                    </strong>
+                    <span>
+                      {g.home?.name || ""}
+                    </span>
+                  </div>
+                  <img
+                    src={g.home?.logo || ""}
+                    alt=""
+                  />
+                </div>
+              </div>
+
+              <div className="modelStrip">
+                <div>
+                  <span>MODEL MARGIN</span>
+                  <strong>
+                    {signed(x.model_margin)}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>MARKET MARGIN</span>
+                  <strong>
+                    {signed(x.market_margin)}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>MODEL TOTAL</span>
+                  <strong>
+                    {num(x.model_total)}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>MARKET TOTAL</span>
+                  <strong>
+                    {num(x.market_total ?? m.total)}
+                  </strong>
+                </div>
+              </div>
+
+              <div className="picks">
+                {picks.map((pick, rank) => (
+                  <div
+                    className={confidenceClass(rank)}
+                    key={pick.key}
+                  >
+                    <div className="pickHead">
+                      <span>{pick.label}</span>
+                      <b>#{rank + 1}</b>
+                    </div>
+
+                    <strong className="selection">
+                      {pick.selection}
+                    </strong>
+
+                    <div className="pickStats">
+                      <div>
+                        <span>Probability</span>
+                        <b>
+                          {pct(pick.probability)}
+                        </b>
+                      </div>
+
+                      <div>
+                        <span>
+                          {pick.key === "ml"
+                            ? "Prob. Edge"
+                            : "Point Edge"}
+                        </span>
+                        <b>
+                          {pick.key === "ml"
+                            ? pct(pick.edge)
+                            : signed(pick.edge)}
+                        </b>
+                      </div>
+
+                      <div>
+                        <span>Market</span>
+                        <b>{pick.market}</b>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <footer className="gameFooter">
+                <span>
+                  Injury adj{" "}
+                  {signed(
+                    x.injury_margin_adjustment
+                  )}
+                </span>
+
+                <span>
+                  Context{" "}
+                  {signed(
+                    x.context_margin_adjustment
+                  )}
+                </span>
+
+                <span>
+                  Weather{" "}
+                  {signed(
+                    x.weather_total_adjustment
+                  )}
+                </span>
+
+                <span>
+                  {Number(
+                    x.simulations || simulationCount
+                  ).toLocaleString()}{" "}
+                  sims
+                </span>
+              </footer>
+            </article>
+          );
+        })}
+      </section>
+
+      <footer className="modelDisclosure">
+        <strong>NFL Quant Model {modelVersion}</strong>
+        <span>
+          Predictions are generated and locked before the
+          weekly slate. Probabilities are model estimates,
+          not guarantees. Model edge compares the model with
+          the captured sportsbook market.
+        </span>
+      </footer>
+    </main>
+  );
+}
