@@ -1,0 +1,64 @@
+name: Inspect Predictions
+
+on:
+  workflow_dispatch:
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r python/requirements.txt
+
+      - name: Inspect prediction database
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          PYTHONPATH=python python - <<'PY'
+          import os
+          from collections import Counter
+          from supabase import create_client
+
+          db = create_client(
+              os.environ["SUPABASE_URL"],
+              os.environ["SUPABASE_SECRET_KEY"],
+          )
+
+          rows = (
+              db.table("predictions")
+              .select("season,week,event_id,locked_at")
+              .order("season")
+              .order("week")
+              .execute()
+          ).data
+
+          print("=" * 70)
+          print("PREDICTIONS CURRENTLY IN SUPABASE")
+          print("=" * 70)
+          print("Total predictions:", len(rows))
+
+          counts = Counter(
+              (r["season"], r["week"])
+              for r in rows
+          )
+
+          if not counts:
+              print("No predictions currently stored.")
+          else:
+              for (season, week), count in sorted(counts.items()):
+                  print(
+                      f"{season} Week {week}: "
+                      f"{count} locked predictions"
+                  )
+
+          print("=" * 70)
+          print("READ-ONLY DATABASE CHECK COMPLETE")
+          PY
