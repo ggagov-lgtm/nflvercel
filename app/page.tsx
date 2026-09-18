@@ -277,19 +277,19 @@ export default async function Page() {
 
       <section className="performance">
         <div className="metric">
-          <span>ML SUCCESS</span>
+          <span>WINNER PREDICTION SUCCESS</span>
           <b>{pct(completedPerformance.mlRate)}</b>
           <small>{completedPerformance.mlWins}–{completedPerformance.mlLosses} · {completedPerformance.finals} Final{completedPerformance.finals === 1 ? "" : "s"}</small>
         </div>
 
         <div className="metric">
-          <span>ATS SUCCESS</span>
+          <span>POINT SPREAD SUCCESS</span>
           <b>{pct(completedPerformance.spreadRate)}</b>
           <small>{completedPerformance.spreadWins}–{completedPerformance.spreadLosses} · Completed only</small>
         </div>
 
         <div className="metric">
-          <span>TOTAL SUCCESS</span>
+          <span>OVER / UNDER SUCCESS</span>
           <b>{pct(completedPerformance.totalRate)}</b>
           <small>{completedPerformance.totalWins}–{completedPerformance.totalLosses} · Completed only</small>
         </div>
@@ -301,7 +301,7 @@ export default async function Page() {
         </div>
 
         <div className="metric">
-          <span>SCORE MAE</span>
+          <span>AVERAGE SCORE ERROR</span>
           <b>{num(completedPerformance.scoreMae)}</b>
           <small>{completedPerformance.finals} completed game{completedPerformance.finals === 1 ? "" : "s"}</small>
         </div>
@@ -572,28 +572,28 @@ export default async function Page() {
 
               <div className="modelStrip">
                 <div>
-                  <span>MODEL MARGIN</span>
+                  <span>MODEL POINT DIFFERENCE</span>
                   <strong>
                     {signed(x.model_margin)}
                   </strong>
                 </div>
 
                 <div>
-                  <span>MARKET MARGIN</span>
+                  <span>SPORTSBOOK POINT DIFFERENCE</span>
                   <strong>
                     {signed(x.market_margin)}
                   </strong>
                 </div>
 
                 <div>
-                  <span>MODEL TOTAL</span>
+                  <span>MODEL TOTAL POINTS</span>
                   <strong>
                     {num(x.model_total)}
                   </strong>
                 </div>
 
                 <div>
-                  <span>MARKET TOTAL</span>
+                  <span>SPORTSBOOK TOTAL POINTS</span>
                   <strong>
                     {num(x.market_total ?? m.total)}
                   </strong>
@@ -677,7 +677,7 @@ export default async function Page() {
                   {Number(
                     x.simulations || simulationCount
                   ).toLocaleString()}{" "}
-                  sims
+                  simulations
                 </span>
               </footer>
             </article>
