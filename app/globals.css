@@ -573,3 +573,22 @@
 .noTopPicks{padding:18px 4px;color:var(--muted);font-size:11px}
 @media(max-width:1200px){.topPicksGrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){.topPicksGrid{grid-template-columns:1fr}.topPicksTitle{display:block}.topPicksTitle small{display:block;margin-top:6px}}
+
+
+/* Segmented weekly progress */
+.weekProgress{margin:12px 0 14px;padding:10px 12px;background:#091522;border:1px solid var(--line);border-radius:10px}
+.weekProgressHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+.weekProgressHead strong{font-size:10px;letter-spacing:.1em}
+.weekProgressHead span{color:var(--muted);font-size:10px}
+.weekSegments{display:grid;grid-template-columns:repeat(16,minmax(5px,1fr));gap:4px}
+.weekSegment{height:8px;border-radius:3px;border:1px solid #344256;background:transparent}
+.segmentFinal{background:var(--green);border-color:var(--green)}
+.segmentLive{background:#7d8793;border-color:#a0a8b2}
+.segmentUpcoming{background:transparent;border-color:#344256}
+.weekProgressLegend{display:flex;gap:14px;flex-wrap:wrap;margin-top:7px;color:var(--muted);font-size:9px}
+.weekProgressLegend span{display:flex;align-items:center;gap:5px}
+.weekProgressLegend i{width:7px;height:7px;border-radius:2px;display:inline-block}
+.progressFinalDot{background:var(--green)}
+.progressLiveDot{background:#7d8793}
+.progressUpcomingDot{border:1px solid #536176;background:transparent}
+@media(max-width:700px){.weekSegments{gap:2px}.weekProgressLegend{gap:9px}}
