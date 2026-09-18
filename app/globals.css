@@ -778,3 +778,10 @@
 .pickComparison small{font-size:7px;font-weight:900;letter-spacing:.08em;color:#71869a}
 .pickComparison b{margin:0;font-size:10px;color:#dce8f3;text-align:right}
 .analysisPick .pickOutcome{margin-top:7px;font-weight:900}
+
+/* Compact typography inside expanded prediction recommendation boxes */
+.analysisPick>span{font-size:8px}
+.analysisPick>strong{font-size:13px;line-height:1.2}
+.pickComparison{margin-top:5px;padding-top:4px}
+.pickComparison small{font-size:6px}
+.pickComparison b{font-size:8px;line-height:1.1}
