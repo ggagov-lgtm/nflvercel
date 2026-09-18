@@ -1,0 +1,61 @@
+name: Test NFL Settlement
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r python/requirements.txt
+
+      - name: Test Week 2 settlement
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          PYTHONPATH=python python - <<'PY'
+          import os
+          from supabase import create_client
+
+          from src.espn import scoreboard, parse_games
+          from src.settlement import settle_week
+
+          season = 2026
+          week = 2
+
+          db = create_client(
+              os.environ["SUPABASE_URL"],
+              os.environ["SUPABASE_SECRET_KEY"],
+          )
+
+          games = parse_games(
+              scoreboard(season, week)
+          )
+
+          result = settle_week(
+              db=db,
+              season=season,
+              week=week,
+              games=games,
+              dry_run=True,
+          )
+
+          print()
+          print("Settlement result:")
+          print(result)
+
+          assert result["status"] == "NO_PREDICTIONS"
+          assert result["games"] == 0
+
+          print()
+          print("WEEK 2 SETTLEMENT SAFETY TEST: PASS")
+          PY
