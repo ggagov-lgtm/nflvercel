@@ -753,11 +753,16 @@ export default async function Page() {
                     <div className="analysisScore"><b>{g.away?.abbr} {num(x.pred_away)}</b><em>—</em><b>{g.home?.abbr} {num(x.pred_home)}</b></div>
                     <div className="analysisPicks">
                       {picks.map((pick,rank)=>{
-                        const modelRecommendation = pick.key === "ml"
-                          ? `${pick.selection} WIN`
+                        const modelLine = pick.key === "ml"
+                          ? `${pick.selection} ${pick.market}`
                           : pick.key === "spread"
-                            ? `TAKE ${pick.selection} (Model ${signed(spreadHome ? -modelMargin : modelMargin)})`
-                            : `TAKE ${isOver ? "OVER" : "UNDER"} (Model ${num(modelTotal)})`;
+                            ? signed(spreadHome ? -modelMargin : modelMargin)
+                            : num(modelTotal);
+                        const modelRecommendation = pick.key === "ml"
+                          ? `${pick.selection} WIN (Model ${pct(pick.probability)})`
+                          : pick.key === "spread"
+                            ? `TAKE ${pick.selection} (Model ${pct(pick.probability)})`
+                            : `TAKE ${isOver ? "OVER" : "UNDER"} (Model ${pct(pick.probability)})`;
                         const sportsbookLine = pick.key === "ml"
                           ? `${pick.selection} ${pick.market}`
                           : pick.key === "spread"
@@ -766,7 +771,7 @@ export default async function Page() {
                         return <div key={pick.key} className={`analysisPick ${rank===0?"analysisPickBest":rank===1?"analysisPickSecond":"analysisPickThird"} ${resultClass(pick.result)}`}>
                           <span>{pick.label}</span>
                           <strong>{modelRecommendation}</strong>
-                          <div className="pickComparison"><small>MODEL</small><b>{pct(pick.probability)}</b></div>
+                          <div className="pickComparison"><small>MODEL</small><b>{modelLine}</b></div>
                           <div className="pickComparison"><small>SPORTSBOOK</small><b>{sportsbookLine}</b></div>
                           {isFinal&&pick.result?<small className="pickOutcome">{resultLabel(pick.result)}</small>:null}
                         </div>
