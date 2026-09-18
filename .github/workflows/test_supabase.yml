@@ -1,0 +1,92 @@
+name: Test Supabase Connection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Safe Supabase diagnostic
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          python - <<'PY'
+          import os
+          import urllib.request
+          import urllib.error
+
+          url = os.environ.get("SUPABASE_URL", "").strip()
+          key = os.environ.get("SUPABASE_SECRET_KEY", "").strip()
+
+          print("=" * 60)
+          print("SUPABASE CONNECTION DIAGNOSTIC")
+          print("=" * 60)
+
+          print("URL configured:", bool(url))
+          print("Key configured:", bool(key))
+          print("URL starts https://:", url.startswith("https://"))
+          print("URL ends supabase.co:", url.rstrip("/").endswith("supabase.co"))
+
+          if key.startswith("sb_secret_"):
+              key_type = "sb_secret"
+          elif key.startswith("eyJ"):
+              key_type = "legacy JWT"
+          else:
+              key_type = "UNKNOWN"
+
+          print("Key type:", key_type)
+          print("Key length:", len(key))
+
+          if not url:
+              raise SystemExit("FAIL: SUPABASE_URL is empty")
+
+          if not key:
+              raise SystemExit("FAIL: SUPABASE_SECRET_KEY is empty")
+
+          endpoint = url.rstrip("/") + "/rest/v1/"
+
+          req = urllib.request.Request(
+              endpoint,
+              headers={
+                  "apikey": key,
+                  "Authorization": f"Bearer {key}",
+              },
+          )
+
+          try:
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  print("HTTP status:", response.status)
+                  print("SUCCESS: Supabase accepted the credentials.")
+
+          except urllib.error.HTTPError as e:
+              print("HTTP status:", e.code)
+
+              body = e.read().decode(
+                  "utf-8",
+                  errors="replace",
+              )
+
+              # Supabase error response is safe to display;
+              # never print URL/key themselves.
+              print("Response:", body[:1000])
+              raise SystemExit(
+                  "FAIL: Supabase rejected the credentials."
+              )
+
+          except Exception as e:
+              print(
+                  "Connection error:",
+                  type(e).__name__,
+                  str(e),
+              )
+              raise
+          PY
