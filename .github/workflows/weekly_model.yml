@@ -13,12 +13,14 @@ on:
         default: '2'
 
   # GitHub schedules are UTC.
-  # 05:00 UTC = midnight Central during CDT.
-  # 06:00 UTC = midnight Central during CST.
+  # 05:00-05:40 UTC = midnight hour Central during CDT.
+  # 06:00-06:40 UTC = midnight hour Central during CST.
   # The timezone gate below determines which invocation proceeds.
   schedule:
-    - cron: '0 5 * * 2'
-    - cron: '0 6 * * 2'
+    # Three attempts during the midnight Central hour.
+    # The Chicago timezone gate rejects the DST-inapplicable UTC hour.
+    - cron: '0,20,40 5 * * 2'
+    - cron: '0,20,40 6 * * 2'
 
 jobs:
   model:
