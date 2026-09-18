@@ -119,13 +119,6 @@ export default async function Page() {
 
   const s = await createClient();
 
-  const { data: perf } = await s
-    .from("model_performance_season")
-    .select("*")
-    .order("season", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
   const { data: latest } = await s
     .from("predictions")
     .select("season,week")
@@ -156,6 +149,88 @@ export default async function Page() {
   const gameStates = displayLatest
     ? await getEspnGameStates(displayLatest.season, displayLatest.week)
     : new Map<string, LiveGame>();
+
+  const completedPerformance = (() => {
+    let finals = 0;
+    let mlWins = 0, mlLosses = 0;
+    let spreadWins = 0, spreadLosses = 0;
+    let totalWins = 0, totalLosses = 0;
+    let topWins = 0, topLosses = 0;
+    let scoreError = 0;
+    let scoreGames = 0;
+
+    for (const p of preds) {
+      const live = gameStates.get(String(p.event_id));
+      if (live?.state !== "post" || live.homeScore == null || live.awayScore == null) continue;
+
+      finals += 1;
+      const x = p.model || {};
+      const m = p.market || {};
+      const finalMargin = live.homeScore - live.awayScore;
+      const finalTotal = live.homeScore + live.awayScore;
+
+      const hp = Number(x.home_win_prob);
+      const ap = Number(x.away_win_prob);
+      const homeML = hp >= ap;
+      const mlProb = homeML ? hp : ap;
+      const actualHomeWin = finalMargin > 0;
+      const mlResult = finalMargin === 0 ? "PUSH" : actualHomeWin === homeML ? "WIN" : "LOSS";
+      if (mlResult === "WIN") mlWins += 1;
+      if (mlResult === "LOSS") mlLosses += 1;
+
+      const hc = Number(x.home_cover_prob);
+      const ac = Number(x.away_cover_prob);
+      const spreadHome = hc >= ac;
+      const spreadProb = spreadHome ? hc : ac;
+      const marketMargin = Number(x.market_margin);
+      let spreadResult: string | undefined;
+      if (Number.isFinite(marketMargin)) {
+        const diff = finalMargin - marketMargin;
+        spreadResult = diff === 0 ? "PUSH" : (spreadHome ? diff > 0 : diff < 0) ? "WIN" : "LOSS";
+        if (spreadResult === "WIN") spreadWins += 1;
+        if (spreadResult === "LOSS") spreadLosses += 1;
+      }
+
+      const overProb = Number(x.over_prob);
+      const underProb = Number(x.under_prob);
+      const isOver = overProb >= underProb;
+      const totalProb = isOver ? overProb : underProb;
+      const marketTotal = Number(x.market_total ?? m.total);
+      let totalResult: string | undefined;
+      if (Number.isFinite(marketTotal)) {
+        totalResult = finalTotal === marketTotal ? "PUSH" : (isOver ? finalTotal > marketTotal : finalTotal < marketTotal) ? "WIN" : "LOSS";
+        if (totalResult === "WIN") totalWins += 1;
+        if (totalResult === "LOSS") totalLosses += 1;
+      }
+
+      const ranked = [
+        { probability: mlProb, result: mlResult },
+        { probability: spreadProb, result: spreadResult },
+        { probability: totalProb, result: totalResult },
+      ].sort((a, b) => Number(b.probability) - Number(a.probability));
+      if (ranked[0]?.result === "WIN") topWins += 1;
+      if (ranked[0]?.result === "LOSS") topLosses += 1;
+
+      const predHome = Number(x.pred_home);
+      const predAway = Number(x.pred_away);
+      if (Number.isFinite(predHome) && Number.isFinite(predAway)) {
+        scoreError += (Math.abs(predHome - live.homeScore) + Math.abs(predAway - live.awayScore)) / 2;
+        scoreGames += 1;
+      }
+    }
+
+    const rate = (wins: number, losses: number) =>
+      wins + losses ? wins / (wins + losses) : null;
+
+    return {
+      finals,
+      mlWins, mlLosses, mlRate: rate(mlWins, mlLosses),
+      spreadWins, spreadLosses, spreadRate: rate(spreadWins, spreadLosses),
+      totalWins, totalLosses, totalRate: rate(totalWins, totalLosses),
+      topWins, topLosses, topRate: rate(topWins, topLosses),
+      scoreMae: scoreGames ? scoreError / scoreGames : null,
+    };
+  })();
 
   const modelVersion =
     preds[0]?.model_version || "v2.0.0";
@@ -202,39 +277,39 @@ export default async function Page() {
 
       <section className="performance">
         <div className="metric">
-          <span>ML ACCURACY</span>
-          <b>{pct(perf?.ml_accuracy)}</b>
-          <small>Season</small>
+          <span>ML SUCCESS</span>
+          <b>{pct(completedPerformance.mlRate)}</b>
+          <small>{completedPerformance.mlWins}–{completedPerformance.mlLosses} · {completedPerformance.finals} Final{completedPerformance.finals === 1 ? "" : "s"}</small>
         </div>
 
         <div className="metric">
-          <span>ATS ACCURACY</span>
-          <b>{pct(perf?.spread_accuracy)}</b>
-          <small>Spread</small>
+          <span>ATS SUCCESS</span>
+          <b>{pct(completedPerformance.spreadRate)}</b>
+          <small>{completedPerformance.spreadWins}–{completedPerformance.spreadLosses} · Completed only</small>
         </div>
 
         <div className="metric">
-          <span>TOTAL ACCURACY</span>
-          <b>{pct(perf?.total_accuracy)}</b>
-          <small>O/U</small>
+          <span>TOTAL SUCCESS</span>
+          <b>{pct(completedPerformance.totalRate)}</b>
+          <small>{completedPerformance.totalWins}–{completedPerformance.totalLosses} · Completed only</small>
         </div>
 
         <div className="metric">
-          <span>#1 PICK</span>
-          <b>{pct(perf?.top_pick_accuracy)}</b>
-          <small>Highest confidence</small>
+          <span>#1 PICK SUCCESS</span>
+          <b>{pct(completedPerformance.topRate)}</b>
+          <small>{completedPerformance.topWins}–{completedPerformance.topLosses} · Highest confidence</small>
         </div>
 
         <div className="metric">
           <span>SCORE MAE</span>
-          <b>{num(perf?.score_mae)}</b>
-          <small>Points</small>
+          <b>{num(completedPerformance.scoreMae)}</b>
+          <small>{completedPerformance.finals} completed game{completedPerformance.finals === 1 ? "" : "s"}</small>
         </div>
 
         <div className="metric">
           <span>MODEL</span>
           <b>{modelVersion}</b>
-          <small>Frozen architecture</small>
+          <small>Live week performance</small>
         </div>
       </section>
 
