@@ -160,3 +160,110 @@ jobs:
               print("Message:", str(e))
               raise
           PY
+
+      - name: Test Supabase write read delete
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          pip install -r python/requirements.txt
+
+          python - <<'PY'
+          import os
+          import uuid
+          from supabase import create_client
+
+          print("=" * 60)
+          print("SUPABASE WRITE / READ / DELETE TEST")
+          print("=" * 60)
+
+          db = create_client(
+              os.environ["SUPABASE_URL"].strip(),
+              os.environ["SUPABASE_SECRET_KEY"].strip(),
+          )
+
+          test_service = (
+              "github_connection_test_"
+              + uuid.uuid4().hex
+          )
+
+          # -----------------------------------------------
+          # INSERT
+          # -----------------------------------------------
+
+          inserted = (
+              db.table("system_health")
+              .insert({
+                  "service": test_service,
+                  "status": "TEST",
+                  "message":
+                      "Temporary GitHub Actions connection test",
+                  "response_ms": 0,
+              })
+              .execute()
+          )
+
+          assert inserted.data, "INSERT returned no data"
+
+          row = inserted.data[0]
+          row_id = row["id"]
+
+          print("INSERT: PASS")
+          print("Temporary row ID:", row_id)
+
+          # -----------------------------------------------
+          # READ
+          # -----------------------------------------------
+
+          fetched = (
+              db.table("system_health")
+              .select("*")
+              .eq("id", row_id)
+              .execute()
+          )
+
+          assert len(fetched.data) == 1, (
+              "READ did not return exactly one row"
+          )
+
+          assert (
+              fetched.data[0]["service"]
+              == test_service
+          )
+
+          print("READ: PASS")
+
+          # -----------------------------------------------
+          # DELETE
+          # -----------------------------------------------
+
+          db.table("system_health") \
+              .delete() \
+              .eq("id", row_id) \
+              .execute()
+
+          print("DELETE: PASS")
+
+          # -----------------------------------------------
+          # VERIFY DELETION
+          # -----------------------------------------------
+
+          verify = (
+              db.table("system_health")
+              .select("id")
+              .eq("id", row_id)
+              .execute()
+          )
+
+          assert len(verify.data) == 0, (
+              "Temporary row still exists after DELETE"
+          )
+
+          print("DELETE VERIFICATION: PASS")
+
+          print("=" * 60)
+          print("SUCCESS: SUPABASE READ/WRITE ACCESS VERIFIED")
+          print("Temporary test row removed.")
+          print("NFL predictions table was NOT touched.")
+          print("=" * 60)
+          PY
