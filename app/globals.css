@@ -789,3 +789,10 @@
 .recommendationLine{display:flex;align-items:center;gap:6px}
 .recommendationLine>strong{font-size:13px;line-height:1.2}
 .probInfo{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid #7890a3;border-radius:50%;font-size:9px;font-weight:900;font-style:normal;color:#a9bac8;cursor:help;flex:0 0 14px}
+
+.authPasswordRow{display:flex;justify-content:flex-end;margin:-7px 0 14px;font-size:12px}
+.authPasswordRow a,.auth a{color:#8fc9ff;text-decoration:none}
+.authPasswordRow a:hover,.auth a:hover{text-decoration:underline}
+.authSuccess,.authError{padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.45}
+.authSuccess{background:#35d07f14;border:1px solid #35d07f55;color:#9ee5be}
+.authError{background:#ff6b6b12;border:1px solid #ff6b6b55;color:#ffaaaa}
