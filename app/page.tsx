@@ -428,7 +428,7 @@ export default async function Page() {
         <div className="summaryGrid">
           <div className="summaryPrimary summaryPrimaryThree">
             <div className="summaryPanel">
-              <div className="summaryLabel">TOP GUESS SUCCESS<button type="button" className="infoTip" aria-label="Explain top guess success" data-tip="How often the model’s single highest-probability prediction for each completed game was correct.">i</button></div>
+              <div className="summaryLabel">TOP PICK<button type="button" className="infoTip" aria-label="Explain top guess success" data-tip="How often the model’s single highest-probability prediction for each completed game was correct.">i</button></div>
               <div className="donutWrap">
                 <div className={`donut ${!weeklyNumberOneResult ? "donutPending" : weeklyNumberOneResult === "LOSS" ? "donutLoss" : ""}`} style={{"--value": weeklyNumberOneResult ? "100%" : "0%"} as React.CSSProperties}>
                   <div>
@@ -440,7 +440,7 @@ export default async function Page() {
             </div>
 
             <div className="summaryPanel">
-              <div className="summaryLabel">TOP PREDICTION SUCCESS — SEASON<button type="button" className="infoTip" aria-label="Explain season top prediction percentage" data-tip="Success rate of the model’s #1 prediction using completed games only for the season.">i</button></div>
+              <div className="summaryLabel">SEASON SUCCESS<button type="button" className="infoTip" aria-label="Explain season top prediction percentage" data-tip="Success rate of the model’s #1 prediction using completed games only for the season.">i</button></div>
               <div className="donutWrap">
                 <div className={`donut donutBlue ${seasonTopPerformance.games === 0 ? "donutPending" : ""}`} style={{"--value": seasonTopPerformance.games ? `${Math.max(0, Math.min(100, Number(seasonTopPerformance.rate || 0) * 100))}%` : "0%"} as React.CSSProperties}>
                   <div><b>{seasonTopPerformance.games ? pct(seasonTopPerformance.rate) : "N/A"}</b><span>{seasonTopPerformance.games ? `${seasonTopPerformance.wins} of ${seasonTopPerformance.games} correct` : "No completed games"}</span></div>
@@ -449,7 +449,7 @@ export default async function Page() {
             </div>
 
             <div className="summaryPanel">
-              <div className="summaryLabel">TOP PREDICTION SUCCESS — THIS WEEK<button type="button" className="infoTip" aria-label="Explain weekly top prediction percentage" data-tip="Success rate of the model’s #1 prediction using completed games only for the displayed week.">i</button></div>
+              <div className="summaryLabel">WEEK SUCCESS<button type="button" className="infoTip" aria-label="Explain weekly top prediction percentage" data-tip="Success rate of the model’s #1 prediction using completed games only for the displayed week.">i</button></div>
               <div className="donutWrap">
                 <div className={`donut donutPurple ${completedPerformance.topWins + completedPerformance.topLosses === 0 ? "donutPending" : ""}`} style={{"--value": completedPerformance.topWins + completedPerformance.topLosses ? `${Math.max(0, Math.min(100, Number(completedPerformance.topRate || 0) * 100))}%` : "0%"} as React.CSSProperties}>
                   <div><b>{completedPerformance.topWins + completedPerformance.topLosses ? pct(completedPerformance.topRate) : "N/A"}</b><span>{completedPerformance.topWins + completedPerformance.topLosses ? `${completedPerformance.topWins} of ${completedPerformance.topWins + completedPerformance.topLosses} correct` : "No completed games"}</span></div>
