@@ -761,8 +761,8 @@ export default async function Page() {
                         const modelRecommendation = pick.key === "ml"
                           ? `${pick.selection} WIN (${pct(pick.probability)})`
                           : pick.key === "spread"
-                            ? `TAKE ${pick.selection} (${pct(pick.probability)})`
-                            : `TAKE ${isOver ? "OVER" : "UNDER"} (${pct(pick.probability)})`;
+                            ? `${pick.selection} ${signed(spreadHome ? -modelMargin : modelMargin)} (${pct(pick.probability)})`
+                            : `${isOver ? "OVER" : "UNDER"} ${num(modelTotal)} (${pct(pick.probability)})`;
                         const sportsbookLine = pick.key === "ml"
                           ? `${pick.selection} ${pick.market}`
                           : pick.key === "spread"
