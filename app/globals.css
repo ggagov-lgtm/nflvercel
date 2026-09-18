@@ -482,3 +482,63 @@
     margin-top:5px
   }
 }
+
+
+/* Game lifecycle */
+.gameFinal{
+  opacity:.72;
+  filter:saturate(.72);
+  background:linear-gradient(180deg,#151d26 0%,#0d141c 100%);
+}
+.gameFinal:hover{opacity:.92}
+.gameLive{
+  border-color:#ff6b6b;
+  box-shadow:0 0 0 1px #ff6b6b55,0 12px 35px #0005;
+}
+.gameLive .locked{color:var(--red)}
+.upcomingModelScore b{
+  font-size:34px;
+  line-height:1;
+}
+.actualScore b{
+  font-size:31px;
+  line-height:1;
+}
+.modelWas{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:10px;
+}
+.gameFinal .pick{
+  background:#101820;
+  border-color:#34404d;
+}
+.gameFinal .pick.resultWin{
+  opacity:1;
+  border-color:#35d07f88;
+  background:linear-gradient(180deg,#123426,#0b2018);
+}
+.gameFinal .pick.resultLoss{
+  opacity:1;
+  border-color:#ff6b6b88;
+  background:linear-gradient(180deg,#35191d,#211014);
+}
+.gameFinal .pick.resultPush{
+  opacity:1;
+  border-color:#7d8793;
+  background:#18202a;
+}
+.resultWin .pickHead b,.topPickResult.resultWin{color:var(--green)}
+.resultLoss .pickHead b,.topPickResult.resultLoss{color:var(--red)}
+.resultPush .pickHead b,.topPickResult.resultPush{color:#aab3bd}
+.topPickResult{
+  margin:0 10px 10px;
+  padding:8px 10px;
+  text-align:center;
+  border:1px solid currentColor;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.04em;
+}
