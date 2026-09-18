@@ -394,12 +394,26 @@ def train_models(target_season: int, target_week: int):
         }
     )
 
+    # -----------------------------------------------------
+    # Frozen v2.0.0 feature selection
+    #
+    # The validated v2.0.0 Top-100 football features were
+    # selected using 2022-2024 only, with 2025 held out for
+    # confirmation. Keep that feature-selection population
+    # frozen even though model-fitting observations expand
+    # every week with completed current-season games.
+    # -----------------------------------------------------
+
+    ranking_train = df[
+        df["season"].between(2022, 2024)
+    ].copy()
+
     football_cols = [
         c
-        for c in train.columns
+        for c in ranking_train.columns
         if c not in exclude
         and pd.api.types.is_numeric_dtype(
-            train[c]
+            ranking_train[c]
         )
     ]
 
@@ -408,7 +422,9 @@ def train_models(target_season: int, target_week: int):
     )
 
     X_rank = rank_imputer.fit_transform(
-        train[football_cols].astype(float)
+        ranking_train[
+            football_cols
+        ].astype(float)
     )
 
     ranker = ExtraTreesRegressor(
@@ -421,7 +437,7 @@ def train_models(target_season: int, target_week: int):
 
     ranker.fit(
         X_rank,
-        train["target_margin"],
+        ranking_train["target_margin"],
     )
 
     ranking = pd.Series(
