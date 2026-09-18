@@ -542,3 +542,34 @@
   font-weight:900;
   letter-spacing:.04em;
 }
+
+
+/* Weekly top picks */
+.topPicksSection{margin:4px 0 28px}
+.topPicksTitle{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:12px}
+.topPicksTitle h2{margin:4px 0 0;font-size:21px}
+.topPicksTitle small{color:var(--muted);font-size:10px}
+.topPicksGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.topPicksCard{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:linear-gradient(180deg,#101e30,#0a1522);box-shadow:0 10px 30px #0004}
+.topPicksCard header{padding:13px 14px 10px;border-bottom:1px solid #ffffff12}
+.topPicksCard header strong,.topPicksCard header span{display:block}
+.topPicksCard header strong{font-size:14px}
+.topPicksCard header span{margin-top:3px;color:var(--muted);font-size:9px}
+.topWinner{border-color:#35d07f88;background:linear-gradient(180deg,#0d3329,#0a1718)}
+.topSpread{border-color:#328cff88;background:linear-gradient(180deg,#102c4b,#0a1725)}
+.topTotal{border-color:#a76cff88;background:linear-gradient(180deg,#2a1d48,#121326)}
+.topOverall{border-color:#f5bd5088;background:linear-gradient(180deg,#332d18,#17180f)}
+.topPicksRows{padding:7px 11px 10px}
+.topPickRow{display:grid;grid-template-columns:18px 30px minmax(0,1fr) auto;align-items:center;gap:7px;min-height:49px;border-bottom:1px solid #ffffff10}
+.topPickRow:last-child{border-bottom:0}
+.topPickRow img{width:28px;height:28px;object-fit:contain}
+.topRank{font-size:15px;color:#d7deea}
+.topPickText{min-width:0}
+.topPickText strong,.topPickText span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topPickText strong{font-size:12px}
+.topPickText span{margin-top:3px;color:var(--muted);font-size:8px}
+.topProbability{font-size:14px;color:var(--green)}
+.topOverall .topProbability{color:var(--gold)}
+.noTopPicks{padding:18px 4px;color:var(--muted);font-size:11px}
+@media(max-width:1200px){.topPicksGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.topPicksGrid{grid-template-columns:1fr}.topPicksTitle{display:block}.topPicksTitle small{display:block;margin-top:6px}}
