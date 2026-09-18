@@ -296,6 +296,22 @@ export default async function Page() {
     return { winner: top3(winner), spread: top3(spread), total: top3(total), overall: top3(overall) };
   })();
 
+  const weekProgress = preds
+    .map((p) => {
+      const live = gameStates.get(String(p.event_id));
+      return {
+        eventId: p.event_id,
+        state: live?.state || "pre",
+        date: live?.date || p.game?.date || "",
+        matchup: `${p.game?.away?.abbr || "AWAY"} at ${p.game?.home?.abbr || "HOME"}`,
+      };
+    })
+    .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+
+  const progressFinal = weekProgress.filter((g) => g.state === "post").length;
+  const progressLive = weekProgress.filter((g) => g.state === "in").length;
+  const progressUpcoming = weekProgress.length - progressFinal - progressLive;
+
   const modelVersion =
     preds[0]?.model_version || "v2.0.0";
 
@@ -336,6 +352,27 @@ export default async function Page() {
               {simulationCount.toLocaleString()} simulations/game
             </span>
           </div>
+        </div>
+      </section>
+
+      <section className="weekProgress" aria-label="Week progress">
+        <div className="weekProgressHead">
+          <strong>WEEK {displayLatest?.week || "—"} PROGRESS</strong>
+          <span>{progressFinal} of {weekProgress.length} Final</span>
+        </div>
+        <div className="weekSegments">
+          {weekProgress.map((game) => (
+            <span
+              key={game.eventId}
+              className={`weekSegment ${game.state === "post" ? "segmentFinal" : game.state === "in" ? "segmentLive" : "segmentUpcoming"}`}
+              title={`${game.matchup} · ${game.state === "post" ? "Final" : game.state === "in" ? "In Progress" : "Upcoming"}`}
+            />
+          ))}
+        </div>
+        <div className="weekProgressLegend">
+          <span><i className="progressFinalDot" />{progressFinal} Final</span>
+          <span><i className="progressLiveDot" />{progressLive} In Progress</span>
+          <span><i className="progressUpcomingDot" />{progressUpcoming} Upcoming</span>
         </div>
       </section>
 
