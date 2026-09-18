@@ -125,3 +125,38 @@ jobs:
               print("Message:", str(e))
               raise
           PY
+
+      - name: Test Python Supabase client
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          pip install -r python/requirements.txt
+
+          python - <<'PY'
+          import os
+          import supabase
+          from supabase import create_client
+
+          url = os.environ["SUPABASE_URL"].strip()
+          key = os.environ["SUPABASE_SECRET_KEY"].strip()
+
+          print("=" * 60)
+          print("PYTHON SUPABASE CLIENT TEST")
+          print("=" * 60)
+
+          print("Supabase package version:",
+                getattr(supabase, "__version__", "unknown"))
+          print("Key type:",
+                "sb_secret" if key.startswith("sb_secret_")
+                else "legacy")
+          print("Key length:", len(key))
+
+          try:
+              client = create_client(url, key)
+              print("SUCCESS: Python Supabase client created.")
+          except Exception as e:
+              print("FAILED:", type(e).__name__)
+              print("Message:", str(e))
+              raise
+          PY
