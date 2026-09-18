@@ -733,6 +733,108 @@ def run(season, week, dry_run=False):
             f"{starter_lookup[team]['qb_name']}"
         )
 
+    # ---------------------------------------------------------
+    # Production market preflight
+    #
+    # Official weekly predictions must be complete. Validate
+    # every sportsbook market before writing any prediction.
+    # Cache successful markets so ESPN is not called twice.
+    # ---------------------------------------------------------
+
+    market_cache = {}
+
+    if not dry_run:
+
+        print()
+        print("=" * 78)
+        print("MARKET PREFLIGHT")
+        print("=" * 78)
+
+        missing_markets = []
+
+        for game in games:
+
+            event_id = game["event_id"]
+            away = game["away"]["abbr"]
+            home = game["home"]["abbr"]
+
+            market, market_error = get_market(
+                event_id
+            )
+
+            if market_error:
+
+                missing_markets.append({
+                    "event_id": event_id,
+                    "game": f"{away} @ {home}",
+                    "error": market_error,
+                })
+
+                print(
+                    f"FAIL {away} @ {home}: "
+                    f"{market_error}"
+                )
+
+            else:
+
+                market_cache[event_id] = market
+
+                print(
+                    f"OK   {away} @ {home}"
+                )
+
+        if missing_markets:
+
+            details = "; ".join(
+                f'{x["game"]}: {x["error"]}'
+                for x in missing_markets
+            )
+
+            message = (
+                f"Production market preflight failed: "
+                f"{len(missing_markets)} of "
+                f"{len(games)} games missing "
+                f"complete sportsbook markets. "
+                f"ZERO new predictions written. "
+                f"{details}"
+            )
+
+            print()
+            print(message)
+
+            db.table(
+                "pipeline_runs"
+            ).insert({
+                "run_type": "WEEKLY_MODEL",
+                "season": season,
+                "week": week,
+                "started_at": started_at,
+                "completed_at": utc_now(),
+                "status": "ERROR",
+                "message": message,
+                "model_version": MODEL_VERSION,
+                "games_expected": len(games),
+                "games_processed": 0,
+                "errors": len(missing_markets),
+                "warnings": 0,
+            }).execute()
+
+            log_health(
+                db,
+                "NFL Model",
+                "ERROR",
+                message,
+                dry_run,
+            )
+
+            raise RuntimeError(message)
+
+        print()
+        print(
+            f"MARKET PREFLIGHT PASS: "
+            f"{len(market_cache)}/{len(games)}"
+        )
+
     processed = 0
     skipped = 0
     errors = 0
@@ -791,16 +893,24 @@ def run(season, week, dry_run=False):
         # Market
         # -----------------------------------------------------
 
-        market, market_error = get_market(
-            event_id
-        )
+        if dry_run:
 
-        if market_error:
-            warnings_count += 1
-            print(
-                f"MARKET WARNING: {market_error}"
+            market, market_error = get_market(
+                event_id
             )
-            continue
+
+            if market_error:
+                warnings_count += 1
+                print(
+                    f"MARKET WARNING: {market_error}"
+                )
+                continue
+
+        else:
+
+            # Already validated during production preflight.
+            market = market_cache[event_id]
+            market_error = None
 
         print(
             f"Market: {market['provider']} | "
