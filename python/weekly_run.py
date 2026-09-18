@@ -32,6 +32,8 @@ from src.production_model import (
     SIMULATIONS,
 )
 
+from src.settlement import settle_week
+
 
 TRAINING_DATA = "python/data/training_2022_2025.parquet"
 FOOTBALL_WEIGHT = 0.10
@@ -626,6 +628,65 @@ def run(season, week, dry_run=False):
         f"{len(games)} games retrieved",
         dry_run,
     )
+
+    # ---------------------------------------------------------
+    # Settle previous week's locked predictions BEFORE training
+    # ---------------------------------------------------------
+
+    settlement_result = None
+
+    if week > 1:
+
+        previous_week = week - 1
+
+        print()
+        print(
+            f"Checking settlement for "
+            f"{season} Week {previous_week}..."
+        )
+
+        previous_games = parse_games(
+            scoreboard(
+                season,
+                previous_week,
+            )
+        )
+
+        settlement_result = settle_week(
+            db=db,
+            season=season,
+            week=previous_week,
+            games=previous_games,
+            dry_run=dry_run,
+        )
+
+        settlement_status = (
+            settlement_result.get("status")
+        )
+
+        print(
+            f"Previous-week settlement status: "
+            f"{settlement_status}"
+        )
+
+        # If predictions exist but one or more games are not final,
+        # stop the pipeline. Never train/generate the next official
+        # prediction set from an incompletely settled prior week.
+        if settlement_status == "INCOMPLETE":
+            raise RuntimeError(
+                f"Cannot generate {season} Week {week}: "
+                f"{season} Week {previous_week} "
+                f"contains locked predictions that are "
+                f"not fully final."
+            )
+
+    else:
+
+        print()
+        print(
+            "Week 1: no previous regular-season "
+            "week to settle."
+        )
 
     # ---------------------------------------------------------
     # Train frozen v2 architecture
