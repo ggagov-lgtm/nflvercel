@@ -113,12 +113,11 @@ function resultLabel(result?: string) {
   return "";
 }
 
-export default async function Page({ searchParams }: { searchParams?: Promise<{ week?: string }> }) {
+export default async function Page() {
   const user = await currentUser();
   if (!user) redirect("/auth/login");
 
   const s = await createClient();
-  const params = await searchParams;
 
   const { data: latest } = await s
     .from("predictions")
@@ -128,39 +127,22 @@ export default async function Page({ searchParams }: { searchParams?: Promise<{ 
     .limit(1)
     .maybeSingle();
 
-  const season = latest?.season || week2Preview.season;
-  const { data: availableRows } = await s
-    .from("predictions")
-    .select("season,week")
-    .eq("season", season)
-    .order("week", { ascending: false });
-
-  const availableWeeks = Array.from(new Set([
-    ...(availableRows || []).map((r: AnyObj) => Number(r.week)),
-    Number(week2Preview.week),
-  ])).filter(Number.isFinite).sort((a,b)=>b-a);
-
-  const requestedWeek = Number(params?.week);
-  const selectedWeek = Number.isFinite(requestedWeek) && availableWeeks.includes(requestedWeek)
-    ? requestedWeek
-    : (latest?.week || Number(week2Preview.week));
-
   let preds: Pred[] = [];
-  let displayLatest: { season: number; week: number } | null = { season, week: selectedWeek };
+  let displayLatest: { season: number; week: number } | null = latest;
   let previewMode = false;
 
-  if (latest && availableWeeks.includes(selectedWeek)) {
+  if (latest) {
     const { data } = await s
       .from("predictions")
       .select("*")
-      .eq("season", season)
-      .eq("week", selectedWeek)
+      .eq("season", latest.season)
+      .eq("week", latest.week)
       .order("locked_at");
-    preds = (data || []) as Pred[];
-  }
 
-  if (!preds.length && selectedWeek === Number(week2Preview.week)) {
+    preds = (data || []) as Pred[];
+  } else {
     preds = week2Preview.games as unknown as Pred[];
+    displayLatest = { season: week2Preview.season, week: week2Preview.week };
     previewMode = true;
   }
 
@@ -428,22 +410,11 @@ export default async function Page({ searchParams }: { searchParams?: Promise<{ 
             </div>
           </div>
 
-          <div className="introRight">
-            <form className="weekSelector" action="/" method="get">
-              <label htmlFor="week-select">VIEW WEEK</label>
-              <select id="week-select" name="week" defaultValue={String(selectedWeek)} onChange={undefined}>
-                {availableWeeks.map((week) => (
-                  <option key={week} value={week}>Week {week}</option>
-                ))}
-              </select>
-              <button type="submit">View</button>
-            </form>
-            <div className="introModelStatus">
-              <span className="statusDot" />
-              <div>
-                <strong>{previewMode ? "Model Preview" : preds.length ? "Predictions Locked" : "Awaiting First Run"}</strong>
-                <span>{modelVersion} · {simulationCount.toLocaleString()} simulations</span>
-              </div>
+          <div className="introModelStatus">
+            <span className="statusDot" />
+            <div>
+              <strong>{previewMode ? "Model Preview" : latest ? "Predictions Locked" : "Awaiting First Run"}</strong>
+              <span>{modelVersion} · {simulationCount.toLocaleString()} simulations</span>
             </div>
           </div>
         </div>
