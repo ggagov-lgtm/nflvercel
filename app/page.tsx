@@ -150,6 +150,38 @@ export default async function Page() {
     ? await getEspnGameStates(displayLatest.season, displayLatest.week)
     : new Map<string, LiveGame>();
 
+  // Season-wide locked predictions are used only for the season confidence summary.
+  // The display-only Week 2 preview is included when there are no official predictions yet.
+  let seasonPreds: Pred[] = [];
+  if (displayLatest) {
+    const { data: seasonData } = await s
+      .from("predictions")
+      .select("*")
+      .eq("season", displayLatest.season)
+      .order("week", { ascending: true })
+      .order("locked_at", { ascending: true });
+    seasonPreds = (seasonData || []) as Pred[];
+  }
+  if (!seasonPreds.length) seasonPreds = preds;
+
+  const topPredictionProbability = (p: Pred) => {
+    const x = p.model || {};
+    const values = [
+      Number(x.home_win_prob), Number(x.away_win_prob),
+      Number(x.home_cover_prob), Number(x.away_cover_prob),
+      Number(x.over_prob), Number(x.under_prob),
+    ].filter(Number.isFinite);
+    return values.length ? Math.max(...values) : NaN;
+  };
+
+  const averageTopProbability = (rows: Pred[]) => {
+    const values = rows.map(topPredictionProbability).filter(Number.isFinite);
+    return values.length ? values.reduce((a, b) => a + b, 0) / values.length : null;
+  };
+
+  const weekTopProbability = averageTopProbability(preds);
+  const seasonTopProbability = averageTopProbability(seasonPreds);
+
   const completedPerformance = (() => {
     let finals = 0;
     let mlWins = 0, mlLosses = 0;
@@ -382,31 +414,35 @@ export default async function Page() {
           <small>{completedPerformance.finals} of {preds.length} games completed</small>
         </div>
         <div className="summaryGrid">
-          <div className="summaryPrimary">
+          <div className="summaryPrimary summaryPrimaryThree">
             <div className="summaryPanel">
-              <div className="summaryLabel">#1 PREDICTION ACCURACY<button type="button" className="infoTip" aria-label="Explain #1 prediction accuracy" data-tip="How often the model’s single highest-probability prediction for each completed game was correct.">i</button></div>
+              <div className="summaryLabel">TOP GUESS SUCCESS<button type="button" className="infoTip" aria-label="Explain top guess success" data-tip="How often the model’s single highest-probability prediction for each completed game was correct.">i</button></div>
+              <div className="summarySubtext">Results of the model’s #1 prediction on completed games</div>
               <div className="donutWrap">
                 <div className="donut" style={{"--value": `${Math.max(0, Math.min(100, Number(completedPerformance.topRate || 0) * 100))}%`} as React.CSSProperties}>
                   <div><b>{pct(completedPerformance.topRate)}</b><span>{completedPerformance.topWins} of {completedPerformance.topWins + completedPerformance.topLosses} correct</span></div>
                 </div>
               </div>
             </div>
+
             <div className="summaryPanel">
-              <div className="summaryLabel">TOP PREDICTION PERCENTAGE BY GAME<button type="button" className="infoTip" aria-label="Explain top prediction percentage by game" data-tip="The highest probability assigned by the model among the winner, point spread, and over / under predictions for each game. Completed games are shown in gray.">i</button></div>
-              <div className="confidenceBars">
-                {preds.map((p, index) => {
-                  const x=p.model||{};
-                  const values=[Number(x.home_win_prob),Number(x.away_win_prob),Number(x.home_cover_prob),Number(x.away_cover_prob),Number(x.over_prob),Number(x.under_prob)].filter(Number.isFinite);
-                  const best=values.length?Math.max(...values):0;
-                  const completed = gameStates.get(String(p.event_id))?.state === "post";
-                  return <div className={`confidenceBarItem ${completed ? "confidenceCompleted" : ""}`} key={p.id} title={`Game ${index+1}: ${pct(best)}${completed ? " · Final" : ""}`}>
-                    <span className="confidenceValue">{pct(best)}</span>
-                    <i style={{height:`${Math.max(4,best*100)}%`}} />
-                    <small>{index+1}</small>
-                  </div>;
-                })}
+              <div className="summaryLabel">TOP PREDICTION PERCENTAGE — SEASON<button type="button" className="infoTip" aria-label="Explain season top prediction percentage" data-tip="Average probability of the model’s highest-confidence prediction in every locked game this season.">i</button></div>
+              <div className="summarySubtext">Average #1 prediction probability across the {displayLatest?.season || ""} season</div>
+              <div className="donutWrap">
+                <div className="donut donutBlue" style={{"--value": `${Math.max(0, Math.min(100, Number(seasonTopProbability || 0) * 100))}%`} as React.CSSProperties}>
+                  <div><b>{pct(seasonTopProbability)}</b><span>{seasonPreds.length} game{seasonPreds.length===1?"":"s"} included</span></div>
+                </div>
               </div>
-              <div className="confidenceCaption">Game order · highest model probability for each game</div>
+            </div>
+
+            <div className="summaryPanel">
+              <div className="summaryLabel">TOP PREDICTION PERCENTAGE — THIS WEEK<button type="button" className="infoTip" aria-label="Explain weekly top prediction percentage" data-tip="Average probability of the model’s highest-confidence prediction for every game in the displayed week.">i</button></div>
+              <div className="summarySubtext">Average #1 prediction probability for Week {displayLatest?.week || "—"}</div>
+              <div className="donutWrap">
+                <div className="donut donutPurple" style={{"--value": `${Math.max(0, Math.min(100, Number(weekTopProbability || 0) * 100))}%`} as React.CSSProperties}>
+                  <div><b>{pct(weekTopProbability)}</b><span>{preds.length} game{preds.length===1?"":"s"} included</span></div>
+                </div>
+              </div>
             </div>
           </div>
           <div className="summarySecondary">
