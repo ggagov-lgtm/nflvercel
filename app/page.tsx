@@ -701,11 +701,32 @@ export default async function Page() {
           const weatherAdj = Number(x.weather_total_adjustment);
           const marketGap = Number.isFinite(modelMargin) && Number.isFinite(marketMargin)
             ? Math.abs(modelMargin - marketMargin) : null;
+          const analyst = x.analysis_context || {};
+          const injuryList = Array.isArray(analyst.injuries)
+            ? analyst.injuries
+                .filter((i:any) => i?.player && ["out","doubtful","questionable"].includes(String(i.status || "").toLowerCase()))
+                .sort((a:any,b:any) => Number(b.raw_impact || 0) - Number(a.raw_impact || 0))
+                .slice(0, 4)
+            : [];
+          const injuryText = injuryList.length
+            ? `Key injuries: ${injuryList.map((i:any) => `${i.player} (${i.position || "player"}, ${i.status})`).join(", ")}.`
+            : (Number.isFinite(injuryAdj) && Math.abs(injuryAdj) >= .1 ? `Injuries account for a ${signed(injuryAdj)}-point margin adjustment.` : "");
+          const recentText = (team:string, rows:any[]) => Array.isArray(rows) && rows.length
+            ? `${team} last ${rows.length}: ${rows.map((r:any) => `${r.result} ${r.team_score}–${r.opponent_score} vs ${r.opponent}`).join(", ")}.`
+            : "";
+          const weather = analyst.weather || {};
+          const weatherText = weather.indoor
+            ? "Weather is not a material factor in this indoor game."
+            : weather.temperature != null
+              ? `Weather: ${Math.round(Number(weather.temperature))}°F${Number(weather.wind_gust)>0 ? `, gusts ${Math.round(Number(weather.wind_gust))} mph` : ""}${Number(weather.precipitation_probability)>0 ? `, precipitation ${Math.round(Number(weather.precipitation_probability))}%` : ""}; model total adjustment ${signed(weatherAdj)}.`
+              : (Math.abs(weatherAdj || 0) >= .1 ? `Weather changes the projected total by ${signed(weatherAdj)} points.` : "");
           const explanation = [
-            `The model projects ${favoredTeam || "the selected team"} as the more likely winner at ${pct(mlProb)}, with a projected score of ${num(x.pred_away)}–${num(x.pred_home)}.`,
-            marketGap != null ? `Its projected point difference is ${num(modelMargin)}, compared with the captured sportsbook point difference of ${num(marketMargin)}, a ${num(marketGap)}-point difference between model and market.` : "",
-            Number.isFinite(injuryAdj) && Math.abs(injuryAdj) >= .1 ? `The locked injury adjustment contributes ${signed(injuryAdj)} points to the model margin.` : "",
-            Number.isFinite(weatherAdj) && Math.abs(weatherAdj) >= .1 ? `Weather changes the projected total by ${signed(weatherAdj)} points.` : "Weather is not producing a material scoring adjustment in the locked model.",
+            `${g.home?.abbr || "The home team"} is at home. The model favors ${favoredTeam || "the selected team"} at ${pct(mlProb)} and projects ${g.away?.abbr} ${num(x.pred_away)}–${g.home?.abbr} ${num(x.pred_home)}.`,
+            injuryText,
+            recentText(g.away?.abbr || "Away", analyst.away_recent_games),
+            recentText(g.home?.abbr || "Home", analyst.home_recent_games),
+            weatherText,
+            marketGap != null ? `Model vs sportsbook point difference: ${signed(modelMargin)} vs ${signed(marketMargin)} (${num(marketGap)}-point gap).` : "",
           ].filter(Boolean).join(" ");
 
           return (
