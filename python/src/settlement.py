@@ -521,6 +521,27 @@ def settle_week(
     # Load the original locked predictions
     # ---------------------------------------------------------
 
+    # A full model dry-run intentionally has no database
+    # connection. In that mode there are no database predictions
+    # to settle, so safely skip settlement.
+    if db is None:
+        if not dry_run:
+            raise RuntimeError(
+                "Database connection required for settlement."
+            )
+
+        print(
+            "DRY RUN - no database connection; "
+            "previous-week settlement skipped."
+        )
+
+        return {
+            "status": "DRY_RUN_NO_DB",
+            "season": season,
+            "week": week,
+            "games": 0,
+        }
+
     predictions = (
         db.table("predictions")
         .select(
@@ -811,6 +832,15 @@ def settle_week(
         .execute()
     )
 
+    # ---------------------------------------------------------
+    # Recalculate season-to-date performance
+    # ---------------------------------------------------------
+
+    update_season_performance(
+        db,
+        season,
+    )
+
     print()
     print(
         f"SETTLED + SAVED: "
@@ -823,3 +853,162 @@ def settle_week(
         "week": week,
         **summary,
     }
+
+
+def update_season_performance(db, season):
+    """
+    Aggregate settled weekly performance into season performance.
+
+    Accuracy metrics are weighted by actual decisions, not by
+    averaging weekly percentages.
+    """
+
+    rows = (
+        db.table("model_performance_weekly")
+        .select("*")
+        .eq("season", season)
+        .execute()
+    ).data
+
+    if not rows:
+        print(
+            f"No weekly performance records "
+            f"for {season}."
+        )
+        return None
+
+    games = sum(
+        int(r.get("games") or 0)
+        for r in rows
+    )
+
+    # ---------------------------------------------------------
+    # Aggregate W/L/PUSH counts
+    # ---------------------------------------------------------
+
+    ml_wins = sum(
+        int(r.get("ml_wins") or 0)
+        for r in rows
+    )
+    ml_losses = sum(
+        int(r.get("ml_losses") or 0)
+        for r in rows
+    )
+
+    spread_wins = sum(
+        int(r.get("spread_wins") or 0)
+        for r in rows
+    )
+    spread_losses = sum(
+        int(r.get("spread_losses") or 0)
+        for r in rows
+    )
+
+    total_wins = sum(
+        int(r.get("total_wins") or 0)
+        for r in rows
+    )
+    total_losses = sum(
+        int(r.get("total_losses") or 0)
+        for r in rows
+    )
+
+    top_wins = sum(
+        int(r.get("top_pick_wins") or 0)
+        for r in rows
+    )
+    top_losses = sum(
+        int(r.get("top_pick_losses") or 0)
+        for r in rows
+    )
+
+    def accuracy(wins, losses):
+        decisions = wins + losses
+        if decisions == 0:
+            return None
+        return wins / decisions
+
+    # ---------------------------------------------------------
+    # Weighted MAE by number of games
+    # ---------------------------------------------------------
+
+    def weighted_metric(field):
+        usable = [
+            r
+            for r in rows
+            if (
+                r.get(field) is not None
+                and int(r.get("games") or 0) > 0
+            )
+        ]
+
+        denominator = sum(
+            int(r["games"])
+            for r in usable
+        )
+
+        if denominator == 0:
+            return None
+
+        numerator = sum(
+            float(r[field]) * int(r["games"])
+            for r in usable
+        )
+
+        return numerator / denominator
+
+    season_row = {
+        "season": season,
+        "games": games,
+
+        "ml_accuracy":
+            accuracy(
+                ml_wins,
+                ml_losses,
+            ),
+
+        "spread_accuracy":
+            accuracy(
+                spread_wins,
+                spread_losses,
+            ),
+
+        "total_accuracy":
+            accuracy(
+                total_wins,
+                total_losses,
+            ),
+
+        "top_pick_accuracy":
+            accuracy(
+                top_wins,
+                top_losses,
+            ),
+
+        "score_mae":
+            weighted_metric("score_mae"),
+
+        "margin_mae":
+            weighted_metric("margin_mae"),
+
+        "total_mae":
+            weighted_metric("total_mae"),
+    }
+
+    (
+        db.table("model_performance_season")
+        .upsert(
+            season_row,
+            on_conflict="season",
+        )
+        .execute()
+    )
+
+    print()
+    print(
+        f"Season performance updated: "
+        f"{season}"
+    )
+    print(season_row)
+
+    return season_row
