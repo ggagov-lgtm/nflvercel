@@ -296,3 +296,146 @@ on public.model_performance_season
 for select
 to authenticated
 using (true);
+
+
+-- ============================================================
+-- ATOMIC WEEKLY PREDICTION SAVE
+-- ============================================================
+
+create or replace function public.save_weekly_predictions(
+    p_season integer,
+    p_week integer,
+    p_expected_games integer,
+    p_predictions jsonb
+)
+returns integer
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+    v_count integer;
+    v_existing integer;
+begin
+
+    -- --------------------------------------------------------
+    -- Validate input
+    -- --------------------------------------------------------
+
+    if p_predictions is null
+       or jsonb_typeof(p_predictions) <> 'array'
+    then
+        raise exception
+            'Predictions payload must be a JSON array';
+    end if;
+
+    v_count := jsonb_array_length(p_predictions);
+
+    if v_count <> p_expected_games then
+        raise exception
+            'Prediction count mismatch: expected %, received %',
+            p_expected_games,
+            v_count;
+    end if;
+
+    -- --------------------------------------------------------
+    -- Never overwrite an already-created official week.
+    -- Locked historical predictions are immutable.
+    -- --------------------------------------------------------
+
+    select count(*)
+    into v_existing
+    from public.predictions
+    where season = p_season
+      and week = p_week;
+
+    if v_existing > 0 then
+        raise exception
+            'Predictions already exist for season % week %',
+            p_season,
+            p_week;
+    end if;
+
+    -- --------------------------------------------------------
+    -- Insert the entire prediction set.
+    --
+    -- The function executes inside a PostgreSQL transaction.
+    -- Any failure rolls back the entire function call.
+    -- --------------------------------------------------------
+
+    insert into public.predictions (
+        season,
+        week,
+        event_id,
+        game,
+        market,
+        model,
+        model_version,
+        prediction_run_at,
+        locked_at
+    )
+    select
+        (x ->> 'season')::integer,
+        (x ->> 'week')::integer,
+        x ->> 'event_id',
+        x -> 'game',
+        x -> 'market',
+        x -> 'model',
+        x ->> 'model_version',
+        (x ->> 'prediction_run_at')::timestamptz,
+        (x ->> 'locked_at')::timestamptz
+    from jsonb_array_elements(
+        p_predictions
+    ) as x;
+
+    get diagnostics v_count = row_count;
+
+    if v_count <> p_expected_games then
+        raise exception
+            'Database inserted % predictions; expected %',
+            v_count,
+            p_expected_games;
+    end if;
+
+    return v_count;
+
+end;
+$$;
+
+
+-- Service-role backend only.
+revoke execute
+on function public.save_weekly_predictions(
+    integer,
+    integer,
+    integer,
+    jsonb
+)
+from public;
+
+revoke execute
+on function public.save_weekly_predictions(
+    integer,
+    integer,
+    integer,
+    jsonb
+)
+from anon;
+
+revoke execute
+on function public.save_weekly_predictions(
+    integer,
+    integer,
+    integer,
+    jsonb
+)
+from authenticated;
+
+grant execute
+on function public.save_weekly_predictions(
+    integer,
+    integer,
+    integer,
+    jsonb
+)
+to service_role;

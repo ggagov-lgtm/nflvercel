@@ -839,6 +839,7 @@ def run(season, week, dry_run=False):
     skipped = 0
     errors = 0
     warnings_count = 0
+    pending_rows = []
 
     print()
     print("=" * 78)
@@ -1203,27 +1204,109 @@ def run(season, week, dry_run=False):
                 timestamp,
         }
 
-        try:
+        # Do not write individual predictions here.
+        # Queue every successfully modeled game first.
+        pending_rows.append(row)
+
+        print(
+            "MODELED - PENDING WEEKLY SAVE"
+        )
+
+    # ---------------------------------------------------------
+    # Production completeness gate + weekly bulk save
+    # ---------------------------------------------------------
+
+    if not dry_run:
+
+        expected_new = (
+            len(games) - skipped
+        )
+
+        if (
+            errors > 0
+            or len(pending_rows) != expected_new
+        ):
+
+            message = (
+                f"Prediction completeness gate failed: "
+                f"{len(pending_rows)} of "
+                f"{expected_new} required new predictions "
+                f"modeled successfully. "
+                f"ZERO queued predictions written."
+            )
+
+            print()
+            print(message)
 
             db.table(
-                "predictions"
-            ).insert(
-                row
-            ).execute()
+                "pipeline_runs"
+            ).insert({
+                "run_type": "WEEKLY_MODEL",
+                "season": season,
+                "week": week,
+                "started_at": started_at,
+                "completed_at": utc_now(),
+                "status": "ERROR",
+                "message": message,
+                "model_version": MODEL_VERSION,
+                "games_expected": len(games),
+                "games_processed": 0,
+                "errors": max(
+                    errors,
+                    expected_new - len(pending_rows),
+                ),
+                "warnings": warnings_count,
+            }).execute()
 
-            processed += 1
-
-            print(
-                "SAVED + LOCKED"
+            log_health(
+                db,
+                "NFL Model",
+                "ERROR",
+                message,
+                dry_run,
             )
 
-        except Exception as e:
+            raise RuntimeError(message)
 
-            errors += 1
+        if pending_rows:
 
-            print(
-                f"DATABASE ERROR: {e}"
-            )
+            try:
+
+                response = db.rpc(
+                    "save_weekly_predictions",
+                    {
+                        "p_season": season,
+                        "p_week": week,
+                        "p_expected_games": len(games),
+                        "p_predictions": pending_rows,
+                    },
+                ).execute()
+
+                processed = len(
+                    pending_rows
+                )
+
+                print()
+                print(
+                    f"BULK SAVED + LOCKED: "
+                    f"{processed} predictions"
+                )
+
+            except Exception as e:
+
+                errors += 1
+
+                message = (
+                    f"Weekly prediction bulk save failed: "
+                    f"{e}"
+                )
+
+                print()
+                print(message)
+
+                raise RuntimeError(
+                    message
+                )
 
     # ---------------------------------------------------------
     # Summary
