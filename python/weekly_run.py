@@ -652,6 +652,55 @@ def run(season, week, dry_run=False):
             )
         )
 
+        # -----------------------------------------------------
+        # Previous-week finality gate
+        #
+        # Training must never include a partially completed
+        # prior week, even when no official predictions existed
+        # for that week and therefore nothing needs settlement.
+        # -----------------------------------------------------
+
+        incomplete_previous_games = [
+            game
+            for game in previous_games
+            if not game.get("completed", False)
+        ]
+
+        if not previous_games or incomplete_previous_games:
+
+            incomplete_names = ", ".join(
+                f"{game['away']['abbr']} @ "
+                f"{game['home']['abbr']}"
+                for game in incomplete_previous_games
+            )
+
+            message = (
+                f"Cannot generate {season} Week {week}: "
+                f"{season} Week {previous_week} is not "
+                f"fully final. "
+                f"{len(incomplete_previous_games)} of "
+                f"{len(previous_games)} games remain "
+                f"incomplete: {incomplete_names}"
+            )
+
+            print()
+            print(message)
+
+            log_health(
+                db,
+                "Previous Week Finality",
+                "ERROR",
+                message,
+                dry_run,
+            )
+
+            raise RuntimeError(message)
+
+        print(
+            f"Previous-week finality: PASS "
+            f"({len(previous_games)}/{len(previous_games)} final)"
+        )
+
         settlement_result = settle_week(
             db=db,
             season=season,
