@@ -851,7 +851,7 @@ def run(season, week, dry_run=False, refresh=False):
 
         missing_markets = []
 
-        for game in games:
+        for game in active_games:
 
             event_id = game["event_id"]
             away = game["away"]["abbr"]
@@ -931,7 +931,7 @@ def run(season, week, dry_run=False, refresh=False):
         print()
         print(
             f"MARKET PREFLIGHT PASS: "
-            f"{len(market_cache)}/{len(games)}"
+            f"{len(market_cache)}/{len(active_games)}"
         )
 
     processed = 0
@@ -1076,7 +1076,7 @@ def run(season, week, dry_run=False, refresh=False):
     # Games
     # ---------------------------------------------------------
 
-    for game in games:
+    for game in active_games:
 
         event_id = game["event_id"]
         away = game["away"]["abbr"]
@@ -1439,7 +1439,8 @@ def run(season, week, dry_run=False, refresh=False):
     if not dry_run:
 
         expected_new = (
-            len(games) - skipped
+            len(active_games) if refresh
+            else len(games) - skipped
         )
 
         if (
