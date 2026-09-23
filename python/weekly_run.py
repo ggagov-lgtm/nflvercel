@@ -61,6 +61,10 @@ def utc_now():
     return dt.datetime.now(dt.timezone.utc).isoformat()
 
 
+def _parse_game_time(value):
+    return dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
 def create_db():
     return create_client(
         os.environ["SUPABASE_URL"],
@@ -617,7 +621,7 @@ def train_models(target_season: int, target_week: int):
     }
 
 
-def run(season, week, dry_run=False):
+def run(season, week, dry_run=False, refresh=False):
 
     started_at = utc_now()
 
@@ -656,6 +660,16 @@ def run(season, week, dry_run=False):
     print(
         f"Schedule: {len(games)} games"
     )
+
+    now = dt.datetime.now(dt.timezone.utc)
+    active_games = games
+    if refresh:
+        active_games = [
+            game for game in games
+            if _parse_game_time(game["date"]) > now
+            and not game.get("completed", False)
+        ]
+        print(f"Refreshable pre-kickoff games: {len(active_games)}")
 
     log_health(
         db,
