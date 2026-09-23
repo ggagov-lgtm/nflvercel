@@ -230,14 +230,16 @@ export default async function Page() {
   let priorSeasonTopWins = 0;
   let priorSeasonTopLosses = 0;
   if (displayLatest && !previewMode) {
-    const { data: settled } = await s
-      .from("prediction_settlements")
-      .select("top_pick_result,predictions!inner(season,week)")
-      .eq("predictions.season", displayLatest.season)
-      .lt("predictions.week", displayLatest.week);
-    for (const row of settled || []) {
-      if (row.top_pick_result === "WIN") priorSeasonTopWins += 1;
-      if (row.top_pick_result === "LOSS") priorSeasonTopLosses += 1;
+    // Historical weekly performance includes manually backfilled preview weeks
+    // as well as future production-settled weeks.
+    const { data: priorWeeks } = await s
+      .from("model_performance_weekly")
+      .select("top_pick_wins,top_pick_losses")
+      .eq("season", displayLatest.season)
+      .lt("week", displayLatest.week);
+    for (const row of priorWeeks || []) {
+      priorSeasonTopWins += Number(row.top_pick_wins || 0);
+      priorSeasonTopLosses += Number(row.top_pick_losses || 0);
     }
   }
 
@@ -470,16 +472,16 @@ export default async function Page() {
           </div>
           <div className="summarySecondary">
             {[
-              ["WINNER PREDICTION SUCCESS",completedPerformance.mlRate,completedPerformance.mlWins,completedPerformance.mlLosses],
-              ["POINT SPREAD SUCCESS",completedPerformance.spreadRate,completedPerformance.spreadWins,completedPerformance.spreadLosses],
-              ["OVER / UNDER SUCCESS",completedPerformance.totalRate,completedPerformance.totalWins,completedPerformance.totalLosses],
+              ["WINNER PREDICTION SUCCESS",previousWeekPerformance?.ml_accuracy,previousWeekPerformance?.ml_wins,previousWeekPerformance?.ml_losses],
+              ["POINT SPREAD SUCCESS",previousWeekPerformance?.spread_accuracy,previousWeekPerformance?.spread_wins,previousWeekPerformance?.spread_losses],
+              ["OVER / UNDER SUCCESS",previousWeekPerformance?.total_accuracy,previousWeekPerformance?.total_wins,previousWeekPerformance?.total_losses],
             ].map(([label,rate,wins,losses])=><div className="miniMetric" key={String(label)}>
               <div className="miniDonut" style={{"--value":`${Math.max(0,Math.min(100,Number(rate||0)*100))}%`} as React.CSSProperties} />
-              <div><span>{String(label)}<button type="button" className="infoTip" aria-label={`Explain ${String(label).toLowerCase()}`} data-tip={String(label)==="WINNER PREDICTION SUCCESS" ? "Percentage of completed winner predictions that were correct." : String(label)==="POINT SPREAD SUCCESS" ? "Percentage of completed point-spread predictions that covered the sportsbook line. Pushes are excluded." : "Percentage of completed over / under predictions that correctly predicted the sportsbook total. Pushes are excluded."}>i</button></span><b>{Number(wins)+Number(losses) ? pct(rate) : "N/A"}</b><small>{Number(wins)}–{Number(losses)} · Completed only</small></div>
+              <div><span>{String(label)}<button type="button" className="infoTip" aria-label={`Explain ${String(label).toLowerCase()}`} data-tip={String(label)==="WINNER PREDICTION SUCCESS" ? "Winner-prediction accuracy from the previous completed week." : String(label)==="POINT SPREAD SUCCESS" ? "Point-spread accuracy from the previous completed week. Pushes are excluded." : "Over / under accuracy from the previous completed week. Pushes are excluded."}>i</button></span><b>{previousWeekPerformance ? pct(rate) : "N/A"}</b><small>{previousWeekPerformance ? `${Number(wins)}–${Number(losses)} · Week ${previousWeekPerformance.week}` : "No previous week data"}</small></div>
             </div>)}
             <div className="miniMetric errorMetric">
               <div className="errorIcon">▥</div>
-              <div><span>AVERAGE SCORE ERROR<button type="button" className="infoTip" aria-label="Explain average score error" data-tip="Average absolute difference between the model’s predicted team scores and the actual final scores. Lower is better.">i</button></span><b>{num(completedPerformance.scoreMae)}</b><small>{completedPerformance.finals} completed game{completedPerformance.finals===1?"":"s"} · Lower is better</small></div>
+              <div><span>AVERAGE SCORE ERROR<button type="button" className="infoTip" aria-label="Explain average score error" data-tip="Average absolute difference between predicted team scores and actual final scores for the previous completed week. Lower is better.">i</button></span><b>{previousWeekPerformance ? num(previousWeekPerformance.score_mae) : "N/A"}</b><small>{previousWeekPerformance ? `Week ${previousWeekPerformance.week} · Lower is better` : "No previous week data"}</small></div>
             </div>
           </div>
         </div>
