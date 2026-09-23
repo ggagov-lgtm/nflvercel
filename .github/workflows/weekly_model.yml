@@ -12,11 +12,10 @@ on:
         required: true
         default: '2'
 
-  # Run three times during the Tuesday midnight hour in Chicago.
-  # GitHub supports IANA timezones, so DST is handled by the scheduler.
-  # Starting at :07 avoids the high-load top-of-hour window.
+  # Initial weekly run Tuesday shortly after midnight, then refresh
+  # the current week once nightly. DST is handled by the IANA timezone.
   schedule:
-    - cron: '7,27,47 0 * * 2'
+    - cron: '7 0 * * *'
       timezone: "America/Chicago"
 
 jobs:
@@ -76,11 +75,22 @@ jobs:
           print(f"ESPN reported: {season} Week {current_week}")
           print(f"Prediction target: {season} Week {target_week}")
 
-          subprocess.check_call([
+          cmd = [
               "python", "python/weekly_run.py",
               "--season", str(season),
               "--week", str(target_week),
-          ])
+          ]
+
+          # Tuesday creates the official weekly set. Wednesday-Monday
+          # refresh only games that have not kicked off, preserving each
+          # prior version in prediction_history.
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          local_day = datetime.now(ZoneInfo("America/Chicago")).weekday()
+          if local_day != 1:
+              cmd.append("--refresh")
+
+          subprocess.check_call(cmd)
           PY
 
           fi
