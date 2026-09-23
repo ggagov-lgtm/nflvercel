@@ -255,15 +255,15 @@ export default async function Page() {
   }
 
   const seasonTopPerformance = (() => {
-    // Current displayed week is graded from live ESPN finals. Prior official weeks
-    // come from the settlement table so only completed, settled games are counted.
+    // Success is based on the highest-probability selection within each game
+    // (Winner, Point Spread, or Over / Under), not winner predictions alone.
+    const wins = priorSeasonTopWins + completedPerformance.topWins;
+    const losses = priorSeasonTopLosses + completedPerformance.topLosses;
     return {
-      wins: priorSeasonTopWins + completedPerformance.topWins,
-      losses: priorSeasonTopLosses + completedPerformance.topLosses,
-      rate: completedPerformance.mlWins + completedPerformance.mlLosses
-        ? completedPerformance.mlRate
-        : previousWeekPerformance?.ml_accuracy ?? null,
-      games: priorSeasonTopWins + priorSeasonTopLosses + completedPerformance.topWins + completedPerformance.topLosses,
+      wins,
+      losses,
+      rate: wins + losses ? wins / (wins + losses) : null,
+      games: wins + losses,
     };
   })();
 
@@ -452,18 +452,18 @@ export default async function Page() {
             </div>
 
             <div className="summaryPanel">
-              <div className="summaryLabel">SEASON SUCCESS<button type="button" className="infoTip" aria-label="Explain season success percentage" data-tip="Winner-prediction accuracy across completed games for the season.">i</button></div>
+              <div className="summaryLabel">SEASON SUCCESS<button type="button" className="infoTip" aria-label="Explain season success percentage" data-tip="Success rate of each completed game’s highest-probability prediction—Winner, Point Spread, or Over / Under—across the season.">i</button></div>
               <div className="donutWrap">
                 <div className={`donut donutBlue ${seasonTopPerformance.games === 0 ? "donutPending" : ""}`} style={{"--value": seasonTopPerformance.games ? `${Math.max(0, Math.min(100, Number(seasonTopPerformance.rate || 0) * 100))}%` : "0%"} as React.CSSProperties}>
-                  <div><b>{previousWeekPerformance ? pct(previousWeekPerformance.ml_accuracy) : "N/A"}</b><span>{previousWeekPerformance ? `${previousWeekPerformance.ml_wins} of ${Number(previousWeekPerformance.ml_wins) + Number(previousWeekPerformance.ml_losses)} correct` : "No completed games"}</span></div>
+                  <div><b>{seasonTopPerformance.games ? pct(seasonTopPerformance.rate) : "N/A"}</b><span>{seasonTopPerformance.games ? `${seasonTopPerformance.wins} of ${seasonTopPerformance.games} correct` : "No completed games"}</span></div>
                 </div>
               </div>
             </div>
 
             <div className="summaryPanel">
-              <div className="summaryLabel">PREVIOUS WEEK<button type="button" className="infoTip" aria-label="Explain previous week top pick percentage" data-tip="Top-pick success rate from the immediately preceding completed week.">i</button></div>
+              <div className="summaryLabel">PREVIOUS WEEK<button type="button" className="infoTip" aria-label="Explain previous week top pick percentage" data-tip="Success rate of each game’s highest-probability prediction—Winner, Point Spread, or Over / Under—from the immediately preceding completed week.">i</button></div>
               <div className="donutWrap">
-                <div className={`donut donutPurple ${!previousWeekPerformance ? "donutPending" : ""}`} style={{"--value": previousWeekPerformance ? `${Math.max(0, Math.min(100, Number(previousWeekPerformance.ml_accuracy || 0) * 100))}%` : "0%"} as React.CSSProperties}>
+                <div className={`donut donutPurple ${!previousWeekPerformance ? "donutPending" : ""}`} style={{"--value": previousWeekPerformance ? `${Math.max(0, Math.min(100, Number(previousWeekPerformance.top_pick_accuracy || 0) * 100))}%` : "0%"} as React.CSSProperties}>
                   <div><b>{previousWeekPerformance ? pct(previousWeekPerformance.top_pick_accuracy) : "N/A"}</b><span>{previousWeekPerformance ? `${previousWeekPerformance.ml_wins} of ${Number(previousWeekPerformance.ml_wins) + Number(previousWeekPerformance.ml_losses)} correct · Week ${previousWeekPerformance.week}` : "No previous week data"}</span></div>
                 </div>
               </div>
