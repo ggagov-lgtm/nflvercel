@@ -12,15 +12,12 @@ on:
         required: true
         default: '2'
 
-  # GitHub schedules are UTC.
-  # 05:00-05:40 UTC = midnight hour Central during CDT.
-  # 06:00-06:40 UTC = midnight hour Central during CST.
-  # The timezone gate below determines which invocation proceeds.
+  # Run three times during the Tuesday midnight hour in Chicago.
+  # GitHub supports IANA timezones, so DST is handled by the scheduler.
+  # Starting at :07 avoids the high-load top-of-hour window.
   schedule:
-    # Three attempts during the midnight Central hour.
-    # The Chicago timezone gate rejects the DST-inapplicable UTC hour.
-    - cron: '0,20,40 5 * * 2'
-    - cron: '0,20,40 6 * * 2'
+    - cron: '7,27,47 0 * * 2'
+      timezone: "America/Chicago"
 
 jobs:
   model:
@@ -35,51 +32,6 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r python/requirements.txt
-
-      - name: Determine whether scheduled run should proceed
-        id: gate
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-        run: |
-          python - <<'PY'
-          import os
-          from datetime import datetime
-          from zoneinfo import ZoneInfo
-
-          event = os.environ["EVENT_NAME"]
-
-          # Manual workflow_dispatch always proceeds.
-          if event == "workflow_dispatch":
-              proceed = True
-              reason = "manual workflow dispatch"
-          else:
-              now = datetime.now(
-                  ZoneInfo("America/Chicago")
-              )
-
-              proceed = (
-                  now.weekday() == 1
-                  and now.hour == 0
-              )
-
-              reason = (
-                  f"Chicago time: "
-                  f"{now.isoformat()}"
-              )
-
-          print("Proceed:", proceed)
-          print(reason)
-
-          with open(
-              os.environ["GITHUB_OUTPUT"],
-              "a",
-          ) as f:
-              f.write(
-                  "proceed="
-                  + ("true" if proceed else "false")
-                  + "\n"
-              )
-          PY
 
       - name: Run weekly NFL model
         if: steps.gate.outputs.proceed == 'true'
@@ -102,31 +54,33 @@ jobs:
           import subprocess
           import requests
 
-          data = requests.get(
-              "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
-              timeout=20,
-          ).json()
+          url = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+          data = requests.get(url, timeout=20).json()
+          season = int(data.get("season", {}).get("year"))
+          current_week = int(data.get("week", {}).get("number"))
 
-          season = int(
-              data.get("season", {}).get("year")
-          )
+          # At Tuesday midnight ESPN can still identify the just-completed
+          # Monday-night slate as the current week. Generate the NEXT week.
+          target_week = current_week + 1
 
-          week = int(
-              data.get("week", {}).get("number")
-          )
+          # If ESPN has already rolled forward, avoid advancing twice by
+          # checking whether the returned slate contains future games.
+          events = data.get("events", [])
+          if events:
+              states = [
+                  e.get("status", {}).get("type", {}).get("state")
+                  for e in events
+              ]
+              if any(s == "pre" for s in states):
+                  target_week = current_week
 
-          print(
-              f"ESPN current NFL week: "
-              f"{season} Week {week}"
-          )
+          print(f"ESPN reported: {season} Week {current_week}")
+          print(f"Prediction target: {season} Week {target_week}")
 
           subprocess.check_call([
-              "python",
-              "python/weekly_run.py",
-              "--season",
-              str(season),
-              "--week",
-              str(week),
+              "python", "python/weekly_run.py",
+              "--season", str(season),
+              "--week", str(target_week),
           ])
           PY
 
