@@ -428,12 +428,12 @@ export default async function Page() {
         <div className="summaryGrid">
           <div className="summaryPrimary summaryPrimaryThree">
             <div className="summaryPanel">
-              <div className="summaryLabel">TOP PICK<button type="button" className="infoTip" aria-label="Explain top guess success" data-tip="How often the model’s single highest-probability prediction for each completed game was correct.">i</button></div>
+              <div className="summaryLabel">TOP PICK SUCCESS<button type="button" className="infoTip" aria-label="Explain top pick success" data-tip="Season-to-date success rate of each completed game's highest-probability prediction.">i</button></div>
               <div className="donutWrap">
-                <div className={`donut ${!weeklyNumberOneResult ? "donutPending" : weeklyNumberOneResult === "LOSS" ? "donutLoss" : ""}`} style={{"--value": weeklyNumberOneResult ? "100%" : "0%"} as React.CSSProperties}>
+                <div className={`donut ${seasonTopPerformance.games === 0 ? "donutPending" : ""}`} style={{"--value": seasonTopPerformance.games ? `${Math.max(0, Math.min(100, Number(seasonTopPerformance.rate || 0) * 100))}%` : "0%"} as React.CSSProperties}>
                   <div>
-                    <b>{weeklyNumberOneResult === "WIN" ? "100%" : weeklyNumberOneResult === "LOSS" ? "0%" : weeklyNumberOneResult === "PUSH" ? "PUSH" : "PENDING"}</b>
-                    <span>{weeklyNumberOne ? `${weeklyNumberOne.selection} · ${pct(weeklyNumberOne.probability)}` : "No #1 prediction"}</span>
+                    <b>{seasonTopPerformance.games ? pct(seasonTopPerformance.rate) : "N/A"}</b>
+                    <span>{seasonTopPerformance.games ? `${seasonTopPerformance.wins} of ${seasonTopPerformance.games} correct` : "No completed top picks"}</span>
                   </div>
                 </div>
               </div>
@@ -464,7 +464,7 @@ export default async function Page() {
               ["OVER / UNDER SUCCESS",completedPerformance.totalRate,completedPerformance.totalWins,completedPerformance.totalLosses],
             ].map(([label,rate,wins,losses])=><div className="miniMetric" key={String(label)}>
               <div className="miniDonut" style={{"--value":`${Math.max(0,Math.min(100,Number(rate||0)*100))}%`} as React.CSSProperties} />
-              <div><span>{String(label)}<button type="button" className="infoTip" aria-label={`Explain ${String(label).toLowerCase()}`} data-tip={String(label)==="WINNER PREDICTION SUCCESS" ? "Percentage of completed winner predictions that were correct." : String(label)==="POINT SPREAD SUCCESS" ? "Percentage of completed point-spread predictions that covered the sportsbook line. Pushes are excluded." : "Percentage of completed over / under predictions that correctly predicted the sportsbook total. Pushes are excluded."}>i</button></span><b>{pct(rate)}</b><small>{Number(wins)}–{Number(losses)} · Completed only</small></div>
+              <div><span>{String(label)}<button type="button" className="infoTip" aria-label={`Explain ${String(label).toLowerCase()}`} data-tip={String(label)==="WINNER PREDICTION SUCCESS" ? "Percentage of completed winner predictions that were correct." : String(label)==="POINT SPREAD SUCCESS" ? "Percentage of completed point-spread predictions that covered the sportsbook line. Pushes are excluded." : "Percentage of completed over / under predictions that correctly predicted the sportsbook total. Pushes are excluded."}>i</button></span><b>{Number(wins)+Number(losses) ? pct(rate) : "N/A"}</b><small>{Number(wins)}–{Number(losses)} · Completed only</small></div>
             </div>)}
             <div className="miniMetric errorMetric">
               <div className="errorIcon">▥</div>
