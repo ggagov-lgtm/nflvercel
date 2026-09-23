@@ -1507,15 +1507,25 @@ def run(season, week, dry_run=False, refresh=False):
 
             try:
 
-                response = db.rpc(
-                    "save_weekly_predictions",
-                    {
-                        "p_season": season,
-                        "p_week": week,
-                        "p_expected_games": len(games),
-                        "p_predictions": pending_rows,
-                    },
-                ).execute()
+                if refresh:
+                    response = db.rpc(
+                        "refresh_weekly_predictions",
+                        {
+                            "p_season": season,
+                            "p_week": week,
+                            "p_predictions": pending_rows,
+                        },
+                    ).execute()
+                else:
+                    response = db.rpc(
+                        "save_weekly_predictions",
+                        {
+                            "p_season": season,
+                            "p_week": week,
+                            "p_expected_games": len(games),
+                            "p_predictions": pending_rows,
+                        },
+                    ).execute()
 
                 processed = len(
                     pending_rows
@@ -1523,7 +1533,7 @@ def run(season, week, dry_run=False, refresh=False):
 
                 print()
                 print(
-                    f"BULK SAVED + LOCKED: "
+                    f"{'REFRESHED + ARCHIVED' if refresh else 'BULK SAVED + LOCKED'}: "
                     f"{processed} predictions"
                 )
 
@@ -1653,6 +1663,12 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Refresh only pre-kickoff games and archive prior versions.",
+    )
+
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help=(
@@ -1667,4 +1683,5 @@ if __name__ == "__main__":
         args.season,
         args.week,
         dry_run=args.dry_run,
+        refresh=args.refresh,
     )
