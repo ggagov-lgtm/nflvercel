@@ -789,15 +789,6 @@ def run(season, week, dry_run=False, refresh=False):
         )
 
     # ---------------------------------------------------------
-    # Train frozen v2 architecture
-    # ---------------------------------------------------------
-
-    trained = train_models(
-        target_season=season,
-        target_week=week,
-    )
-
-    # ---------------------------------------------------------
     # Current production feature state
     # ---------------------------------------------------------
 
@@ -1100,6 +1091,16 @@ def run(season, week, dry_run=False, refresh=False):
             "warnings": 0,
         }).execute()
         return
+
+    # ---------------------------------------------------------
+    # Train frozen v2 architecture
+    # ---------------------------------------------------------
+
+    trained = train_models(
+        target_season=season,
+        target_week=week,
+    )
+
 
     print()
     print("=" * 78)
