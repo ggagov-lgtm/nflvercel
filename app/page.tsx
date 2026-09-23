@@ -271,7 +271,6 @@ export default async function Page() {
       const m = p.market || {};
       const x = p.model || {};
       const state = gameStates.get(String(p.event_id))?.state || "pre";
-      if (state === "post") continue;
 
       const hp = Number(x.home_win_prob);
       const ap = Number(x.away_win_prob);
@@ -313,8 +312,14 @@ export default async function Page() {
         matchup: `${g.away?.abbr || "AWAY"} at ${g.home?.abbr || "HOME"}`,
       };
 
-      winner.push(ml); spread.push(sp); total.push(tot);
+      // Preserve every locked prediction in the overall pool so the week's
+      // true #1 pick remains identifiable and gradeable after its game finishes.
       overall.push(ml, sp, tot);
+
+      // The visible Top 3 boards intentionally show only games still actionable.
+      if (state !== "post") {
+        winner.push(ml); spread.push(sp); total.push(tot);
+      }
     }
 
     const top3 = (rows: AnyObj[]) =>
