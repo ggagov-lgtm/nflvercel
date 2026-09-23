@@ -57,37 +57,38 @@ jobs:
           season = int(data.get("season", {}).get("year"))
           current_week = int(data.get("week", {}).get("number"))
 
-          # At Tuesday midnight ESPN can still identify the just-completed
-          # Monday-night slate as the current week. Generate the NEXT week.
-          target_week = current_week + 1
-
-          # If ESPN has already rolled forward, avoid advancing twice by
-          # checking whether the returned slate contains future games.
           events = data.get("events", [])
-          if events:
-              states = [
-                  e.get("status", {}).get("type", {}).get("state")
-                  for e in events
-              ]
-              if any(s == "pre" for s in states):
-                  target_week = current_week
+          states = [
+              e.get("status", {}).get("type", {}).get("state")
+              for e in events
+          ]
+          has_future_games = any(s == "pre" for s in states)
+
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          local_day = datetime.now(ZoneInfo("America/Chicago")).weekday()
+
+          # Tuesday initializes the new slate. On every other day we keep
+          # refreshing ESPN's current week while it still contains future
+          # games. This avoids jumping to the next week after Thursday/Sunday
+          # games have started.
+          if local_day == 1:
+              target_week = current_week if has_future_games else current_week + 1
+              refresh = False
+          else:
+              target_week = current_week
+              refresh = True
 
           print(f"ESPN reported: {season} Week {current_week}")
           print(f"Prediction target: {season} Week {target_week}")
+          print(f"Refresh mode: {refresh}")
 
           cmd = [
               "python", "python/weekly_run.py",
               "--season", str(season),
               "--week", str(target_week),
           ]
-
-          # Tuesday creates the official weekly set. Wednesday-Monday
-          # refresh only games that have not kicked off, preserving each
-          # prior version in prediction_history.
-          from datetime import datetime
-          from zoneinfo import ZoneInfo
-          local_day = datetime.now(ZoneInfo("America/Chicago")).weekday()
-          if local_day != 1:
+          if refresh:
               cmd.append("--refresh")
 
           subprocess.check_call(cmd)
