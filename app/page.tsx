@@ -111,8 +111,16 @@ function resultLabel(result?: string) {
   return "";
 }
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: Promise<{ season?: string; week?: string }>;
+}) {
   const s = await createClient();
+  const params = (await searchParams) || {};
+  const requestedSeason = Number(params.season);
+  const requestedWeek = Number(params.week);
+  const hasRequestedWeek = Number.isInteger(requestedSeason) && Number.isInteger(requestedWeek) && requestedWeek > 0;
 
   const { data: latest } = await s
     .from("predictions")
@@ -123,23 +131,35 @@ export default async function Page() {
     .maybeSingle();
 
   let preds: Pred[] = [];
-  let displayLatest: { season: number; week: number } | null = latest;
+  let displayLatest: { season: number; week: number } | null =
+    hasRequestedWeek ? { season: requestedSeason, week: requestedWeek } : latest;
   let previewMode = false;
 
-  if (latest) {
+  if (displayLatest) {
     const { data } = await s
       .from("predictions")
       .select("*")
-      .eq("season", latest.season)
-      .eq("week", latest.week)
+      .eq("season", displayLatest.season)
+      .eq("week", displayLatest.week)
       .order("locked_at");
-
     preds = (data || []) as Pred[];
-  } else {
+  }
+
+  if (!preds.length && displayLatest?.season === week2Preview.season && displayLatest?.week === week2Preview.week) {
+    preds = week2Preview.games as unknown as Pred[];
+    previewMode = true;
+  } else if (!displayLatest) {
     preds = week2Preview.games as unknown as Pred[];
     displayLatest = { season: week2Preview.season, week: week2Preview.week };
     previewMode = true;
   }
+
+  const previousWeekHref = displayLatest && displayLatest.week > 1
+    ? `/?season=${displayLatest.season}&week=${displayLatest.week - 1}`
+    : null;
+  const nextWeekHref = displayLatest
+    ? `/?season=${displayLatest.season}&week=${displayLatest.week + 1}`
+    : null;
 
   const gameStates = displayLatest
     ? await getEspnGameStates(displayLatest.season, displayLatest.week)
@@ -414,7 +434,11 @@ export default async function Page() {
       <section className="dashboardIntro">
         <div className="introIdentity">
           <span className="introSeason">NFL · {displayLatest?.season || "—"}</span>
-          <h1>Week {displayLatest?.week || "—"}</h1>
+          <div className="weekNavigator">
+            {previousWeekHref ? <a className="weekArrow" href={previousWeekHref} aria-label="Previous week">‹</a> : <span className="weekArrow weekArrowDisabled">‹</span>}
+            <h1>Week {displayLatest?.week || "—"}</h1>
+            {nextWeekHref ? <a className="weekArrow" href={nextWeekHref} aria-label="Next week">›</a> : <span className="weekArrow weekArrowDisabled">›</span>}
+          </div>
           <p>Market-anchored quantitative predictions · locked before kickoff</p>
         </div>
 
