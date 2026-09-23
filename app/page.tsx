@@ -254,6 +254,24 @@ export default async function Page() {
     previousWeekPerformance = previousPerf;
   }
 
+  let weeklyNumberOneWins = 0;
+  let weeklyNumberOneLosses = 0;
+  if (displayLatest && !previewMode) {
+    const { data: weeklyTopHistory } = await s
+      .from("model_performance_weekly")
+      .select("weekly_top_pick_wins,weekly_top_pick_losses")
+      .eq("season", displayLatest.season)
+      .lt("week", displayLatest.week);
+    for (const row of weeklyTopHistory || []) {
+      weeklyNumberOneWins += Number(row.weekly_top_pick_wins || 0);
+      weeklyNumberOneLosses += Number(row.weekly_top_pick_losses || 0);
+    }
+  }
+  const weeklyNumberOneHistoryRate =
+    weeklyNumberOneWins + weeklyNumberOneLosses
+      ? weeklyNumberOneWins / (weeklyNumberOneWins + weeklyNumberOneLosses)
+      : null;
+
   const seasonTopPerformance = (() => {
     // Success is based on the highest-probability selection within each game
     // (Winner, Point Spread, or Over / Under), not winner predictions alone.
@@ -440,12 +458,12 @@ export default async function Page() {
         <div className="summaryGrid">
           <div className="summaryPrimary summaryPrimaryThree">
             <div className="summaryPanel">
-              <div className="summaryLabel">TOP PICK SUCCESS<button type="button" className="infoTip" aria-label="Explain top pick success" data-tip="Season-to-date success rate of each completed game's highest-probability prediction.">i</button></div>
+              <div className="summaryLabel">TOP PICK SUCCESS<button type="button" className="infoTip" aria-label="Explain top pick success" data-tip="Season-to-date success rate of the model’s single highest-confidence prediction from each completed week.">i</button></div>
               <div className="donutWrap">
-                <div className={`donut ${seasonTopPerformance.games === 0 ? "donutPending" : ""}`} style={{"--value": seasonTopPerformance.games ? `${Math.max(0, Math.min(100, Number(seasonTopPerformance.rate || 0) * 100))}%` : "0%"} as React.CSSProperties}>
+                <div className={`donut ${weeklyNumberOneWins + weeklyNumberOneLosses === 0 ? "donutPending" : ""}`} style={{"--value": weeklyNumberOneHistoryRate != null ? `${Math.max(0, Math.min(100, weeklyNumberOneHistoryRate * 100))}%` : "0%"} as React.CSSProperties}>
                   <div>
-                    <b>{seasonTopPerformance.games ? pct(seasonTopPerformance.rate) : "N/A"}</b>
-                    <span>{seasonTopPerformance.games ? `${seasonTopPerformance.wins} of ${seasonTopPerformance.games} correct` : "No completed top picks"}</span>
+                    <b>{weeklyNumberOneHistoryRate != null ? pct(weeklyNumberOneHistoryRate) : "N/A"}</b>
+                    <span>{weeklyNumberOneWins + weeklyNumberOneLosses ? `${weeklyNumberOneWins}–${weeklyNumberOneLosses} weekly #1 picks` : "No completed weekly #1 picks"}</span>
                   </div>
                 </div>
               </div>
