@@ -1,6 +1,4 @@
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { currentUser } from "@/lib/auth";
 import week2Preview from "@/data/week2-preview.json";
 
 type AnyObj = Record<string, any>;
@@ -114,9 +112,6 @@ function resultLabel(result?: string) {
 }
 
 export default async function Page() {
-  const user = await currentUser();
-  if (!user) redirect("/auth/login");
-
   const s = await createClient();
 
   const { data: latest } = await s
