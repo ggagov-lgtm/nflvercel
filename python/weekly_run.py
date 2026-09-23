@@ -680,12 +680,13 @@ def run(season, week, dry_run=False, refresh=False):
     )
 
     # ---------------------------------------------------------
-    # Settle previous week's locked predictions BEFORE training
+    # Settle previous week's locked predictions BEFORE training.
+    # Daily refreshes do not need to repeat this already-completed gate.
     # ---------------------------------------------------------
 
     settlement_result = None
 
-    if week > 1:
+    if week > 1 and not refresh:
 
         previous_week = week - 1
 
@@ -779,7 +780,7 @@ def run(season, week, dry_run=False, refresh=False):
                 f"not fully final."
             )
 
-    else:
+    elif week == 1:
 
         print()
         print(
@@ -1557,12 +1558,15 @@ def run(season, week, dry_run=False, refresh=False):
     # Summary
     # ---------------------------------------------------------
 
-    expected_games = len(games)
+    expected_games = len(active_games) if refresh else len(games)
 
     if (
         errors == 0
-        and processed + skipped
-        == expected_games
+        and (
+            processed == expected_games
+            if refresh
+            else processed + skipped == expected_games
+        )
     ):
         status = "OK"
 
@@ -1586,7 +1590,7 @@ def run(season, week, dry_run=False, refresh=False):
             "pipeline_runs"
         ).insert({
             "run_type":
-                "WEEKLY_MODEL",
+                "DAILY_REFRESH" if refresh else "WEEKLY_MODEL",
 
             "season":
                 season,
