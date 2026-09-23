@@ -976,7 +976,21 @@ def run(season, week, dry_run=False, refresh=False):
 
         if existing_event_ids:
 
-            if (
+            if refresh:
+                if not (
+                    len(existing_event_ids) == len(games)
+                    and existing_event_ids == schedule_event_ids
+                ):
+                    raise RuntimeError(
+                        f"Refresh integrity error for {season} Week {week}: "
+                        "stored predictions do not match the official schedule."
+                    )
+                print(
+                    f"Daily refresh: {len(active_games)} pre-kickoff "
+                    "games will be recalculated; started games stay frozen."
+                )
+
+            elif (
                 len(existing_event_ids) == len(games)
                 and existing_event_ids
                 == schedule_event_ids
