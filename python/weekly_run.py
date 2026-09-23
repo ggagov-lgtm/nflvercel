@@ -843,7 +843,7 @@ def run(season, week, dry_run=False, refresh=False):
 
     market_cache = {}
 
-    if not dry_run:
+    if not dry_run and active_games:
 
         print()
         print("=" * 78)
@@ -1081,6 +1081,25 @@ def run(season, week, dry_run=False, refresh=False):
             )
 
             raise RuntimeError(message)
+
+    if refresh and not active_games:
+        message = "No pre-kickoff games remain; nothing to refresh."
+        print(message)
+        db.table("pipeline_runs").insert({
+            "run_type": "DAILY_REFRESH",
+            "season": season,
+            "week": week,
+            "started_at": started_at,
+            "completed_at": utc_now(),
+            "status": "OK",
+            "message": message,
+            "model_version": MODEL_VERSION,
+            "games_expected": 0,
+            "games_processed": 0,
+            "errors": 0,
+            "warnings": 0,
+        }).execute()
+        return
 
     print()
     print("=" * 78)
