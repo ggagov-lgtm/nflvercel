@@ -674,6 +674,10 @@
 .introIdentity{min-width:0}
 .introSeason{display:block;color:var(--green);font-size:9px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
 .introIdentity h1{margin:2px 0 2px;font-size:29px;line-height:1.05;letter-spacing:-.035em}
+.weekNavigator{display:grid;grid-template-columns:34px auto 34px;align-items:center;justify-content:start;gap:7px;margin:1px 0}
+.weekArrow{display:grid;place-items:center;width:30px;height:30px;border:1px solid #31465b;border-radius:8px;background:#0d2032;color:#d9e7f3;font-size:24px;font-weight:700;line-height:1;text-decoration:none;transition:background .15s,border-color .15s,transform .15s}
+.weekArrow:hover{background:#142c43;border-color:#4e6d89;transform:translateY(-1px)}
+.weekArrowDisabled{opacity:.25;pointer-events:none}
 .introIdentity p{margin:0;color:var(--muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .introOperations{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;min-width:0}
 .introProgress{min-width:0}
