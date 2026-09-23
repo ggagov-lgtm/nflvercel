@@ -640,6 +640,7 @@ def run(season, week, dry_run=False, refresh=False):
         "Mode:",
         "DRY RUN - ZERO DATABASE WRITES"
         if dry_run
+        else "DAILY REFRESH" if refresh
         else "PRODUCTION",
     )
     print("=" * 78)
