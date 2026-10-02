@@ -936,19 +936,14 @@ def run(season, week, dry_run=False, refresh=False):
     # ---------------------------------------------------------
     # Official-week prediction state preflight
     #
-    # Production weeks are immutable complete sets:
-    #
-    #   0 existing   -> create the complete week
-    #   all existing -> clean idempotent rerun
-    #   partial      -> integrity error; never fill piecemeal
+    # Tuesday creates one complete prediction set. Nightly refreshes may
+    # recalculate only games that have not kicked off; started/final games
+    # remain frozen. A completed game therefore must never make the rest of
+    # the week's refresh fail.
     # ---------------------------------------------------------
 
     if not dry_run:
-
-        schedule_event_ids = {
-            str(game["event_id"])
-            for game in games
-        }
+        schedule_event_ids = {str(game["event_id"]) for game in games}
 
         existing_response = (
             db.table("predictions")
@@ -957,54 +952,57 @@ def run(season, week, dry_run=False, refresh=False):
             .eq("week", week)
             .execute()
         )
-
-        existing_rows = (
-            existing_response.data or []
-        )
-
-        existing_event_ids = {
-            str(row["event_id"])
-            for row in existing_rows
-        }
+        existing_rows = existing_response.data or []
+        existing_event_ids = {str(row["event_id"]) for row in existing_rows}
 
         if existing_event_ids:
+            complete_exact_set = (
+                len(existing_event_ids) == len(games)
+                and existing_event_ids == schedule_event_ids
+            )
 
             if refresh:
-                if not (
-                    len(existing_event_ids) == len(games)
-                    and existing_event_ids == schedule_event_ids
-                ):
-                    raise RuntimeError(
+                if not complete_exact_set:
+                    missing = sorted(schedule_event_ids - existing_event_ids)
+                    extra = sorted(existing_event_ids - schedule_event_ids)
+                    message = (
                         f"Refresh integrity error for {season} Week {week}: "
-                        "stored predictions do not match the official schedule."
+                        f"stored predictions do not match the official schedule. "
+                        f"Missing event IDs: {missing or 'none'}; "
+                        f"unexpected event IDs: {extra or 'none'}."
                     )
+                    db.table("pipeline_runs").insert({
+                        "run_type": "DAILY_REFRESH",
+                        "season": season,
+                        "week": week,
+                        "started_at": started_at,
+                        "completed_at": utc_now(),
+                        "status": "ERROR",
+                        "message": message,
+                        "model_version": MODEL_VERSION,
+                        "games_expected": len(active_games),
+                        "games_processed": 0,
+                        "errors": 1,
+                        "warnings": 0,
+                    }).execute()
+                    log_health(db, "NFL Model", "ERROR", message, dry_run)
+                    raise RuntimeError(message)
+
                 print(
                     f"Daily refresh: {len(active_games)} pre-kickoff "
-                    "games will be recalculated; started games stay frozen."
+                    "games will be recalculated; started/final games stay frozen."
                 )
 
-            elif (
-                len(existing_event_ids) == len(games)
-                and existing_event_ids
-                == schedule_event_ids
-            ):
-
+            elif complete_exact_set:
                 skipped = len(games)
-
                 message = (
-                    f"{season} Week {week} already has "
-                    f"a complete locked prediction set "
-                    f"({skipped}/{len(games)} games). "
-                    f"Idempotent rerun: no predictions "
-                    f"were changed."
+                    f"{season} Week {week} already has a complete locked "
+                    f"prediction set ({skipped}/{len(games)} games). "
+                    "Idempotent rerun: no predictions were changed."
                 )
-
                 print()
                 print(message)
-
-                db.table(
-                    "pipeline_runs"
-                ).insert({
+                db.table("pipeline_runs").insert({
                     "run_type": "WEEKLY_MODEL",
                     "season": season,
                     "week": week,
@@ -1018,61 +1016,38 @@ def run(season, week, dry_run=False, refresh=False):
                     "errors": 0,
                     "warnings": 0,
                 }).execute()
-
-                log_health(
-                    db,
-                    "NFL Model",
-                    "OK",
-                    message,
-                    dry_run,
-                )
-
+                log_health(db, "NFL Model", "OK", message, dry_run)
                 print()
                 print("=" * 78)
                 print("WEEK ALREADY COMPLETE - NO CHANGES")
                 print("=" * 78)
-
                 return
 
-            message = (
-                f"Prediction integrity error for "
-                f"{season} Week {week}: database contains "
-                f"{len(existing_event_ids)} prediction(s), "
-                f"but the official schedule contains "
-                f"{len(schedule_event_ids)} games. "
-                f"Partial or mismatched prediction sets "
-                f"cannot be extended automatically."
-            )
-
-            print()
-            print(message)
-
-            db.table(
-                "pipeline_runs"
-            ).insert({
-                "run_type": "WEEKLY_MODEL",
-                "season": season,
-                "week": week,
-                "started_at": started_at,
-                "completed_at": utc_now(),
-                "status": "ERROR",
-                "message": message,
-                "model_version": MODEL_VERSION,
-                "games_expected": len(games),
-                "games_processed": 0,
-                "errors": 1,
-                "warnings": 0,
-            }).execute()
-
-            log_health(
-                db,
-                "NFL Model",
-                "ERROR",
-                message,
-                dry_run,
-            )
-
-            raise RuntimeError(message)
+            else:
+                message = (
+                    f"Prediction integrity error for {season} Week {week}: "
+                    f"database contains {len(existing_event_ids)} prediction(s), "
+                    f"but the official schedule contains {len(schedule_event_ids)} games. "
+                    "Partial or mismatched prediction sets cannot be extended automatically."
+                )
+                print()
+                print(message)
+                db.table("pipeline_runs").insert({
+                    "run_type": "WEEKLY_MODEL",
+                    "season": season,
+                    "week": week,
+                    "started_at": started_at,
+                    "completed_at": utc_now(),
+                    "status": "ERROR",
+                    "message": message,
+                    "model_version": MODEL_VERSION,
+                    "games_expected": len(games),
+                    "games_processed": 0,
+                    "errors": 1,
+                    "warnings": 0,
+                }).execute()
+                log_health(db, "NFL Model", "ERROR", message, dry_run)
+                raise RuntimeError(message)
 
     if refresh and not active_games:
         message = "No pre-kickoff games remain; nothing to refresh."
