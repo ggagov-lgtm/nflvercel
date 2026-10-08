@@ -98,7 +98,9 @@ async function getEspnGameStates(season: number, week: number) {
 }
 
 
-async function getScheduledGames(season: number, week: number) {
+type ScheduledGame = { id: string; date: string; state: string; home: string; away: string; homeLogo: string; awayLogo: string };
+
+async function getScheduledGames(season: number, week: number): Promise<ScheduledGame[]> {
   try {
     const url = `https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=${season}&week=${week}&seasontype=2`;
     const response = await fetch(url, { next: { revalidate: 300 } });
@@ -202,7 +204,7 @@ export default async function Page({
 
   const scheduledGames = displayLatest ? await getScheduledGames(displayLatest.season, displayLatest.week) : [];
   const savedEventIds = new Set(preds.map(p => String(p.event_id)));
-  const pendingGames = previewMode ? [] : scheduledGames.filter(g => !savedEventIds.has(g.id));
+  const pendingGames = previewMode ? [] : scheduledGames.filter((g: ScheduledGame) => !savedEventIds.has(g.id));
 
   const completedPerformance = (() => {
     let finals = 0;
