@@ -800,3 +800,37 @@
 .authSuccess,.authError{padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.45}
 .authSuccess{background:#35d07f14;border:1px solid #35d07f55;color:#9ee5be}
 .authError{background:#ff6b6b12;border:1px solid #ff6b6b55;color:#ffaaaa}
+
+
+/* Day/night theme — compact editorial palette */
+.brandAndTheme{display:flex;align-items:center;gap:14px;min-width:0}
+.themeToggle{width:39px;height:39px;flex:none;display:grid;place-items:center;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--text);cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+.themeToggle:hover{border-color:var(--green);transform:translateY(-1px)}
+.themeToggle:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+:root[data-theme="light"]{color-scheme:light;--bg:#f6f8fb;--panel:#ffffff;--panel2:#f8fafc;--line:#dce4ed;--text:#16263c;--muted:#52647a;--green:#087b50;--green2:#e0f4e9;--gold:#936000;--red:#bb303b}
+:root[data-theme="light"] body{background:radial-gradient(circle at 30% -10%,#e9f1fa 0,#f6f8fb 38%);color:var(--text)}
+:root[data-theme="light"] .panel{box-shadow:0 8px 26px #263b5610}
+:root[data-theme="light"] .metric,
+:root[data-theme="light"] .market,
+:root[data-theme="light"] .heroStatus,
+:root[data-theme="light"] .modelStrip,
+:root[data-theme="light"] .pick,
+:root[data-theme="light"] .gameTop{background:#f5f8fc;color:var(--text)}
+:root[data-theme="light"] .gameCard{background:linear-gradient(180deg,#ffffff,#f8fafc);box-shadow:0 8px 25px #263b5612}
+:root[data-theme="light"] .pickBest{background:linear-gradient(180deg,#e0f4e9,#f3fbf7);border-color:#8bceb0}
+:root[data-theme="light"] .pickSecond{background:#f0f7f3;border-color:#b4d5c4}
+:root[data-theme="light"] .pickThird{background:#f3f6fa;border-color:#d4dde7}
+:root[data-theme="light"] .nav a,
+:root[data-theme="light"] .button{background:#edf3f9;color:#16263c;border-color:#cfdce9}
+:root[data-theme="light"] .auth input{background:#fff;color:#16263c}
+:root[data-theme="light"] .metric small,
+:root[data-theme="light"] .gameFooter,
+:root[data-theme="light"] .modelDisclosure,
+:root[data-theme="light"] .pickStats span{color:#53647a}
+:root[data-theme="light"] .topPicksCard,
+:root[data-theme="light"] .topPickRow{color:var(--text)}
+:root[data-theme="light"] .topPicksCard{background:#fff;border-color:var(--line)}
+:root[data-theme="light"] .topPickRow{background:#f5f8fc;border-color:var(--line)}
+:root[data-theme="light"] .topPicksCard strong,
+:root[data-theme="light"] .topPickText strong{color:var(--text)}
+@media(max-width:700px){.brandAndTheme{gap:8px}.themeToggle{width:34px;height:34px;border-radius:9px}}
