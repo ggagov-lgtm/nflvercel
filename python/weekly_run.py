@@ -876,50 +876,7 @@ def run(season, week, dry_run=False, refresh=False):
                 )
 
         if missing_markets:
-
-            details = "; ".join(
-                f'{x["game"]}: {x["error"]}'
-                for x in missing_markets
-            )
-
-            message = (
-                f"Production market preflight failed: "
-                f"{len(missing_markets)} of "
-                f"{len(games)} games missing "
-                f"complete sportsbook markets. "
-                f"ZERO new predictions written. "
-                f"{details}"
-            )
-
-            print()
-            print(message)
-
-            db.table(
-                "pipeline_runs"
-            ).insert({
-                "run_type": "WEEKLY_MODEL",
-                "season": season,
-                "week": week,
-                "started_at": started_at,
-                "completed_at": utc_now(),
-                "status": "ERROR",
-                "message": message,
-                "model_version": MODEL_VERSION,
-                "games_expected": len(games),
-                "games_processed": 0,
-                "errors": len(missing_markets),
-                "warnings": 0,
-            }).execute()
-
-            log_health(
-                db,
-                "NFL Model",
-                "ERROR",
-                message,
-                dry_run,
-            )
-
-            raise RuntimeError(message)
+            print(f"{len(missing_markets)} games pending sportsbook odds; eligible games will still be modeled.")
 
         print()
         print(
@@ -962,36 +919,7 @@ def run(season, week, dry_run=False, refresh=False):
             )
 
             if refresh:
-                if not complete_exact_set:
-                    missing = sorted(schedule_event_ids - existing_event_ids)
-                    extra = sorted(existing_event_ids - schedule_event_ids)
-                    message = (
-                        f"Refresh integrity error for {season} Week {week}: "
-                        f"stored predictions do not match the official schedule. "
-                        f"Missing event IDs: {missing or 'none'}; "
-                        f"unexpected event IDs: {extra or 'none'}."
-                    )
-                    db.table("pipeline_runs").insert({
-                        "run_type": "DAILY_REFRESH",
-                        "season": season,
-                        "week": week,
-                        "started_at": started_at,
-                        "completed_at": utc_now(),
-                        "status": "ERROR",
-                        "message": message,
-                        "model_version": MODEL_VERSION,
-                        "games_expected": len(active_games),
-                        "games_processed": 0,
-                        "errors": 1,
-                        "warnings": 0,
-                    }).execute()
-                    log_health(db, "NFL Model", "ERROR", message, dry_run)
-                    raise RuntimeError(message)
-
-                print(
-                    f"Daily refresh: {len(active_games)} pre-kickoff "
-                    "games will be recalculated; started/final games stay frozen."
-                )
+                print(f"Daily refresh: {len(active_games)} future games; missing predictions may be added.")
 
             elif complete_exact_set:
                 skipped = len(games)
@@ -1024,30 +952,7 @@ def run(season, week, dry_run=False, refresh=False):
                 return
 
             else:
-                message = (
-                    f"Prediction integrity error for {season} Week {week}: "
-                    f"database contains {len(existing_event_ids)} prediction(s), "
-                    f"but the official schedule contains {len(schedule_event_ids)} games. "
-                    "Partial or mismatched prediction sets cannot be extended automatically."
-                )
-                print()
-                print(message)
-                db.table("pipeline_runs").insert({
-                    "run_type": "WEEKLY_MODEL",
-                    "season": season,
-                    "week": week,
-                    "started_at": started_at,
-                    "completed_at": utc_now(),
-                    "status": "ERROR",
-                    "message": message,
-                    "model_version": MODEL_VERSION,
-                    "games_expected": len(games),
-                    "games_processed": 0,
-                    "errors": 1,
-                    "warnings": 0,
-                }).execute()
-                log_health(db, "NFL Model", "ERROR", message, dry_run)
-                raise RuntimeError(message)
+                print("Partial prediction set exists; missing future games will be retried.")
 
     if refresh and not active_games:
         message = "No pre-kickoff games remain; nothing to refresh."
@@ -1092,6 +997,13 @@ def run(season, week, dry_run=False, refresh=False):
         event_id = game["event_id"]
         away = game["away"]["abbr"]
         home = game["home"]["abbr"]
+        if not dry_run and not refresh and str(event_id) in existing_event_ids:
+            skipped += 1
+            continue
+        if not dry_run and _parse_game_time(game["date"]) <= dt.datetime.now(dt.timezone.utc) and str(event_id) not in existing_event_ids:
+            print(f"Skipping {away} @ {home}: kickoff already passed; no retroactive prediction.")
+            skipped += 1
+            continue
 
         print()
         print("-" * 78)
@@ -1120,8 +1032,12 @@ def run(season, week, dry_run=False, refresh=False):
         else:
 
             # Already validated during production preflight.
-            market = market_cache[event_id]
+            market = market_cache.get(event_id)
             market_error = None
+            if market is None:
+                warnings_count += 1
+                print('ODDS PENDING - prediction will be retried before kickoff')
+                continue
 
         print(
             f"Market: {market['provider']} | "
@@ -1449,80 +1365,24 @@ def run(season, week, dry_run=False, refresh=False):
 
     if not dry_run:
 
-        expected_new = (
-            len(active_games) if refresh
-            else len(games) - skipped
-        )
-
-        if (
-            errors > 0
-            or len(pending_rows) != expected_new
-        ):
-
-            message = (
-                f"Prediction completeness gate failed: "
-                f"{len(pending_rows)} of "
-                f"{expected_new} required new predictions "
-                f"modeled successfully. "
-                f"ZERO queued predictions written."
-            )
-
-            print()
-            print(message)
-
-            db.table(
-                "pipeline_runs"
-            ).insert({
-                "run_type": "WEEKLY_MODEL",
-                "season": season,
-                "week": week,
-                "started_at": started_at,
-                "completed_at": utc_now(),
-                "status": "ERROR",
-                "message": message,
-                "model_version": MODEL_VERSION,
-                "games_expected": len(games),
-                "games_processed": 0,
-                "errors": max(
-                    errors,
-                    expected_new - len(pending_rows),
-                ),
-                "warnings": warnings_count,
-            }).execute()
-
-            log_health(
-                db,
-                "NFL Model",
-                "ERROR",
-                message,
-                dry_run,
-            )
-
-            raise RuntimeError(message)
+        if errors:
+            print(f"{errors} games failed modeling; successful games may still be saved.")
 
         if pending_rows:
 
             try:
 
-                if refresh:
-                    response = db.rpc(
-                        "refresh_weekly_predictions",
-                        {
-                            "p_season": season,
-                            "p_week": week,
-                            "p_predictions": pending_rows,
-                        },
-                    ).execute()
-                else:
-                    response = db.rpc(
-                        "save_weekly_predictions",
-                        {
-                            "p_season": season,
-                            "p_week": week,
-                            "p_expected_games": len(games),
-                            "p_predictions": pending_rows,
-                        },
-                    ).execute()
+                # Existing rows are refreshed atomically and archived by the
+                # established RPC; missing games are inserted separately.
+                old_rows = [r for r in pending_rows if str(r["event_id"]) in existing_event_ids]
+                new_rows = [r for r in pending_rows if str(r["event_id"]) not in existing_event_ids]
+                if old_rows and refresh:
+                    db.rpc("refresh_weekly_predictions", {
+                        "p_season": season, "p_week": week,
+                        "p_predictions": old_rows,
+                    }).execute()
+                if new_rows:
+                    db.table("predictions").insert(new_rows).execute()
 
                 processed = len(
                     pending_rows
