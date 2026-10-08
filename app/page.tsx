@@ -97,6 +97,35 @@ async function getEspnGameStates(season: number, week: number) {
   }
 }
 
+
+async function getScheduledGames(season: number, week: number) {
+  try {
+    const url = `https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=${season}&week=${week}&seasontype=2`;
+    const response = await fetch(url, { next: { revalidate: 300 } });
+    if (!response.ok) return [];
+    const data = await response.json();
+    return (data.events || []).map((event: AnyObj) => {
+      const competitors = event.competitions?.[0]?.competitors || [];
+      const home = competitors.find((x: AnyObj) => x.homeAway === "home")?.team;
+      const away = competitors.find((x: AnyObj) => x.homeAway === "away")?.team;
+      return { id: String(event.id), date: event.date as string, state: event.status?.type?.state || "pre",
+        home: home?.abbreviation || "HOME", away: away?.abbreviation || "AWAY",
+        homeLogo: home?.logo || "", awayLogo: away?.logo || "" };
+    });
+  } catch { return []; }
+}
+
+async function getCurrentEspnWeek() {
+  try {
+    const response = await fetch("https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard", { next: { revalidate: 300 } });
+    if (!response.ok) return null;
+    const data = await response.json();
+    const season = Number(data.season?.year);
+    const week = Number(data.week?.number);
+    return Number.isInteger(season) && Number.isInteger(week) ? { season, week } : null;
+  } catch { return null; }
+}
+
 function resultClass(result?: string) {
   if (result === "WIN") return "resultWin";
   if (result === "LOSS") return "resultLoss";
@@ -134,6 +163,12 @@ export default async function Page({
   let displayLatest: { season: number; week: number } | null =
     hasRequestedWeek ? { season: requestedSeason, week: requestedWeek } : latest;
   let previewMode = false;
+  if (!hasRequestedWeek) {
+    const current = await getCurrentEspnWeek();
+    if (current && (!displayLatest || current.season > displayLatest.season || (current.season === displayLatest.season && current.week > displayLatest.week))) {
+      displayLatest = current;
+    }
+  }
 
   if (displayLatest) {
     const { data } = await s
@@ -164,6 +199,10 @@ export default async function Page({
   const gameStates = displayLatest
     ? await getEspnGameStates(displayLatest.season, displayLatest.week)
     : new Map<string, LiveGame>();
+
+  const scheduledGames = displayLatest ? await getScheduledGames(displayLatest.season, displayLatest.week) : [];
+  const savedEventIds = new Set(preds.map(p => String(p.event_id)));
+  const pendingGames = previewMode ? [] : scheduledGames.filter(g => !savedEventIds.has(g.id));
 
   const completedPerformance = (() => {
     let finals = 0;
@@ -576,9 +615,7 @@ export default async function Page({
           <h2>
             {previewMode
               ? `${preds.length} Display-Only Games`
-              : latest
-                ? `${preds.length} Locked Games`
-                : "No locked predictions yet"}
+              : `${preds.length} Predictions · ${pendingGames.length} Pending`}
           </h2>
         </div>
 
@@ -598,7 +635,7 @@ export default async function Page({
         </div>
       </section>
 
-      {!preds.length && (
+      {!preds.length && !pendingGames.length && (
         <section className="emptyState panel">
           <div className="lockIcon">🔒</div>
           <h2>Production pipeline ready</h2>
@@ -610,6 +647,20 @@ export default async function Page({
       )}
 
       <section className="games">
+        {pendingGames.map(game => (
+          <article className="panel" key={game.id} style={{ padding: 24, marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+              <div>
+                <strong style={{ fontSize: 18 }}>{game.away} @ {game.home}</strong>
+                <div style={{ opacity: .7, marginTop: 6 }}>{dateLabel(game.date)}</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <strong>{game.state === "pre" ? "Odds not available yet — prediction pending" : "Pregame prediction unavailable"}</strong>
+                <div style={{ opacity: .7, marginTop: 6 }}>{game.state === "pre" ? "Checking for sportsbook lines automatically" : "No verified pregame prediction was recorded"}</div>
+              </div>
+            </div>
+          </article>
+        ))}
         {preds.map((p) => {
           const g = p.game || {};
           const m = p.market || {};
