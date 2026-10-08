@@ -16,6 +16,7 @@ on:
   # the current week once nightly. DST is handled by the IANA timezone.
   schedule:
     - cron: '7 0 * * *'
+    - cron: '7 6,12,18 * * 2,3'
       timezone: "America/Chicago"
 
 jobs:
@@ -78,6 +79,19 @@ jobs:
           else:
               target_week = current_week
               refresh = True
+
+          # Recover automatically if the Tuesday creation failed due to
+          # unavailable sportsbook odds. Never use refresh mode before
+          # the initial complete weekly prediction set exists.
+          if local_day == 2:
+              import os
+              from supabase import create_client
+              db = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SECRET_KEY"])
+              existing = (db.table("predictions").select("event_id")
+                          .eq("season", season).eq("week", target_week)
+                          .limit(1).execute().data or [])
+              if not existing:
+                  refresh = False
 
           print(f"ESPN reported: {season} Week {current_week}")
           print(f"Prediction target: {season} Week {target_week}")
