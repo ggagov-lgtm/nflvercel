@@ -80,10 +80,10 @@ jobs:
               target_week = current_week
               refresh = True
 
-          # Recover automatically if the Tuesday creation failed due to
+          # Recover automatically on any subsequent day if Tuesday failed due to
           # unavailable sportsbook odds. Never use refresh mode before
           # the initial complete weekly prediction set exists.
-          if local_day == 2:
+          if local_day in (2, 3, 4, 5, 6, 0):
               import os
               from supabase import create_client
               db = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SECRET_KEY"])
