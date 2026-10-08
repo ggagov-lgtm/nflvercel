@@ -1,6 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import week2Preview from "@/data/week2-preview.json";
 
+// Predictions change independently of Vercel deployments via GitHub Actions.
+// Never serve a cached HTML snapshot of the weekly prediction board.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type AnyObj = Record<string, any>;
 
 type Pred = {
