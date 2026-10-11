@@ -1,4 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import week2Preview from "@/data/week2-preview.json";
 
 // Predictions change independently of Vercel deployments via GitHub Actions.
@@ -152,19 +153,31 @@ export default async function Page({
 }: {
   searchParams?: Promise<{ season?: string; week?: string }>;
 }) {
-  const s = await createClient();
+  const predictionDir = path.join(process.cwd(), "data", "predictions");
+  const loadWeek = async (season: number, week: number): Promise<Pred[]> => {
+    try {
+      const raw = await fs.readFile(path.join(predictionDir, `${season}-week-${week}.json`), "utf8");
+      return (JSON.parse(raw).predictions || []) as Pred[];
+    } catch { return []; }
+  };
+  const loadPerformance = async (season: number, week: number): Promise<AnyObj | null> => {
+    try {
+      const raw = await fs.readFile(path.join(process.cwd(), "data", "performance", `${season}-week-${week}.json`), "utf8");
+      return JSON.parse(raw);
+    } catch { return null; }
+  };
+  let availableWeeks: {season: number; week: number}[] = [];
+  try {
+    const files = await fs.readdir(predictionDir);
+    availableWeeks = files.flatMap(name => { const m = /^(\\d{4})-week-(\\d+)\\.json$/.exec(name); return m ? [{season: Number(m[1]), week: Number(m[2])}] : []; });
+    availableWeeks.sort((a,b) => b.season - a.season || b.week - a.week);
+  } catch {}
   const params = (await searchParams) || {};
   const requestedSeason = Number(params.season);
   const requestedWeek = Number(params.week);
   const hasRequestedWeek = Number.isInteger(requestedSeason) && Number.isInteger(requestedWeek) && requestedWeek > 0;
 
-  const { data: latest } = await s
-    .from("predictions")
-    .select("season,week")
-    .order("season", { ascending: false })
-    .order("week", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const latest = availableWeeks[0] || null;
 
   let preds: Pred[] = [];
   let displayLatest: { season: number; week: number } | null =
@@ -177,15 +190,7 @@ export default async function Page({
     }
   }
 
-  if (displayLatest) {
-    const { data } = await s
-      .from("predictions")
-      .select("*")
-      .eq("season", displayLatest.season)
-      .eq("week", displayLatest.week)
-      .order("locked_at");
-    preds = (data || []) as Pred[];
-  }
+  if (displayLatest) preds = await loadWeek(displayLatest.season, displayLatest.week);
 
   if (!preds.length && displayLatest?.season === week2Preview.season && displayLatest?.week === week2Preview.week) {
     preds = week2Preview.games as unknown as Pred[];
@@ -296,43 +301,26 @@ export default async function Page({
   let priorSeasonTopWins = 0;
   let priorSeasonTopLosses = 0;
   if (displayLatest && !previewMode) {
-    // Historical weekly performance includes manually backfilled preview weeks
-    // as well as future production-settled weeks.
-    const { data: priorWeeks } = await s
-      .from("model_performance_weekly")
-      .select("top_pick_wins,top_pick_losses")
-      .eq("season", displayLatest.season)
-      .lt("week", displayLatest.week);
-    for (const row of priorWeeks || []) {
-      priorSeasonTopWins += Number(row.top_pick_wins || 0);
-      priorSeasonTopLosses += Number(row.top_pick_losses || 0);
+    for (let w = 1; w < displayLatest.week; w++) {
+      const row = await loadPerformance(displayLatest.season, w);
+      priorSeasonTopWins += Number(row?.top_pick_wins || 0);
+      priorSeasonTopLosses += Number(row?.top_pick_losses || 0);
     }
   }
 
   let previousWeekPerformance: AnyObj | null = null;
-  if (displayLatest && displayLatest.week > 1) {
-    const { data: previousPerf } = await s
-      .from("model_performance_weekly")
-      .select("*")
-      .eq("season", displayLatest.season)
-      .eq("week", displayLatest.week - 1)
-      .maybeSingle();
-    previousWeekPerformance = previousPerf;
-  }
+  if (displayLatest && displayLatest.week > 1) previousWeekPerformance = await loadPerformance(displayLatest.season, displayLatest.week - 1);
 
   let weeklyNumberOneWins = 0;
   let weeklyNumberOneLosses = 0;
   if (displayLatest && !previewMode) {
-    const { data: weeklyTopHistory } = await s
-      .from("model_performance_weekly")
-      .select("weekly_top_pick_wins,weekly_top_pick_losses")
-      .eq("season", displayLatest.season)
-      .lt("week", displayLatest.week);
-    for (const row of weeklyTopHistory || []) {
-      weeklyNumberOneWins += Number(row.weekly_top_pick_wins || 0);
-      weeklyNumberOneLosses += Number(row.weekly_top_pick_losses || 0);
+    for (let w = 1; w < displayLatest.week; w++) {
+      const row = await loadPerformance(displayLatest.season, w);
+      weeklyNumberOneWins += Number(row?.weekly_top_pick_wins || 0);
+      weeklyNumberOneLosses += Number(row?.weekly_top_pick_losses || 0);
     }
   }
+
   const weeklyNumberOneHistoryRate =
     weeklyNumberOneWins + weeklyNumberOneLosses
       ? weeklyNumberOneWins / (weeklyNumberOneWins + weeklyNumberOneLosses)
