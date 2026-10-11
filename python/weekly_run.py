@@ -1,4 +1,6 @@
 import os
+import json
+from pathlib import Path
 import argparse
 import datetime as dt
 import warnings
@@ -625,10 +627,14 @@ def run(season, week, dry_run=False, refresh=False):
 
     started_at = utc_now()
 
+    file_mode = os.environ.get('PREDICTION_STORAGE', 'supabase').lower() == 'files'
     db = None
-
-    if not dry_run:
+    if not dry_run and not file_mode:
         db = create_db()
+    store_path = Path('data/predictions') / f'{season}-week-{week}.json'
+    file_rows = []
+    if file_mode and store_path.exists():
+        file_rows = json.loads(store_path.read_text(encoding='utf-8')).get('predictions', [])
 
     print("=" * 78)
     print("NFL QUANT MODEL")
@@ -753,7 +759,7 @@ def run(season, week, dry_run=False, refresh=False):
             f"({len(previous_games)}/{len(previous_games)} final)"
         )
 
-        settlement_result = settle_week(
+        settlement_result = {'status': 'FILE_MODE_DEFERRED'} if file_mode else settle_week(
             db=db,
             season=season,
             week=previous_week,
@@ -902,14 +908,17 @@ def run(season, week, dry_run=False, refresh=False):
     if not dry_run:
         schedule_event_ids = {str(game["event_id"]) for game in games}
 
-        existing_response = (
-            db.table("predictions")
-            .select("event_id,locked_at")
-            .eq("season", season)
-            .eq("week", week)
-            .execute()
-        )
-        existing_rows = existing_response.data or []
+        if file_mode:
+            existing_rows = file_rows
+        else:
+            existing_response = (
+                db.table("predictions")
+                .select("event_id,locked_at")
+                .eq("season", season)
+                .eq("week", week)
+                .execute()
+            )
+            existing_rows = existing_response.data or []
         existing_event_ids = {str(row["event_id"]) for row in existing_rows}
 
         if existing_event_ids:
@@ -930,7 +939,8 @@ def run(season, week, dry_run=False, refresh=False):
                 )
                 print()
                 print(message)
-                db.table("pipeline_runs").insert({
+                if not file_mode:
+                    db.table("pipeline_runs").insert({
                     "run_type": "WEEKLY_MODEL",
                     "season": season,
                     "week": week,
@@ -957,7 +967,8 @@ def run(season, week, dry_run=False, refresh=False):
     if refresh and not active_games:
         message = "No pre-kickoff games remain; nothing to refresh."
         print(message)
-        db.table("pipeline_runs").insert({
+        if not file_mode:
+            db.table("pipeline_runs").insert({
             "run_type": "DAILY_REFRESH",
             "season": season,
             "week": week,
@@ -1374,14 +1385,31 @@ def run(season, week, dry_run=False, refresh=False):
 
                 # Existing rows are refreshed atomically and archived by the
                 # established RPC; missing games are inserted separately.
-                old_rows = [r for r in pending_rows if str(r["event_id"]) in existing_event_ids]
-                new_rows = [r for r in pending_rows if str(r["event_id"]) not in existing_event_ids]
-                if old_rows and refresh:
+                if file_mode:
+                    merged = {str(r["event_id"]): r for r in file_rows}
+                    for row in pending_rows:
+                        event_id = str(row["event_id"])
+                        if event_id in merged:
+                            previous = merged[event_id]
+                            history_path = Path("data/prediction-history") / f"{season}-week-{week}.jsonl"
+                            history_path.parent.mkdir(parents=True, exist_ok=True)
+                            with history_path.open("a", encoding="utf-8") as history_file:
+                                history_file.write(json.dumps(previous, separators=(",", ":")) + "\\n")
+                        merged[event_id] = row
+                    store_path.parent.mkdir(parents=True, exist_ok=True)
+                    tmp = store_path.with_suffix(".tmp")
+                    tmp.write_text(json.dumps({"season": season, "week": week, "predictions": list(merged.values()), "updated_at": utc_now()}, indent=2, default=str), encoding="utf-8")
+                    tmp.replace(store_path)
+                    print(f"FILE SAVED: {store_path} ({len(merged)} predictions)")
+                else:
+                    old_rows = [r for r in pending_rows if str(r["event_id"]) in existing_event_ids]
+                    new_rows = [r for r in pending_rows if str(r["event_id"]) not in existing_event_ids]
+                if not file_mode and old_rows and refresh:
                     db.rpc("refresh_weekly_predictions", {
                         "p_season": season, "p_week": week,
                         "p_predictions": old_rows,
                     }).execute()
-                if new_rows:
+                if not file_mode and new_rows:
                     db.table("predictions").insert(new_rows).execute()
 
                 processed = len(
@@ -1440,7 +1468,7 @@ def run(season, week, dry_run=False, refresh=False):
         f"out of {expected_games} games"
     )
 
-    if not dry_run:
+    if not dry_run and not file_mode:
 
         db.table(
             "pipeline_runs"
