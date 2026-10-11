@@ -1,6 +1,10 @@
 name: NFL Weekly Model
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/weekly_model.yml"
   workflow_dispatch:
     inputs:
       season:
