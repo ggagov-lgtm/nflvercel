@@ -22,9 +22,13 @@ on:
 jobs:
   model:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - uses: actions/setup-python@v5
         with:
@@ -35,8 +39,7 @@ jobs:
 
       - name: Run weekly NFL model
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          PREDICTION_STORAGE: files
           INPUT_SEASON: ${{ inputs.season }}
           INPUT_WEEK: ${{ inputs.week }}
           EVENT_NAME: ${{ github.event_name }}
@@ -85,12 +88,8 @@ jobs:
           # the initial complete weekly prediction set exists.
           if local_day in (2, 3, 4, 5, 6, 0):
               import os
-              from supabase import create_client
-              db = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SECRET_KEY"])
-              existing = (db.table("predictions").select("event_id")
-                          .eq("season", season).eq("week", target_week)
-                          .limit(1).execute().data or [])
-              if not existing:
+              target_file = f"data/predictions/{season}-week-{target_week}.json"
+              if not os.path.exists(target_file):
                   refresh = False
 
           print(f"ESPN reported: {season} Week {current_week}")
@@ -108,4 +107,18 @@ jobs:
           subprocess.check_call(cmd)
           PY
 
+          fi
+
+      - name: Commit updated prediction files
+        if: always()
+        run: |
+          if [ -d data/predictions ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/predictions data/prediction-history 2>/dev/null || git add data/predictions
+            if ! git diff --cached --quiet; then
+              git commit -m "Update NFL prediction JSON [skip ci]"
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
           fi
