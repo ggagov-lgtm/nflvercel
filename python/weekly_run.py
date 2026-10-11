@@ -1394,7 +1394,7 @@ def run(season, week, dry_run=False, refresh=False):
                             history_path = Path("data/prediction-history") / f"{season}-week-{week}.jsonl"
                             history_path.parent.mkdir(parents=True, exist_ok=True)
                             with history_path.open("a", encoding="utf-8") as history_file:
-                                history_file.write(json.dumps(previous, separators=(",", ":")) + "\\n")
+                                history_file.write(json.dumps(previous, separators=(",", ":")) + "\n")
                         merged[event_id] = row
                     store_path.parent.mkdir(parents=True, exist_ok=True)
                     tmp = store_path.with_suffix(".tmp")
