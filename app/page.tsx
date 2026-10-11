@@ -169,7 +169,7 @@ export default async function Page({
   let availableWeeks: {season: number; week: number}[] = [];
   try {
     const files = await fs.readdir(predictionDir);
-    availableWeeks = files.flatMap(name => { const m = /^(\\d{4})-week-(\\d+)\\.json$/.exec(name); return m ? [{season: Number(m[1]), week: Number(m[2])}] : []; });
+    availableWeeks = files.flatMap(name => { const m = /^(\d{4})-week-(\d+)\.json$/.exec(name); return m ? [{season: Number(m[1]), week: Number(m[2])}] : []; });
     availableWeeks.sort((a,b) => b.season - a.season || b.week - a.week);
   } catch {}
   const params = (await searchParams) || {};
