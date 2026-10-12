@@ -6279,42 +6279,42 @@
       },
       "market": {
         "provider": "DraftKings",
-        "spread": -3.5,
-        "market_margin": 3.5,
+        "spread": -3.0,
+        "market_margin": 3.0,
         "total": 54.5,
-        "home_ml": -185,
-        "away_ml": 154,
-        "captured_at": "2026-10-11T12:45:04.157873+00:00"
+        "home_ml": -175,
+        "away_ml": 145,
+        "captured_at": "2026-10-12T05:44:00.231167+00:00"
       },
       "model": {
-        "pred_home": 28.92648,
-        "pred_away": 25.13314,
-        "model_margin": 3.79334,
-        "model_total": 54.05962,
-        "home_win_prob": 0.63106,
-        "away_win_prob": 0.33236,
-        "tie_prob": 0.03658,
-        "home_cover_prob": 0.51052,
-        "away_cover_prob": 0.48948,
-        "spread_push_prob": 0.0,
-        "over_prob": 0.4835,
-        "under_prob": 0.5165,
+        "pred_home": 28.70574,
+        "pred_away": 25.35522,
+        "model_margin": 3.35052,
+        "model_total": 54.06096,
+        "home_win_prob": 0.61416,
+        "away_win_prob": 0.3479,
+        "tie_prob": 0.03794,
+        "home_cover_prob": 0.4924,
+        "away_cover_prob": 0.46638,
+        "spread_push_prob": 0.04122,
+        "over_prob": 0.48388,
+        "under_prob": 0.51612,
         "total_push_prob": 0.0,
-        "market_fair_home_prob": 0.6224665518611737,
-        "market_fair_away_prob": 0.3775334481388264,
+        "market_fair_home_prob": 0.6092362344582594,
+        "market_fair_away_prob": 0.39076376554174075,
         "simulations": 50000,
         "model_version": "v2.0.0",
         "football_weight": 0.1,
-        "market_margin": 3.5,
+        "market_margin": 3.0,
         "market_total": 54.5,
         "football_margin": 2.5527508261890612,
         "football_total": 50.5218716283717,
-        "base_margin": 3.405275082618906,
+        "base_margin": 2.9552750826189063,
         "base_total": 54.10218716283717,
         "injury_margin_adjustment": 0.392,
         "context_margin_adjustment": 0.0,
         "weather_total_adjustment": 0.0,
-        "expected_margin": 3.797275082618906,
+        "expected_margin": 3.347275082618906,
         "expected_total": 54.10218716283717,
         "qb": {
           "home_qb_id": "00-0026498",
@@ -6501,7 +6501,7 @@
         "context": {
           "venue_indoor": 1.0,
           "venue_grass": 0.0,
-          "temperature": 67.0,
+          "temperature": 68.0,
           "wind_gust": 0.0,
           "precipitation_probability": 0.0,
           "weather_cold_severity": 0.0,
@@ -6718,7 +6718,7 @@
           ],
           "weather": {
             "indoor": true,
-            "temperature": 67.0,
+            "temperature": 68.0,
             "wind_gust": 0.0,
             "precipitation_probability": 0.0
           },
@@ -6733,9 +6733,9 @@
         "training_cutoff": "2026-W4"
       },
       "model_version": "v2.0.0",
-      "prediction_run_at": "2026-10-11T12:52:18.249528+00:00",
-      "locked_at": "2026-10-11T12:52:18.249528+00:00"
+      "prediction_run_at": "2026-10-12T05:48:52.110780+00:00",
+      "locked_at": "2026-10-12T05:48:52.110780+00:00"
     }
   ],
-  "updated_at": "2026-10-11T12:52:18.249697+00:00"
+  "updated_at": "2026-10-12T05:48:52.111247+00:00"
 }
