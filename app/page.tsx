@@ -360,9 +360,9 @@ export default async function Page({
   })();
 
   const weeklyTopPicks = (() => {
-    const winner: AnyObj[] = [];
-    const spread: AnyObj[] = [];
-    const total: AnyObj[] = [];
+    const winner: TopPick[] = [];
+    const spread: TopPick[] = [];
+    const total: TopPick[] = [];
     const overall: TopPick[] = [];
 
     for (const p of preds) {
