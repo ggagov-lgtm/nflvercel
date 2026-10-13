@@ -1100,14 +1100,9 @@ export default async function Page({
               </summary>
 
               <div className="gameExpansion">
-                {historicalReplayMode && <p className="historicalReplayNotice">
-                  Historical backtest: this v2.2 forecast was computed after the game using pre-2026
-                  training and retrospectively sourced sportsbook odds. It is not an originally locked
-                  pregame prediction and does not count toward the official performance record.
-                </p>}
                 <div className="analysisLead">
                   <div className="analysisPrediction">
-                    <span className="sectionKicker">LOCKED MODEL PREDICTION</span>
+                    <span className="sectionKicker">{historicalReplayMode ? "MODEL REPLAY" : "LOCKED MODEL PREDICTION"}</span>
                     <div className="analysisScore"><b>{g.away?.abbr} {num(x.pred_away)}</b><em>—</em><b>{g.home?.abbr} {num(x.pred_home)}</b></div>
                     <div className="analysisPicks">
                       {picks.map((pick,rank)=>{
