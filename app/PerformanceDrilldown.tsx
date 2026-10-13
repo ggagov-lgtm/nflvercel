@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 type Pick = {
   game: string;
@@ -93,7 +94,7 @@ export default function PerformanceDrilldown({
     ...(pending ? [{ value: "PENDING" as const, label: "Pending" }] : []),
   ];
 
-  return (
+  return createPortal(
     <div className="bettorDetailBackdrop" onMouseDown={e => {
       if (e.target === e.currentTarget) onClose();
     }}>
@@ -114,7 +115,7 @@ export default function PerformanceDrilldown({
         </div>
         <div className="bettorDetailBreakdown">
           <span>Winning bets earned <b className="bettorPositive">{dollars(winningReturns)}</b></span>
-          <span>Losing bets cost <b className="bettorNegative">−$${(stats.losses * 10).toFixed(2)}</b></span>
+          <span>Losing bets cost <b className="bettorNegative">{"−$" + (stats.losses * 10).toFixed(2)}</b></span>
         </div>
         <p className="bettorDetailNote" id="bettorDetailNote">
           Hypothetical $10 stake per pick · archived odds when available · missing spread/total prices estimated at −110.
@@ -153,6 +154,7 @@ export default function PerformanceDrilldown({
           <button type="button" onClick={onClose}>Close</button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
