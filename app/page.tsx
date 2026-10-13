@@ -392,14 +392,25 @@ export default async function Page({
         matchup: `${g.away?.abbr || "AWAY"} at ${g.home?.abbr || "HOME"}`,
       };
 
+      // Grade the original locked selection against ESPN's final score.
+      const live = gameStates.get(String(p.event_id));
+      const grade = (side: "home"|"away"|"over"|"under", line?: number) => {
+        if (live?.state !== "post" || live.homeScore === undefined || live.awayScore === undefined) return state === "in" ? "LIVE" : "UPCOMING";
+        const diff = live.homeScore - live.awayScore;
+        const totalPoints = live.homeScore + live.awayScore;
+        const delta = side === "home" ? diff + (line ?? 0) : side === "away" ? -diff + (line ?? 0) : side === "over" ? totalPoints - (line ?? NaN) : (line ?? NaN) - totalPoints;
+        if (!Number.isFinite(delta)) return "UNAVAILABLE";
+        return Math.abs(delta) < 0.000001 ? "PUSH" : delta > 0 ? "WIN" : "LOSS";
+      };
+      Object.assign(ml, {result:grade(homeML ? "home" : "away")});
+      Object.assign(sp, {result:grade(spreadHome ? "home" : "away", selectedLine)});
+      Object.assign(tot, {result:grade(isOver ? "over" : "under", marketTotal)});
       // Preserve every locked prediction in the overall pool so the week's
       // true #1 pick remains identifiable and gradeable after its game finishes.
       overall.push(ml, sp, tot);
 
-      // The visible Top 3 boards intentionally show only games still actionable.
-      if (state !== "post") {
-        winner.push(ml); spread.push(sp); total.push(tot);
-      }
+      // Keep locked picks visible after kickoff so final results can be reviewed.
+      winner.push(ml); spread.push(sp); total.push(tot);
     }
 
     const top3 = (rows: AnyObj[]) =>
@@ -577,10 +588,10 @@ export default async function Page({
       <section className="topPicksSection">
         <div className="topPicksTitle">
           <div>
-            <span className="sectionKicker">TOP PICKS THIS WEEK</span>
+            <span className="sectionKicker">TOP PICKS &amp; RESULTS</span>
             <h2>Highest-probability model predictions</h2>
           </div>
-          <small>Upcoming and live games only · completed games automatically drop out</small>
+          <small>Original locked predictions · final games show results</small>
         </div>
 
         <div className="topPicksGrid">
@@ -604,10 +615,10 @@ export default async function Page({
                       <strong>{pick.selection}</strong>
                       <span>{pick.matchup}{group.className === "topOverall" ? ` · ${pick.category}` : ""}</span>
                     </div>
-                    <b className="topProbability">{pct(pick.probability)}</b>
+                    <div className="topPickOutcome"><b className="topProbability">{pct(pick.probability)}</b><span className={`topPickResult topPickResult${pick.result || "UPCOMING"}`}>{pick.result || "UPCOMING"}</span></div>
                   </div>
                 ))}
-                {!group.rows.length && <div className="noTopPicks">No upcoming picks</div>}
+                {!group.rows.length && <div className="noTopPicks">No predictions available</div>}
               </div>
             </article>
           ))}
