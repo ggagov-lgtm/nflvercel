@@ -1,4 +1,5 @@
 "use client";
+import OverallSummary from "./OverallSummary";
 
 type Pick = {
   game: string;
@@ -21,6 +22,7 @@ type Stats = {
   picks: Pick[];
 };
 type HistoryKey = "top3Winner" | "top3Spread" | "top3Total" | "top3Overall";
+type OverallPick = { eventId: string | number; category: string; probability: number; selection: string; logo: string; matchup: string; result?: string };
 type Key = "all" | "best" | "top3" | "moneyline" | "spread" | "total";
 type Week = { week: number } & Record<Key | HistoryKey, Stats>;
 
@@ -37,7 +39,6 @@ const historyLabels: { key: HistoryKey; title: string; subtitle: string }[] = [
   { key: "top3Winner", title: "Top 3 Winners", subtitle: "Moneyline" },
   { key: "top3Spread", title: "Top 3 Spreads", subtitle: "Point spread" },
   { key: "top3Total", title: "Top 3 Over/Unders", subtitle: "Game totals" },
-  { key: "top3Overall", title: "Top 3 Overall", subtitle: "Any bet type" },
 ];
 
 const money = (n: number | null) =>
@@ -64,10 +65,11 @@ function merge(rows: Stats[]): Stats {
   };
 }
 
-export default function PerformanceSummary({ weeks, currentWeek, season }: {
+export default function PerformanceSummary({ weeks, currentWeek, season, overallPicks }: {
   weeks: Week[];
   currentWeek: number;
   season: number;
+  overallPicks: OverallPick[];
 }) {
   const ordered = [...weeks].sort((a, b) => b.week - a.week);
   // Last Week means the previous NFL week, not a partially played current week.
@@ -77,7 +79,9 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
     labels.map(({ key }) => [key, merge(gradedWeeks.map(w => w[key]))])
   ) as Record<Key, Stats>;
   const historicalSummaries = Object.fromEntries(
-    historyLabels.map(({ key }) => [key, merge(gradedWeeks.map(w => w[key]))])
+    (["top3Winner", "top3Spread", "top3Total", "top3Overall"] as HistoryKey[]).map(key =>
+      [key, merge(gradedWeeks.map(w => w[key]))]
+    )
   ) as Record<HistoryKey, Stats>;
 
   const panels = [
@@ -92,6 +96,13 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
         <h2>How our picks performed</h2>
         <p>Hypothetical $10 per bet</p>
       </div>
+
+      <OverallSummary
+        lastWeek={previousWeek?.top3Overall ?? empty}
+        lastWeekNumber={previousWeek?.week}
+        seasonSummary={historicalSummaries.top3Overall}
+        overallPicks={overallPicks}
+      />
 
       {panels.map(panel => (
         <div className="bettorCompactGroup" key={panel.id}>
@@ -175,7 +186,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
       <details className="bettorCompactFoot">
         <summary>How are these calculated?</summary>
         <p>All Bets means one moneyline, one spread and one over/under selection per game. Best / Game means the highest-confidence selection in each game. Top 3 means the three highest-confidence selections in each week, regardless of market. Moneyline, Spread and Over/Under each show the strongest selection in that market per game. Results assume $10 on each selection, using archived sportsbook odds and final scores. Missing spread and total odds are estimated at −110; actual saved prices are used where available. Missing moneyline prices are not estimated and show N/A. Estimated returns are not historical sportsbook quotes. These are hypothetical results, not actual winnings.</p>
-        <p>The historical Top 3 breakdown uses the same four ranking groups as the weekly Top Picks section: each week's three most-confident winner, spread and over/under predictions, plus the three most-confident predictions across all markets. Selections are ranked using the original saved confidence before results are considered. Only settled picks count toward win/loss records; pushes and pending bets are excluded from the win-rate denominator. Season-to-date combines available archived weeks, excluding unverified retrospective backfills. Model confidence is not a measured win rate.</p>
+        <p>The historical Top 3 breakdown shows the three most-confident winner, spread and over/under predictions from each week. Top 3 Overall appears above as a separate featured card with historical results alongside the selected week's picks. Predictions are ranked from saved confidence before outcomes are known. Only graded picks count toward win/loss records; pushes and pending bets are excluded from the win-rate denominator. Season-to-date uses archived weeks and excludes unverified retrospective backfills. Model confidence is not a measured win rate.</p>
       </details>
     </section>
   );
