@@ -186,7 +186,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
                         ? "No graded picks"
                         : s.pushes > 0
                           ? "Pushes excluded"
-                          : "Win rate";
+                          : null;
               return (
                 <button
                   type="button"
@@ -204,7 +204,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
                     {showDollars ? winPercentage(s.wins, s.losses) : money(s.profit)}
                   </span>
                   <span className="bettorCompactRecord">{s.wins}W–{s.losses}L{s.pushes ? "–" + s.pushes + "P" : ""}</span>
-                  <span className="bettorCompactMissing">{summaryNote}</span>
+                  {summaryNote && <span className="bettorCompactMissing">{summaryNote}</span>}
                   {hasDetail ? <span className="bettorCompactViewCue" aria-hidden="true">View bets ›</span> : <span className="bettorCompactNoDetails">No bet details</span>}
                 </button>
               );
