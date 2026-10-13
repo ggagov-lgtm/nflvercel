@@ -633,7 +633,7 @@ export default async function Page({
           <h2>
             {previewMode
               ? `${preds.length} Display-Only Games`
-              : `${preds.length} Locked Predictions${pendingGames.filter(g => g.state === "pre").length ? ` · ${pendingGames.filter(g => g.state === "pre").length} Awaiting` : ""}`}
+              : `${preds.length + pendingGames.length} Games · ${preds.length} Locked Predictions`}
           </h2>
         </div>
 
@@ -664,12 +664,8 @@ export default async function Page({
         </section>
       )}
 
-      {pendingGames.some(game => game.state !== "pre") && (
-        <p className="missingPredictionNote">{pendingGames.filter(game => game.state !== "pre").length} completed game(s) have no archived pregame prediction and are excluded from model performance. {pendingGames.filter(game => game.state !== "pre").map(game => game.away + " @ " + game.home).join(", ")}</p>
-      )}
-
       <section className="games">
-        {pendingGames.filter(game => game.state === "pre").map(game => (
+        {pendingGames.map(game => (
           <article className="panel" key={game.id} style={{ padding: 24, marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
               <div>
@@ -677,8 +673,8 @@ export default async function Page({
                 <div style={{ opacity: .7, marginTop: 6 }}>{dateLabel(game.date)}</div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <strong>{game.state === "pre" ? "Odds not available yet — prediction pending" : "Pregame prediction unavailable"}</strong>
-                <div style={{ opacity: .7, marginTop: 6 }}>{game.state === "pre" ? "Checking for sportsbook lines automatically" : "No verified pregame prediction was recorded"}</div>
+                <strong>{game.state === "pre" ? "Prediction pending" : "NO ARCHIVED PREDICTION"}</strong>
+                <div style={{ opacity: .7, marginTop: 6 }}>{game.state === "pre" ? "Awaiting pregame sportsbook odds" : "Historical game included · excluded from model accuracy and returns"}</div>
               </div>
             </div>
           </article>
