@@ -18,7 +18,7 @@ from src.production_model import (
 
 class ProductionModelTests(unittest.TestCase):
     def test_model_version_and_conservative_weights(self):
-        self.assertEqual(MODEL_VERSION, "v2.1.0")
+        self.assertEqual(MODEL_VERSION, "v2.2.0")
         self.assertEqual(TOTAL_FOOTBALL_WEIGHT, 0.05)
         self.assertEqual(MARKET_MONEYLINE_WEIGHT, 0.75)
 
@@ -73,6 +73,26 @@ class ProductionModelTests(unittest.TestCase):
         self.assertTrue(math.isfinite(game["home_ml_expected_profit_10"]))
         self.assertTrue(math.isfinite(game["away_ml_expected_profit_10"]))
         self.assertIn(game["moneyline_value_side"], ("home", "away", None))
+
+    def test_recent_form_changes_projection_without_rewriting_market_lines(self):
+        prior = run_production_game(
+            market_margin=1.5, market_total=43.5, simulations=1500, seed=17
+        )
+        scored = run_production_game(
+            market_margin=1.5, market_total=43.5, simulations=1500, seed=17,
+            recent_form_features={
+                "recent_margin": -7.0,
+                "recent_total": 54.0,
+                "graph_expected_home_margin": -8.0,
+                "sample_reliability": 1.0,
+            },
+        )
+        self.assertLess(scored["expected_margin"], prior["expected_margin"])
+        self.assertGreater(scored["expected_total"], prior["expected_total"])
+        self.assertAlmostEqual(scored["market_margin"], 1.5)
+        self.assertAlmostEqual(scored["market_total"], 43.5)
+        self.assertEqual(prior["recent_margin_adjustment"], 0.0)
+        self.assertTrue(scored["recent_form"])
 
 
 if __name__ == "__main__":
