@@ -141,10 +141,8 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
 
       {ordered.some(w => w.all.previewWeek) && (
         <p className="bettorCompactCoverage">
-          Week 2 figures use a saved September 18 preview, not official pre-kickoff locks.
-          Profit is hypothetical using retrospective VegasInsider odds or estimated −110
-          where exact prices were unavailable. The preview may postdate some Week 2 kickoffs.
-          Combined season results containing it are illustrative, not an officially verified betting record.
+          Week 2 uses saved preview selections rather than official locked picks.
+          Results are illustrative; see calculation details for historical pricing assumptions.
         </p>
       )}
 
