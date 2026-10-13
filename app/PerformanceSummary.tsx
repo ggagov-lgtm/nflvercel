@@ -171,25 +171,24 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
               const showDollars = view === "dollars";
               const hasDetail = s.picks.length > 0;
               const unavailableTop3 = Boolean(s.missingArchiveWeeks?.length) && graded === 0;
-              const estimateNote = s.previewWeek
-                ? s.missingOdds ? "Preview · moneyline price unavailable" : "Preview · retrospective odds"
-                : unavailableTop3
-                  ? "Top 3 archive unavailable"
-                  : s.aggregateOnly
-                  ? "Aggregate only · odds unavailable"
+              // Keep repetitive odds/preview notes off individual cards.
+              // The historical price methodology remains available below under
+              // "How are these calculated?" and inside bet-by-bet details.
+              const summaryNote = unavailableTop3
+                ? "Top 3 archive unavailable"
+                : s.aggregateOnly
+                  ? "Aggregate only · prices unavailable"
                   : s.missingArchiveWeeks?.length
                     ? key === "top3"
                       ? `W${s.missingArchiveWeeks.join(", ")} Top 3 not archived`
                       : `Includes aggregate-only W${s.missingArchiveWeeks.join(", ")}`
                     : s.missingOdds > 0
-                ? "Moneyline odds missing"
-                : s.estimatedOdds > 0
-                  ? "Est. −110 odds"
-                  : graded === 0
-                    ? "No graded picks"
-                    : s.pushes > 0
-                      ? "Pushes excluded"
-                      : "Win rate";
+                      ? "Moneyline prices unavailable"
+                      : graded === 0
+                        ? "No graded picks"
+                        : s.pushes > 0
+                          ? "Pushes excluded"
+                          : "Win rate";
               return (
                 <button
                   type="button"
@@ -207,7 +206,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
                     {showDollars ? winPercentage(s.wins, s.losses) : money(s.profit)}
                   </span>
                   <span className="bettorCompactRecord">{s.wins}W–{s.losses}L{s.pushes ? "–" + s.pushes + "P" : ""}</span>
-                  <span className="bettorCompactMissing">{estimateNote}</span>
+                  <span className="bettorCompactMissing">{summaryNote}</span>
                   {hasDetail ? <span className="bettorCompactViewCue" aria-hidden="true">View bets ›</span> : <span className="bettorCompactNoDetails">No bet details</span>}
                 </button>
               );
