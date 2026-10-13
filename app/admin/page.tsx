@@ -1,4 +1,11 @@
-import { notFound } from 'next/navigation';
-// Admin access is disabled until a file-backed authentication mechanism is configured.
-// Never expose operational information without authentication.
-export default function Admin() { notFound(); }
+import { redirect } from 'next/navigation';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+import { currentUser } from '@/lib/auth';
+export const dynamic='force-dynamic';
+async function files(folder:string) {try{return (await fs.readdir(path.join(process.cwd(),'data',folder))).filter(x=>x.endsWith('.json')).sort().reverse();}catch{return [] as string[];}}
+export default async function Admin() {
+  if (!await currentUser()) redirect('/auth/login');
+  const [predictions,performance,results]=await Promise.all([files('predictions'),files('performance'),files('results')]);
+  return <main><h1>Admin • Local File Health</h1><p className="muted">No database connection. All predictions and performance are stored as versioned JSON in GitHub.</p><div className="health"><div className="panel"><span className="muted">PREDICTION WEEKS</span><h2>{predictions.length}</h2></div><div className="panel"><span className="muted">PERFORMANCE WEEKS</span><h2>{performance.length}</h2></div><div className="panel"><span className="muted">SETTLED WEEKS</span><h2>{results.length}</h2></div></div><h2>Available prediction files</h2><div className="panel">{predictions.length?predictions.map(f=><p key={f}>{f}</p>):<p className="muted">No prediction files yet.</p>}</div><h2>Performance files</h2><div className="panel">{performance.length?performance.map(f=><p key={f}>{f}</p>):<p className="muted">No performance files yet.</p>}</div><p className="muted">For run logs and failures, see the GitHub Actions NFL Weekly Model workflow.</p></main>;
+}
