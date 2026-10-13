@@ -512,8 +512,8 @@ export default async function Page({
           const options=[
             {type:"Moneyline",prob:Number(x.home_win_prob),selection:home+" to win",side:"home",odds:m.home_ml},
             {type:"Moneyline",prob:Number(x.away_win_prob),selection:away+" to win",side:"away",odds:m.away_ml},
-            {type:"Spread",prob:Number(x.home_cover_prob),selection:home+" spread",side:"home",odds:m.home_spread_odds??m.spread_home_odds},
-            {type:"Spread",prob:Number(x.away_cover_prob),selection:away+" spread",side:"away",odds:m.away_spread_odds??m.spread_away_odds},
+            {type:"Spread",prob:Number(x.home_cover_prob),selection:home+" "+(Number.isFinite(margin)?signed(-margin):"spread"),side:"home",odds:m.home_spread_odds??m.spread_home_odds},
+            {type:"Spread",prob:Number(x.away_cover_prob),selection:away+" "+(Number.isFinite(margin)?signed(margin):"spread"),side:"away",odds:m.away_spread_odds??m.spread_away_odds},
             {type:"Total",prob:Number(x.over_prob),selection:"Over "+lineTotal,side:"over",odds:m.over_odds},
             {type:"Total",prob:Number(x.under_prob),selection:"Under "+lineTotal,side:"under",odds:m.under_odds}
           ].filter(v=>Number.isFinite(v.prob)&&v.prob>=0&&v.prob<=1);
