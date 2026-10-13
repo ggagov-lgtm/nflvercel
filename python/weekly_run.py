@@ -10,7 +10,6 @@ import pandas as pd
 
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.impute import SimpleImputer
-from supabase import create_client
 
 from src.espn import scoreboard, parse_games, odds
 from src.features import load_pbp
@@ -67,15 +66,8 @@ def _parse_game_time(value):
     return dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
-def create_db():
-    return create_client(
-        os.environ["SUPABASE_URL"],
-        os.environ["SUPABASE_SECRET_KEY"],
-    )
-
-
 def log_health(db, service, status, message, dry_run):
-    if dry_run:
+    if dry_run or db is None:
         return
 
     try:
@@ -627,10 +619,9 @@ def run(season, week, dry_run=False, refresh=False):
 
     started_at = utc_now()
 
-    file_mode = os.environ.get('PREDICTION_STORAGE', 'supabase').lower() == 'files'
+    file_mode = True
     db = None
-    if not dry_run and not file_mode:
-        db = create_db()
+    # No database connection; all predictions are persisted to local JSON.
     store_path = Path('data/predictions') / f'{season}-week-{week}.json'
     file_rows = []
     if file_mode and store_path.exists():
