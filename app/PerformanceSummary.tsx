@@ -41,8 +41,11 @@ const historyLabels: { key: HistoryKey; title: string; subtitle: string }[] = [
   { key: "top3Total", title: "Top 3 Over/Unders", subtitle: "Game totals" },
 ];
 
-const money = (n: number | null) =>
-  n === null ? "Odds unavailable" : (n < 0 ? "−" : "+") + "$" + Math.abs(n).toFixed(2);
+// Historical accuracy is the share of graded picks that won (pushes excluded).
+const winPercentage = (wins: number, losses: number) => {
+  const graded = wins + losses;
+  return graded > 0 ? (100 * wins / graded).toFixed(1) + "%" : "—";
+};
 
 const empty: Stats = {
   wins: 0, losses: 0, pushes: 0, profit: null,
@@ -94,7 +97,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season, overall
       <div className="bettorCompactIntro">
         <span className="sectionKicker">MODEL PERFORMANCE</span>
         <h2>How our picks performed</h2>
-        <p>Hypothetical $10 per bet</p>
+        <p>Historical win percentages · pushes excluded</p>
       </div>
 
       <OverallSummary
@@ -113,20 +116,14 @@ export default function PerformanceSummary({ weeks, currentWeek, season, overall
           <div className="bettorCompactGrid">
             {labels.map(({ key, title }) => {
               const s = panel.isLast ? previousWeek?.[key] ?? empty : summaries[key];
+              const graded = s.wins + s.losses;
+              const trend = graded === 0 ? "bettorUnknown" : s.wins > s.losses ? "bettorPositive" : s.wins < s.losses ? "bettorNegative" : "bettorNeutral";
               return (
                 <div className="bettorCompactCell" key={key}>
                   <span className="bettorCompactLabel">{title}</span>
-                  <strong className={s.profit === null ? "bettorUnknown" : s.profit >= 0 ? "bettorPositive" : "bettorNegative"}>
-                    {s.profit === null ? "N/A" : money(s.profit)}
-                  </strong>
+                  <strong className={trend}>{winPercentage(s.wins, s.losses)}</strong>
                   <span className="bettorCompactRecord">{s.wins}W–{s.losses}L{s.pushes ? "–" + s.pushes + "P" : ""}</span>
-                  {s.settled === 0
-                    ? <span className="bettorCompactMissing">No graded picks</span>
-                    : s.profit === null
-                      ? <span className="bettorCompactMissing">Odds missing</span>
-                      : s.estimatedOdds > 0
-                        ? <span className="bettorCompactMissing">Est. −110 odds</span>
-                        : null}
+                  <span className="bettorCompactMissing">{graded === 0 ? "No graded picks" : s.pushes > 0 ? "Pushes excluded" : "Win rate"}</span>
                 </div>
               );
             })}
@@ -185,7 +182,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season, overall
 
       <details className="bettorCompactFoot">
         <summary>How are these calculated?</summary>
-        <p>All Bets means one moneyline, one spread and one over/under selection per game. Best / Game means the highest-confidence selection in each game. Top 3 means the three highest-confidence selections in each week, regardless of market. Moneyline, Spread and Over/Under each show the strongest selection in that market per game. Results assume $10 on each selection, using archived sportsbook odds and final scores. Missing spread and total odds are estimated at −110; actual saved prices are used where available. Missing moneyline prices are not estimated and show N/A. Estimated returns are not historical sportsbook quotes. These are hypothetical results, not actual winnings.</p>
+        <p>Each large percentage is the actual win rate for graded selections: wins divided by wins plus losses, displayed to one decimal place. Pushes and pending bets are excluded from the percentage. All Bets means one moneyline, one spread and one over/under selection per game. Best / Game means the highest-confidence selection in each game. Top 3 means the three highest-confidence selections in each week, regardless of market. Moneyline, Spread and Over/Under each show the strongest selection in that market per game. These are actual outcomes of archived model selections, not the model's predicted confidence percentages. Only archived individual predictions are included.</p>
         <p>The historical Top 3 breakdown shows the three most-confident winner, spread and over/under predictions from each week. Top 3 Overall appears above as a separate featured card with historical results alongside the selected week's picks. Predictions are ranked from saved confidence before outcomes are known. Only graded picks count toward win/loss records; pushes and pending bets are excluded from the win-rate denominator. Season-to-date uses archived weeks and excludes unverified retrospective backfills. Model confidence is not a measured win rate.</p>
       </details>
     </section>
