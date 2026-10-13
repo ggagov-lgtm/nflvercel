@@ -983,3 +983,13 @@
 .bettorCompactRecord{font-size:11px;color:var(--muted)}
 .bettorCompactMissing{font-size:9px}
 @media(max-width:640px){.bettorCompactCell{min-height:106px;padding:12px 3px;gap:6px}.bettorCompactCell>strong{font-size:clamp(20px,6vw,29px)}.bettorCompactCell>strong.bettorUnknown{font-size:20px!important}.bettorCompactRecord{font-size:10px}}
+
+
+/* Compact final-result badges in each Top 3 selection */
+.topPickOutcome{display:flex;flex-direction:column;align-items:flex-end;gap:4px;white-space:nowrap}
+.topPickResult{font-size:10px;font-weight:800;letter-spacing:.06em;color:#64748b}
+.topPickResultWIN{color:#15985e}
+.topPickResultLOSS{color:#db4656}
+.topPickResultPUSH{color:#9a6b1a}
+.topPickResultLIVE{color:#2563eb}
+.topPickResultUNAVAILABLE{color:#64748b}
