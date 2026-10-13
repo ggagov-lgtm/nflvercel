@@ -1221,3 +1221,36 @@
 .bettorCompactClickable:disabled:hover{border-color:var(--line);box-shadow:none}
 :root[data-theme="light"] .bettorCompactClickable:disabled:hover{border-color:#dce3ea}
 @media(max-width:640px){.bettorCompactCoverage{font-size:10px}.bettorCompactNoDetails{font-size:9px}}
+
+
+/* Retrospectively sourced VegasInsider odds; separate from locked bets. */
+.historicalOddsSection{margin:10px 0 24px}
+.historicalOddsDisclosure{border:1px solid var(--line);border-radius:15px;background:var(--panel);overflow:hidden}
+.historicalOddsDisclosure>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 19px;cursor:pointer}
+.historicalOddsDisclosure>summary::-webkit-details-marker{display:none}
+.historicalOddsDisclosure>summary>span:first-child{display:flex;flex-direction:column;gap:4px}
+.historicalOddsDisclosure>summary strong{font-size:16px;color:var(--text);line-height:1.25}
+.historicalOddsDisclosure>summary small{font-size:11px;color:var(--muted)}
+.historicalOddsOpen{flex:none;color:var(--green);font-size:11px;font-weight:800;white-space:nowrap}
+.historicalOddsDisclosure[open] .historicalOddsOpen{opacity:.9}
+.historicalOddsContent{border-top:1px solid var(--line);padding:15px 18px 17px}
+.historicalOddsWarning{font-size:11px;line-height:1.6;color:var(--muted);margin:0 0 13px}
+.historicalOddsWarning b{color:var(--text)}
+.historicalOddsToolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.historicalOddsWeeks{display:inline-flex;gap:4px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:4px}
+.historicalOddsWeeks button{padding:8px 12px;font-size:11px;font-weight:800;border:0;border-radius:7px;color:var(--muted);cursor:pointer;background:transparent}
+.historicalOddsWeeks button[aria-pressed="true"]{background:var(--green2);color:var(--text)}
+.historicalOddsToolbar a{font-size:11px;color:var(--green);font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.historicalOddsTableWrap{max-width:100%;overflow:auto;overscroll-behavior-x:contain;border:1px solid var(--line);border-radius:10px}
+.historicalOddsTable{width:100%;border-collapse:collapse;min-width:595px;font-variant-numeric:tabular-nums}
+.historicalOddsTable thead{background:var(--panel2)}
+.historicalOddsTable th,.historicalOddsTable td{text-align:left;vertical-align:middle;padding:10px 12px;font-size:11px;border-bottom:1px solid var(--line);white-space:nowrap}
+.historicalOddsTable thead th{color:var(--muted);font-size:10px;font-weight:800}
+.historicalOddsTable tbody th{color:var(--text);font-weight:850}
+.historicalOddsTable td span{display:block;margin:3px 0;color:var(--text)}
+.historicalOddsTable tbody tr:last-child th,.historicalOddsTable tbody tr:last-child td{border-bottom:none}
+.historicalOddsFootnote{font-size:10px;color:var(--muted);line-height:1.6;margin:12px 0 0}
+:root[data-theme="light"] .historicalOddsDisclosure{background:#fff}
+:root[data-theme="light"] .historicalOddsWeeks button[aria-pressed="true"]{background:#fff;border:1px solid #dce3ea;color:#087b50}
+:root[data-theme="light"] .historicalOddsToolbar a{color:#087b50}
+@media(max-width:640px){.historicalOddsDisclosure>summary{padding:14px 12px}.historicalOddsDisclosure>summary strong{font-size:13px}.historicalOddsOpen{font-size:10px}.historicalOddsContent{padding:13px 11px}.historicalOddsWarning{font-size:10px}.historicalOddsTable th,.historicalOddsTable td{padding:9px 10px}}
