@@ -1,1 +1,8 @@
-import {NextResponse} from 'next/server';import {adminClient} from '@/lib/supabase/admin';export async function GET(){try{const a=adminClient();const {error}=await a.from('predictions').select('id').limit(1);return NextResponse.json({ok:!error,database:error?error.message:'healthy',time:new Date().toISOString()},{status:error?503:200})}catch(e){return NextResponse.json({ok:false,error:String(e)},{status:503})}}
+import { NextResponse } from 'next/server';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+export const dynamic='force-dynamic';
+export async function GET() {
+ try { const folder=path.join(process.cwd(),'data','predictions'); const files=(await fs.readdir(folder)).filter(x=>x.endsWith('.json')); return NextResponse.json({ok:files.length>0,storage:'local-json',prediction_weeks:files.length,time:new Date().toISOString()},{status:files.length>0?200:503}); }
+ catch { return NextResponse.json({ok:false,storage:'local-json',error:'Prediction files unavailable'}, {status:503}); }
+}
