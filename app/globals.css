@@ -1254,3 +1254,9 @@
 :root[data-theme="light"] .historicalOddsWeeks button[aria-pressed="true"]{background:#fff;border:1px solid #dce3ea;color:#087b50}
 :root[data-theme="light"] .historicalOddsToolbar a{color:#087b50}
 @media(max-width:640px){.historicalOddsDisclosure>summary{padding:14px 12px}.historicalOddsDisclosure>summary strong{font-size:13px}.historicalOddsOpen{font-size:10px}.historicalOddsContent{padding:13px 11px}.historicalOddsWarning{font-size:10px}.historicalOddsTable th,.historicalOddsTable td{padding:9px 10px}}
+
+
+/* Prominent provenance for historical model replays (never official locked picks). */
+.historicalReplayNotice{border:1px solid #cfad60;background:rgba(188,146,45,.10);border-radius:10px;color:var(--text);padding:12px 14px;margin:2px 0 14px;font-size:12px;line-height:1.55}
+:root[data-theme="light"] .historicalReplayNotice{border-color:#c5a15c;background:#fffbef;color:#243247}
+@media(max-width:640px){.historicalReplayNotice{font-size:11px;line-height:1.5;padding:10px 11px}}
