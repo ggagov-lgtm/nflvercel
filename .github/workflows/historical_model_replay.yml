@@ -1,0 +1,61 @@
+name: Replay historical NFL model
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/historical_model_replay.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: historical-model-replay
+  cancel-in-progress: false
+
+jobs:
+  replay:
+    name: Build separate Week 2 and Week 3 historical model replays
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install model requirements
+        run: pip install -r python/requirements.txt
+      - name: Check replay syntax
+        run: python -m compileall -q python/replay_historical.py
+      - name: Generate frozen-input historical model replays
+        env:
+          PYTHONPATH: python
+          OPENBLAS_NUM_THREADS: "1"
+          OMP_NUM_THREADS: "2"
+        run: python python/replay_historical.py
+      - name: Verify each replay has sixteen original game IDs
+        run: |
+          python - <<'PY'
+          import json
+          for week in (2,3):
+              p=f"data/backtests/2026-week-{week}-model-replay.json"
+              d=json.load(open(p))
+              rows=d["predictions"]
+              assert d["kind"] == "historical_model_replay_not_original_pregame_predictions"
+              assert len(rows) == len({r["event_id"] for r in rows}) == 16
+              assert all(r["model"]["training_through_week"] < week or r["model"]["training_through_season"] < 2026 for r in rows)
+              assert all(r["model"]["home_win_prob"] + r["model"]["away_win_prob"] <= 1.00001 for r in rows)
+              print(f"Valid Week {week}: {len(rows)} transparently labeled replay forecasts")
+          PY
+      - name: Commit replays (never overwrite original predictions)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/backtests/
+          if ! git diff --cached --quiet; then
+            git commit -m "Save verified historical NFL model replays [skip ci]"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
