@@ -28,7 +28,7 @@ from src.training import build_pregame_metrics
 
 REPO = Path(__file__).resolve().parents[1]
 SEASON = 2026
-TARGET_WEEKS = (2, 3)
+TARGET_WEEKS = tuple(int(x) for x in os.environ.get("HISTORICAL_REPLAY_WEEKS", "2,3").split(","))
 SIMULATIONS = 50000
 
 
@@ -51,6 +51,20 @@ def market_for(source, vegas_lookup):
     home, away = g["home"]["abbr"], g["away"]["abbr"]
     original = source["market"]
     vegas = vegas_lookup.get(frozenset((home, away)))
+    if source.get("historical_reference_only"):
+        if not vegas:
+            raise ValueError(f"Missing Week 1 sportsbook reference for {away}@{home}")
+        home_is_first = vegas["team_1"] == home
+        home_spread = vegas["team_1_spread"] if home_is_first else vegas["team_2_spread"]
+        return {
+            "market_margin": -float(home_spread),
+            "total": float(vegas["total"]),
+            "home_ml": vegas["team_1_moneyline"] if home_is_first else vegas["team_2_moneyline"],
+            "away_ml": vegas["team_2_moneyline"] if home_is_first else vegas["team_1_moneyline"],
+            "spread_source": "vegasinsider_postgame_reference_not_locked",
+            "total_source": "vegasinsider_postgame_reference_not_locked",
+            "moneyline_source": "vegasinsider_postgame_reference_not_locked",
+        }
     week2 = bool(source.get("display_only"))
     if not week2:
         return {
@@ -139,7 +153,12 @@ def matchup_prediction(p, trained, metrics, current_pbp, prior_pbp, starters,
         "kickoff": kickoff,
         "reference_source_created_at": originally_recorded,
         "reference_existed_before_kickoff": bool(source_time and source_time < date),
-        "reference_source": "2026-week2-preview" if p.get("display_only") else "archived_original_locked_week3",
+        "reference_source": (
+            "week1_reconstructed_schedule_and_retrospective_odds"
+            if p.get("historical_reference_only")
+            else "2026-week2-preview" if p.get("display_only")
+            else "archived_original_locked_week3"
+        ),
         "market": market,
         "model": {
             **predicted,
@@ -181,11 +200,31 @@ def grade(prediction, final):
 
 def replay_week(week):
     print(f"Starting independent {MODEL_VERSION} historical replay for Week {week}",flush=True)
-    target = (load("data/week2-preview.json")["games"] if week == 2
-              else load("data/predictions/2026-week-3.json")["predictions"])
-    assert len(target) == 16, f"Missing original reference games for Week {week}"
     vegas = load(f"data/historical_odds/2026-week-{week}.json")["games"]
     vegas_lookup = {frozenset((g["team_1"],g["team_2"])):g for g in vegas}
+    if week == 1:
+        # Matchup metadata from ESPN; do not include final scores as model inputs.
+        source_schedule = parse_games(scoreboard(SEASON, week))
+        target = [
+            {
+                "event_id": str(g["event_id"]),
+                "season": SEASON,
+                "week": week,
+                "game": {
+                    "home": {k: v for k, v in g["home"].items() if k != "score"},
+                    "away": {k: v for k, v in g["away"].items() if k != "score"},
+                },
+                "model": {},
+                "market": {},
+                "historical_reference_only": True,
+            }
+            for g in source_schedule
+        ]
+    else:
+        target = (load("data/week2-preview.json")["games"] if week == 2
+                  else load("data/predictions/2026-week-3.json")["predictions"])
+    assert len(target) == 16, f"Missing original reference games for Week {week}"
+    assert len({str(p["event_id"]) for p in target}) == 16
 
     # Before any finalized target-week games are observed, obtain earlier
     # scoreboards only. These are the sole source of opponent-graph inputs.
@@ -227,10 +266,17 @@ def replay_week(week):
         "replayed_at":dt.datetime.now(dt.timezone.utc).isoformat(),
         "training_cutoff":f"{trained['training_through_season']}-W{trained['training_through_week']}",
         "source_note":(
-            "This dataset is a retrospective replay of the current model. It was NOT issued as original Week "
-            f"{week} pregame predictions. Weeks 2's moneyline odds were sourced after the games "
-            "and may differ from available pre-kickoff odds. Week 2 injury and weather feature vectors "
-            "weren't archived. Do not merge into official predictions or cumulative betting P/L."
+            f"This is a historical replay, NOT an original Week {week} prediction. "
+            + (
+                "Week 1 has no archived pregame predictions, original injury/weather snapshot or "
+                "verified pre-kickoff prices. The VegasInsider reference quotes were viewed after the games. "
+                "The model uses pre-Week-1 training only; forecasts are illustrative."
+                if week == 1 else
+                "Week 2 includes retrospectively collected moneyline odds and lacks original "
+                "injury/weather details." if week == 2 else
+                "Week 3 uses archived pregame inputs with the current updated model."
+            )
+            + " Never merge into official locked predictions or betting profitability."
         ),
         "predictions":outputs,
     }
