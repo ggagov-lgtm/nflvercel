@@ -1,5 +1,4 @@
 "use client";
-import OverallSummary from "./OverallSummary";
 
 type Pick = {
   game: string;
@@ -21,8 +20,7 @@ type Stats = {
   settled: number;
   picks: Pick[];
 };
-type HistoryKey = "top3Winner" | "top3Spread" | "top3Total" | "top3Overall";
-type OverallPick = { eventId: string | number; category: string; probability: number; selection: string; logo: string; matchup: string; result?: string };
+type HistoryKey = "top3Winner" | "top3Spread" | "top3Total";
 type Key = "all" | "best" | "top3" | "moneyline" | "spread" | "total";
 type Week = { week: number } & Record<Key | HistoryKey, Stats>;
 
@@ -68,11 +66,10 @@ function merge(rows: Stats[]): Stats {
   };
 }
 
-export default function PerformanceSummary({ weeks, currentWeek, season, overallPicks }: {
+export default function PerformanceSummary({ weeks, currentWeek, season }: {
   weeks: Week[];
   currentWeek: number;
   season: number;
-  overallPicks: OverallPick[];
 }) {
   const ordered = [...weeks].sort((a, b) => b.week - a.week);
   // Last Week means the previous NFL week, not a partially played current week.
@@ -82,7 +79,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season, overall
     labels.map(({ key }) => [key, merge(gradedWeeks.map(w => w[key]))])
   ) as Record<Key, Stats>;
   const historicalSummaries = Object.fromEntries(
-    (["top3Winner", "top3Spread", "top3Total", "top3Overall"] as HistoryKey[]).map(key =>
+    (["top3Winner", "top3Spread", "top3Total"] as HistoryKey[]).map(key =>
       [key, merge(gradedWeeks.map(w => w[key]))]
     )
   ) as Record<HistoryKey, Stats>;
@@ -99,13 +96,6 @@ export default function PerformanceSummary({ weeks, currentWeek, season, overall
         <h2>How our picks performed</h2>
         <p>Historical win percentages · pushes excluded</p>
       </div>
-
-      <OverallSummary
-        lastWeek={previousWeek?.top3Overall ?? empty}
-        lastWeekNumber={previousWeek?.week}
-        seasonSummary={historicalSummaries.top3Overall}
-        overallPicks={overallPicks}
-      />
 
       {panels.map(panel => (
         <div className="bettorCompactGroup" key={panel.id}>
@@ -183,7 +173,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season, overall
       <details className="bettorCompactFoot">
         <summary>How are these calculated?</summary>
         <p>Each large percentage is the actual win rate for graded selections: wins divided by wins plus losses, displayed to one decimal place. Pushes and pending bets are excluded from the percentage. All Bets means one moneyline, one spread and one over/under selection per game. Best / Game means the highest-confidence selection in each game. Top 3 means the three highest-confidence selections in each week, regardless of market. Moneyline, Spread and Over/Under each show the strongest selection in that market per game. These are actual outcomes of archived model selections, not the model's predicted confidence percentages. Only archived individual predictions are included.</p>
-        <p>The historical Top 3 breakdown shows the three most-confident winner, spread and over/under predictions from each week. Top 3 Overall appears above as a separate featured card with historical results alongside the selected week's picks. Predictions are ranked from saved confidence before outcomes are known. Only graded picks count toward win/loss records; pushes and pending bets are excluded from the win-rate denominator. Season-to-date uses archived weeks and excludes unverified retrospective backfills. Model confidence is not a measured win rate.</p>
+        <p>The historical Top 3 breakdown shows the three most-confident winner, spread and over/under predictions from each week. Predictions are ranked from saved confidence before outcomes are known. Only graded picks count toward win/loss records; pushes and pending bets are excluded from the win-rate denominator. Season-to-date uses archived weeks and excludes unverified retrospective backfills. Model confidence is not a measured win rate.</p>
       </details>
     </section>
   );
