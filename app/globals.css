@@ -949,3 +949,27 @@
 .bettorStrategy .bettorExpand{margin-top:auto}
 :root[data-theme="light"] .bettorStrategy{background:white;border-color:#dce4ed}
 @media(max-width:720px){.bettorStrategyGrid{grid-template-columns:1fr}.bettorStrategy{padding:14px;gap:8px}.bettorStrategy>strong{font-size:26px}.bettorComparisonHeading h3{font-size:17px}}
+
+
+/* Compact three-column scoreboard, optimized for narrow phones */
+.bettorCompact{padding:16px}
+.bettorCompactIntro h2{font-size:clamp(20px,2.2vw,27px);margin:5px 0 2px}
+.bettorCompactIntro p{margin:0;color:var(--muted);font-size:13px}
+.bettorCompactGroup{margin-top:20px}
+.bettorCompactHeading{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:9px}
+.bettorCompactHeading h3{font-size:17px;margin:0}.bettorCompactHeading>span{font-size:12px;color:var(--muted)}
+.bettorCompactGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bettorCompactCell{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-width:0;padding:14px 6px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel,#17263d)}
+.bettorCompactLabel{font-size:12px;font-weight:750;white-space:nowrap}
+.bettorCompactCell>strong{font-size:clamp(17px,2.3vw,28px);line-height:1.2;letter-spacing:-.4px;overflow-wrap:anywhere}
+.bettorCompactCell>strong.bettorUnknown{font-size:24px!important}
+.bettorCompactRecord{font-size:12px;color:var(--muted);white-space:nowrap}
+.bettorCompactMissing{font-size:10px;color:var(--muted)}
+.bettorCompactDetails{background:transparent;border:0;color:#419aef;font-size:11px;font-weight:700;padding:4px 0;cursor:pointer}
+.bettorCompactDetailList{position:relative;width:100%;max-height:210px;overflow:auto;text-align:left;border-top:1px solid var(--line);padding-top:7px}
+.bettorCompactDetailList>div{padding:6px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
+.bettorCompactDetailList b,.bettorCompactDetailList span{font-size:10px;overflow-wrap:anywhere}
+.bettorCompactFoot{margin-top:16px;color:var(--muted);font-size:12px;line-height:1.6}
+.bettorCompactFoot summary{color:#419aef;cursor:pointer;font-weight:700}
+:root[data-theme="light"] .bettorCompactCell{background:white;border-color:#dce4ed}
+@media(max-width:640px){.bettorCompact{padding:12px}.bettorCompactGrid{gap:5px}.bettorCompactCell{padding:12px 3px 8px;gap:5px}.bettorCompactLabel{font-size:10px}.bettorCompactCell>strong{font-size:17px}.bettorCompactRecord{font-size:10px}.bettorCompactMissing{font-size:9px}.bettorCompactHeading h3{font-size:16px}.bettorCompactGroup{margin-top:17px}}
