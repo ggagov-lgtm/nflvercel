@@ -5,6 +5,44 @@
     {
       "season": 2026,
       "week": 5,
+      "event_id": "401872980",
+      "backfill_status": "retrospective_unmodeled",
+      "backfill_note": "Added after kickoff to complete schedule coverage. No verified pregame model output exists. Excluded from model performance.",
+      "game": {
+        "event_id": "401872980",
+        "date": "2026-10-09T00:15:00Z",
+        "status": "Final",
+        "completed": true,
+        "home": {
+          "name": "Dallas Cowboys",
+          "abbr": "DAL",
+          "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/dal.png",
+          "score": "16"
+        },
+        "away": {
+          "name": "Tampa Bay Buccaneers",
+          "abbr": "TB",
+          "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/tb.png",
+          "score": "24"
+        }
+      },
+      "market": {
+        "provider": "Historical pregame reporting",
+        "spread": -8.5,
+        "market_margin": 8.5,
+        "total": 48.5,
+        "home_ml": null,
+        "away_ml": null,
+        "captured_at": null
+      },
+      "model": null,
+      "model_version": null,
+      "prediction_run_at": null,
+      "locked_at": null
+    },
+    {
+      "season": 2026,
+      "week": 5,
       "event_id": "401872981",
       "game": {
         "event_id": "401872981",
@@ -43,10 +81,10 @@
         "tie_prob": 0.02906,
         "home_cover_prob": 0.508,
         "away_cover_prob": 0.492,
-        "spread_push_prob": 0.0,
+        "spread_push_prob": 0,
         "over_prob": 0.52052,
         "under_prob": 0.47948,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.7600000000000001,
         "market_fair_away_prob": 0.24000000000000005,
         "simulations": 50000,
@@ -59,8 +97,8 @@
         "base_margin": 7.6476022351722355,
         "base_total": 42.20461239242239,
         "injury_margin_adjustment": 0.03,
-        "context_margin_adjustment": 0.0,
-        "weather_total_adjustment": -0.0,
+        "context_margin_adjustment": 0,
+        "weather_total_adjustment": 0,
         "expected_margin": 7.677602235172236,
         "expected_total": 42.20461239242239,
         "qb": {
@@ -77,19 +115,19 @@
             "home_injury_questionable_count": 0,
             "home_injury_total_impact": 6.75,
             "home_injury_offense_impact": 2.75,
-            "home_injury_defense_impact": 4.0,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
+            "home_injury_defense_impact": 4,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
             "home_injury_out_weight": 6.75,
             "away_injury_count": 5,
             "away_injury_out_count": 5,
             "away_injury_doubtful_count": 0,
             "away_injury_questionable_count": 0,
             "away_injury_total_impact": 6.5,
-            "away_injury_offense_impact": 4.0,
+            "away_injury_offense_impact": 4,
             "away_injury_defense_impact": 2.5,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
             "away_injury_out_weight": 6.5,
             "diff_injury_count": 0,
             "diff_injury_out_count": 0,
@@ -98,8 +136,8 @@
             "diff_injury_total_impact": 0.25,
             "diff_injury_offense_impact": -1.25,
             "diff_injury_defense_impact": 1.5,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": 0.25
           },
           "players": [
@@ -113,7 +151,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:11Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -127,7 +165,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:02Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -141,7 +179,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:02Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -155,7 +193,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:02Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -169,7 +207,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:02Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -183,7 +221,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:06Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -197,7 +235,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:03Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -211,7 +249,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:03Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -225,7 +263,7 @@
               "injury_location": "Groin",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:03Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -239,30 +277,30 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:03Z",
-              "status_weight": 1.0,
-              "position_weight": 1.0,
-              "raw_impact": 1.0
+              "status_weight": 1,
+              "position_weight": 1,
+              "raw_impact": 1
             }
           ]
         },
         "context": {
-          "venue_indoor": 0.0,
-          "venue_grass": 1.0,
-          "temperature": 70.0,
-          "wind_gust": 0.0,
-          "precipitation_probability": 0.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 0.0,
-          "weather_precip_severity": 0.0,
+          "venue_indoor": 0,
+          "venue_grass": 1,
+          "temperature": 70,
+          "wind_gust": 0,
+          "precipitation_probability": 0,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 0,
+          "weather_precip_severity": 0,
           "home_rest_days": 6.854166666666667,
           "away_rest_days": 6.854166666666667,
-          "diff_rest_days": 0.0,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "diff_rest_days": 0,
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "JAX",
@@ -332,7 +370,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:11Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -346,7 +384,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:02Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -360,7 +398,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:02Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -374,7 +412,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:02Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -388,7 +426,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:02Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -402,7 +440,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:06Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -416,7 +454,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:03Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -430,7 +468,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:03Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -444,7 +482,7 @@
               "injury_location": "Groin",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:03Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -458,16 +496,16 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:03Z",
-              "status_weight": 1.0,
-              "position_weight": 1.0,
-              "raw_impact": 1.0
+              "status_weight": 1,
+              "position_weight": 1,
+              "raw_impact": 1
             }
           ],
           "weather": {
             "indoor": false,
-            "temperature": 70.0,
-            "wind_gust": 0.0,
-            "precipitation_probability": 0.0
+            "temperature": 70,
+            "wind_gust": 0,
+            "precipitation_probability": 0
           },
           "rest": {
             "home_days": 6.854166666666667,
@@ -524,10 +562,10 @@
         "tie_prob": 0.04022,
         "home_cover_prob": 0.53924,
         "away_cover_prob": 0.46076,
-        "spread_push_prob": 0.0,
+        "spread_push_prob": 0,
         "over_prob": 0.47706,
         "under_prob": 0.52294,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.4675324675324675,
         "market_fair_away_prob": 0.5324675324675325,
         "simulations": 50000,
@@ -540,7 +578,7 @@
         "base_margin": -1.3492899631849633,
         "base_total": 47.4777055949606,
         "injury_margin_adjustment": 0.832,
-        "context_margin_adjustment": 0.0,
+        "context_margin_adjustment": 0,
         "weather_total_adjustment": -0.6000000000000001,
         "expected_margin": -0.5172899631849633,
         "expected_total": 46.877705594960595,
@@ -559,9 +597,9 @@
             "home_injury_total_impact": 3.025,
             "home_injury_offense_impact": 2.5875,
             "home_injury_defense_impact": 0.4375,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
-            "home_injury_out_weight": 0.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
+            "home_injury_out_weight": 0,
             "away_injury_count": 5,
             "away_injury_out_count": 3,
             "away_injury_doubtful_count": 0,
@@ -570,18 +608,18 @@
             "away_injury_offense_impact": 1.75,
             "away_injury_defense_impact": 4.4375,
             "away_injury_qb_impact": 1.75,
-            "away_injury_has_qb": 1.0,
-            "away_injury_out_weight": 4.0,
+            "away_injury_has_qb": 1,
+            "away_injury_out_weight": 4,
             "diff_injury_count": 0,
             "diff_injury_out_count": -3,
             "diff_injury_doubtful_count": 2,
             "diff_injury_questionable_count": 0,
             "diff_injury_total_impact": -3.1625,
             "diff_injury_offense_impact": 0.8374999999999999,
-            "diff_injury_defense_impact": -4.0,
+            "diff_injury_defense_impact": -4,
             "diff_injury_qb_impact": -1.75,
-            "diff_injury_has_qb": -1.0,
-            "diff_injury_out_weight": -4.0
+            "diff_injury_has_qb": -1,
+            "diff_injury_out_weight": -4
           },
           "players": [
             {
@@ -594,9 +632,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-10T20:06Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 1,
+              "raw_impact": 0
             },
             {
               "team": "GB",
@@ -665,7 +703,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-11T12:26Z",
               "status_weight": 0.35,
-              "position_weight": 5.0,
+              "position_weight": 5,
               "raw_impact": 1.75
             },
             {
@@ -678,7 +716,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:13Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -692,7 +730,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T19:58Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -706,7 +744,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T19:40Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -727,23 +765,23 @@
           ]
         },
         "context": {
-          "venue_indoor": 0.0,
-          "venue_grass": 1.0,
-          "temperature": 74.0,
-          "wind_gust": 21.0,
-          "precipitation_probability": 0.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 6.0,
-          "weather_precip_severity": 0.0,
-          "home_rest_days": 7.0,
-          "away_rest_days": 7.0,
-          "diff_rest_days": 0.0,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "venue_indoor": 0,
+          "venue_grass": 1,
+          "temperature": 74,
+          "wind_gust": 21,
+          "precipitation_probability": 0,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 6,
+          "weather_precip_severity": 0,
+          "home_rest_days": 7,
+          "away_rest_days": 7,
+          "diff_rest_days": 0,
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "GB",
@@ -813,9 +851,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-10T20:06Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 1,
+              "raw_impact": 0
             },
             {
               "team": "GB",
@@ -884,7 +922,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-11T12:26Z",
               "status_weight": 0.35,
-              "position_weight": 5.0,
+              "position_weight": 5,
               "raw_impact": 1.75
             },
             {
@@ -897,7 +935,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:13Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -911,7 +949,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T19:58Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -925,7 +963,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T19:40Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -946,13 +984,13 @@
           ],
           "weather": {
             "indoor": false,
-            "temperature": 74.0,
-            "wind_gust": 21.0,
-            "precipitation_probability": 0.0
+            "temperature": 74,
+            "wind_gust": 21,
+            "precipitation_probability": 0
           },
           "rest": {
-            "home_days": 7.0,
-            "away_days": 7.0
+            "home_days": 7,
+            "away_days": 7
           }
         },
         "training_rows": 1151,
@@ -988,8 +1026,8 @@
       },
       "market": {
         "provider": "DraftKings",
-        "spread": 7.0,
-        "market_margin": -7.0,
+        "spread": 7,
+        "market_margin": -7,
         "total": 37.5,
         "home_ml": 280,
         "away_ml": -355,
@@ -1008,20 +1046,20 @@
         "spread_push_prob": 0.0416,
         "over_prob": 0.50492,
         "under_prob": 0.49508,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.2522172949002217,
         "market_fair_away_prob": 0.7477827050997783,
         "simulations": 50000,
         "model_version": "v2.0.0",
         "football_weight": 0.1,
-        "market_margin": -7.0,
+        "market_margin": -7,
         "market_total": 37.5,
         "football_margin": -3.9015108180490565,
         "football_total": 42.03566281866283,
         "base_margin": -6.690151081804905,
         "base_total": 37.95356628186628,
         "injury_margin_adjustment": -0.072,
-        "context_margin_adjustment": 0.0,
+        "context_margin_adjustment": 0,
         "weather_total_adjustment": -0.3525,
         "expected_margin": -6.762151081804905,
         "expected_total": 37.60106628186628,
@@ -1040,8 +1078,8 @@
             "home_injury_total_impact": 2.2125,
             "home_injury_offense_impact": 0.9624999999999999,
             "home_injury_defense_impact": 1.25,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
             "home_injury_out_weight": 1.25,
             "away_injury_count": 5,
             "away_injury_out_count": 0,
@@ -1050,9 +1088,9 @@
             "away_injury_total_impact": 1.4874999999999998,
             "away_injury_offense_impact": 0.6124999999999999,
             "away_injury_defense_impact": 0.875,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
-            "away_injury_out_weight": 0.0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
+            "away_injury_out_weight": 0,
             "diff_injury_count": 0,
             "diff_injury_out_count": 1,
             "diff_injury_doubtful_count": 0,
@@ -1060,8 +1098,8 @@
             "diff_injury_total_impact": 0.7250000000000001,
             "diff_injury_offense_impact": 0.35,
             "diff_injury_defense_impact": 0.375,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": 1.25
           },
           "players": [
@@ -1089,9 +1127,9 @@
               "injury_location": "Torso",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T23:21Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "TEN",
@@ -1117,7 +1155,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T23:43Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -1131,9 +1169,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-01",
               "reported_at": "2026-09-30T01:02Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "HOU",
@@ -1145,9 +1183,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T03:19Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.75,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "HOU",
@@ -1187,9 +1225,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T21:09Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "HOU",
@@ -1208,23 +1246,23 @@
           ]
         },
         "context": {
-          "venue_indoor": 0.0,
-          "venue_grass": 0.0,
-          "temperature": 65.0,
-          "wind_gust": 14.0,
-          "precipitation_probability": 47.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 0.0,
+          "venue_indoor": 0,
+          "venue_grass": 0,
+          "temperature": 65,
+          "wind_gust": 14,
+          "precipitation_probability": 47,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 0,
           "weather_precip_severity": 0.47,
-          "home_rest_days": 7.0,
-          "away_rest_days": 7.0,
-          "diff_rest_days": 0.0,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "home_rest_days": 7,
+          "away_rest_days": 7,
+          "diff_rest_days": 0,
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "TEN",
@@ -1308,9 +1346,9 @@
               "injury_location": "Torso",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T23:21Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "TEN",
@@ -1336,7 +1374,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T23:43Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -1350,9 +1388,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-01",
               "reported_at": "2026-09-30T01:02Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "HOU",
@@ -1364,9 +1402,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T03:19Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.75,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "HOU",
@@ -1406,9 +1444,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T21:09Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "HOU",
@@ -1427,13 +1465,13 @@
           ],
           "weather": {
             "indoor": false,
-            "temperature": 65.0,
-            "wind_gust": 14.0,
-            "precipitation_probability": 47.0
+            "temperature": 65,
+            "wind_gust": 14,
+            "precipitation_probability": 47
           },
           "rest": {
-            "home_days": 7.0,
-            "away_days": 7.0
+            "home_days": 7,
+            "away_days": 7
           }
         },
         "training_rows": 1151,
@@ -1469,8 +1507,8 @@
       },
       "market": {
         "provider": "DraftKings",
-        "spread": 7.0,
-        "market_margin": -7.0,
+        "spread": 7,
+        "market_margin": -7,
         "total": 43.5,
         "home_ml": 275,
         "away_ml": -345,
@@ -1489,13 +1527,13 @@
         "spread_push_prob": 0.0404,
         "over_prob": 0.4964,
         "under_prob": 0.5036,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.2559309849029475,
         "market_fair_away_prob": 0.7440690150970525,
         "simulations": 50000,
         "model_version": "v2.0.0",
         "football_weight": 0.1,
-        "market_margin": -7.0,
+        "market_margin": -7,
         "market_total": 43.5,
         "football_margin": -2.600883316683319,
         "football_total": 45.10236756946756,
@@ -1520,9 +1558,9 @@
             "home_injury_questionable_count": 1,
             "home_injury_total_impact": 6.1,
             "home_injury_offense_impact": 3.1,
-            "home_injury_defense_impact": 3.0,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
+            "home_injury_defense_impact": 3,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
             "home_injury_out_weight": 5.75,
             "away_injury_count": 5,
             "away_injury_out_count": 1,
@@ -1531,8 +1569,8 @@
             "away_injury_total_impact": 3.2624999999999997,
             "away_injury_offense_impact": 1.5749999999999997,
             "away_injury_defense_impact": 1.6875,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
             "away_injury_out_weight": 1.25,
             "diff_injury_count": 0,
             "diff_injury_out_count": 3,
@@ -1541,8 +1579,8 @@
             "diff_injury_total_impact": 2.8375,
             "diff_injury_offense_impact": 1.5250000000000004,
             "diff_injury_defense_impact": 1.3125,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": 4.5
           },
           "players": [
@@ -1556,7 +1594,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-11T00:56Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -1570,7 +1608,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T02:58Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -1584,7 +1622,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T02:41Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -1599,7 +1637,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-09T20:51Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -1612,7 +1650,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-09T20:46Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -1626,7 +1664,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T00:16Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -1689,23 +1727,23 @@
           ]
         },
         "context": {
-          "venue_indoor": 0.0,
-          "venue_grass": 1.0,
-          "temperature": 91.0,
-          "wind_gust": 14.0,
-          "precipitation_probability": 39.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 6.0,
-          "weather_wind_severity": 0.0,
+          "venue_indoor": 0,
+          "venue_grass": 1,
+          "temperature": 91,
+          "wind_gust": 14,
+          "precipitation_probability": 39,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 6,
+          "weather_wind_severity": 0,
           "weather_precip_severity": 0.39,
           "home_rest_days": 6.871527777777778,
-          "away_rest_days": 7.0,
+          "away_rest_days": 7,
           "diff_rest_days": -0.12847222222222232,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "MIA",
@@ -1775,7 +1813,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-11T00:56Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -1789,7 +1827,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T02:58Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -1803,7 +1841,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T02:41Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -1818,7 +1856,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-09T20:51Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -1831,7 +1869,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-09T20:46Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -1845,7 +1883,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T00:16Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -1908,13 +1946,13 @@
           ],
           "weather": {
             "indoor": false,
-            "temperature": 91.0,
-            "wind_gust": 14.0,
-            "precipitation_probability": 39.0
+            "temperature": 91,
+            "wind_gust": 14,
+            "precipitation_probability": 39
           },
           "rest": {
             "home_days": 6.871527777777778,
-            "away_days": 7.0
+            "away_days": 7
           }
         },
         "training_rows": 1151,
@@ -1967,10 +2005,10 @@
         "tie_prob": 0.03772,
         "home_cover_prob": 0.5145,
         "away_cover_prob": 0.4855,
-        "spread_push_prob": 0.0,
+        "spread_push_prob": 0,
         "over_prob": 0.49944,
         "under_prob": 0.50056,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.6224665518611737,
         "market_fair_away_prob": 0.3775334481388264,
         "simulations": 50000,
@@ -2002,8 +2040,8 @@
             "home_injury_total_impact": 2.375,
             "home_injury_offense_impact": 0.35,
             "home_injury_defense_impact": 2.025,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
             "home_injury_out_weight": 1.5,
             "away_injury_count": 5,
             "away_injury_out_count": 2,
@@ -2011,19 +2049,19 @@
             "away_injury_questionable_count": 1,
             "away_injury_total_impact": 3.35,
             "away_injury_offense_impact": 3.35,
-            "away_injury_defense_impact": 0.0,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
-            "away_injury_out_weight": 3.0,
+            "away_injury_defense_impact": 0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
+            "away_injury_out_weight": 3,
             "diff_injury_count": 0,
             "diff_injury_out_count": -1,
             "diff_injury_doubtful_count": 0,
             "diff_injury_questionable_count": 1,
             "diff_injury_total_impact": -0.9750000000000001,
-            "diff_injury_offense_impact": -3.0,
+            "diff_injury_offense_impact": -3,
             "diff_injury_defense_impact": 2.025,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": -1.5
           },
           "players": [
@@ -2038,7 +2076,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-11T11:21Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -2051,9 +2089,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-11T00:36Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 0.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "NE",
@@ -2065,9 +2103,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-10T20:09Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "NE",
@@ -2093,7 +2131,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T01:56Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -2108,7 +2146,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-11T11:11Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -2121,7 +2159,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:03Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -2135,9 +2173,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T23:15Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "LV",
@@ -2149,7 +2187,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T19:01Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -2163,30 +2201,30 @@
               "injury_location": "Arm",
               "return_date": "2026-11-01",
               "reported_at": "2026-09-29T22:27Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             }
           ]
         },
         "context": {
-          "venue_indoor": 0.0,
-          "venue_grass": 0.0,
-          "temperature": 59.0,
-          "wind_gust": 8.0,
-          "precipitation_probability": 1.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 0.0,
+          "venue_indoor": 0,
+          "venue_grass": 0,
+          "temperature": 59,
+          "wind_gust": 8,
+          "precipitation_probability": 1,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 0,
           "weather_precip_severity": 0.01,
-          "home_rest_days": 7.0,
+          "home_rest_days": 7,
           "away_rest_days": 6.857638888888889,
           "diff_rest_days": 0.14236111111111072,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "NE",
@@ -2257,7 +2295,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-11T11:21Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -2270,9 +2308,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-11T00:36Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 0.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "NE",
@@ -2284,9 +2322,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-10T20:09Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "NE",
@@ -2312,7 +2350,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T01:56Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -2327,7 +2365,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-11T11:11Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -2340,7 +2378,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:03Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -2354,9 +2392,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T23:15Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "LV",
@@ -2368,7 +2406,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T19:01Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -2382,19 +2420,19 @@
               "injury_location": "Arm",
               "return_date": "2026-11-01",
               "reported_at": "2026-09-29T22:27Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             }
           ],
           "weather": {
             "indoor": false,
-            "temperature": 59.0,
-            "wind_gust": 8.0,
-            "precipitation_probability": 1.0
+            "temperature": 59,
+            "wind_gust": 8,
+            "precipitation_probability": 1
           },
           "rest": {
-            "home_days": 7.0,
+            "home_days": 7,
             "away_days": 6.857638888888889
           }
         },
@@ -2448,10 +2486,10 @@
         "tie_prob": 0.04092,
         "home_cover_prob": 0.50018,
         "away_cover_prob": 0.49982,
-        "spread_push_prob": 0.0,
+        "spread_push_prob": 0,
         "over_prob": 0.50678,
         "under_prob": 0.49322,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.4572564612326044,
         "market_fair_away_prob": 0.5427435387673957,
         "simulations": 50000,
@@ -2465,7 +2503,7 @@
         "base_total": 41.795372971472965,
         "injury_margin_adjustment": 0.17949999999999997,
         "context_margin_adjustment": -0.29388888888888887,
-        "weather_total_adjustment": 0.0,
+        "weather_total_adjustment": 0,
         "expected_margin": -1.5062873069523068,
         "expected_total": 41.795372971472965,
         "qb": {
@@ -2483,9 +2521,9 @@
             "home_injury_total_impact": 2.1,
             "home_injury_offense_impact": 0.35,
             "home_injury_defense_impact": 1.75,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
-            "home_injury_out_weight": 0.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
+            "home_injury_out_weight": 0,
             "away_injury_count": 5,
             "away_injury_out_count": 1,
             "away_injury_doubtful_count": 0,
@@ -2493,8 +2531,8 @@
             "away_injury_total_impact": 3.5124999999999997,
             "away_injury_offense_impact": 2.0124999999999997,
             "away_injury_defense_impact": 1.5,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
             "away_injury_out_weight": 1.5,
             "diff_injury_count": 0,
             "diff_injury_out_count": -1,
@@ -2503,8 +2541,8 @@
             "diff_injury_total_impact": -1.4124999999999996,
             "diff_injury_offense_impact": -1.6624999999999996,
             "diff_injury_defense_impact": 0.25,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": -1.5
           },
           "players": [
@@ -2519,7 +2557,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-11T11:28Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -2644,30 +2682,30 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T01:52Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             }
           ]
         },
         "context": {
-          "venue_indoor": 1.0,
-          "venue_grass": 0.0,
-          "temperature": 81.0,
-          "wind_gust": 0.0,
-          "precipitation_probability": 0.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 0.0,
-          "weather_precip_severity": 0.0,
+          "venue_indoor": 1,
+          "venue_grass": 0,
+          "temperature": 81,
+          "wind_gust": 0,
+          "precipitation_probability": 0,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 0,
+          "weather_precip_severity": 0,
           "home_rest_days": 5.697916666666667,
           "away_rest_days": 6.871527777777778,
           "diff_rest_days": -1.1736111111111107,
-          "home_short_week": 1.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 1.0
+          "home_short_week": 1,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 1
         },
         "analysis_context": {
           "home_team": "NO",
@@ -2738,7 +2776,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-11T11:28Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -2863,16 +2901,16 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T01:52Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             }
           ],
           "weather": {
             "indoor": true,
-            "temperature": 81.0,
-            "wind_gust": 0.0,
-            "precipitation_probability": 0.0
+            "temperature": 81,
+            "wind_gust": 0,
+            "precipitation_probability": 0
           },
           "rest": {
             "home_days": 5.697916666666667,
@@ -2929,10 +2967,10 @@
         "tie_prob": 0.041,
         "home_cover_prob": 0.4776,
         "away_cover_prob": 0.5224,
-        "spread_push_prob": 0.0,
+        "spread_push_prob": 0,
         "over_prob": 0.48876,
         "under_prob": 0.51124,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.551441114716549,
         "market_fair_away_prob": 0.448558885283451,
         "simulations": 50000,
@@ -2964,19 +3002,19 @@
             "home_injury_total_impact": 4.9625,
             "home_injury_offense_impact": 2.75,
             "home_injury_defense_impact": 2.2125,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
-            "home_injury_out_weight": 4.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
+            "home_injury_out_weight": 4,
             "away_injury_count": 5,
             "away_injury_out_count": 3,
             "away_injury_doubtful_count": 0,
             "away_injury_questionable_count": 0,
-            "away_injury_total_impact": 4.0,
-            "away_injury_offense_impact": 4.0,
-            "away_injury_defense_impact": 0.0,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
-            "away_injury_out_weight": 4.0,
+            "away_injury_total_impact": 4,
+            "away_injury_offense_impact": 4,
+            "away_injury_defense_impact": 0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
+            "away_injury_out_weight": 4,
             "diff_injury_count": 0,
             "diff_injury_out_count": 0,
             "diff_injury_doubtful_count": 0,
@@ -2984,9 +3022,9 @@
             "diff_injury_total_impact": 0.9625000000000004,
             "diff_injury_offense_impact": -1.25,
             "diff_injury_defense_impact": 2.2125,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
-            "diff_injury_out_weight": 0.0
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
+            "diff_injury_out_weight": 0
           },
           "players": [
             {
@@ -2999,7 +3037,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T01:41Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -3041,7 +3079,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T22:11Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -3055,7 +3093,7 @@
               "injury_location": "Arm",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T15:09Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -3069,9 +3107,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:57Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "CLE",
@@ -3083,7 +3121,7 @@
               "injury_location": "Torso",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:09Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -3097,9 +3135,9 @@
               "injury_location": "Torso",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T00:37Z",
-              "status_weight": 0.0,
-              "position_weight": 5.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 5,
+              "raw_impact": 0
             },
             {
               "team": "CLE",
@@ -3111,7 +3149,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T00:35Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -3125,30 +3163,30 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T00:29Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             }
           ]
         },
         "context": {
-          "venue_indoor": 0.0,
-          "venue_grass": 0.0,
-          "temperature": 61.0,
-          "wind_gust": 8.0,
-          "precipitation_probability": 75.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 0.0,
+          "venue_indoor": 0,
+          "venue_grass": 0,
+          "temperature": 61,
+          "wind_gust": 8,
+          "precipitation_probability": 75,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 0,
           "weather_precip_severity": 0.75,
-          "home_rest_days": 7.0,
+          "home_rest_days": 7,
           "away_rest_days": 9.697916666666666,
           "diff_rest_days": -2.697916666666666,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 1.0,
-          "diff_short_week": 0.0
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 1,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "NYJ",
@@ -3218,7 +3256,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T01:41Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -3260,7 +3298,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T22:11Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -3274,7 +3312,7 @@
               "injury_location": "Arm",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T15:09Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -3288,9 +3326,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:57Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "CLE",
@@ -3302,7 +3340,7 @@
               "injury_location": "Torso",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:09Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -3316,9 +3354,9 @@
               "injury_location": "Torso",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T00:37Z",
-              "status_weight": 0.0,
-              "position_weight": 5.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 5,
+              "raw_impact": 0
             },
             {
               "team": "CLE",
@@ -3330,7 +3368,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T00:35Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -3344,19 +3382,19 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T00:29Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             }
           ],
           "weather": {
             "indoor": false,
-            "temperature": 61.0,
-            "wind_gust": 8.0,
-            "precipitation_probability": 75.0
+            "temperature": 61,
+            "wind_gust": 8,
+            "precipitation_probability": 75
           },
           "rest": {
-            "home_days": 7.0,
+            "home_days": 7,
             "away_days": 9.697916666666666
           }
         },
@@ -3393,8 +3431,8 @@
       },
       "market": {
         "provider": "DraftKings",
-        "spread": -3.0,
-        "market_margin": 3.0,
+        "spread": -3,
+        "market_margin": 3,
         "total": 43.5,
         "home_ml": -148,
         "away_ml": 124,
@@ -3413,13 +3451,13 @@
         "spread_push_prob": 0.0395,
         "over_prob": 0.49278,
         "under_prob": 0.50722,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.5720596355604638,
         "market_fair_away_prob": 0.42794036443953615,
         "simulations": 50000,
         "model_version": "v2.0.0",
         "football_weight": 0.1,
-        "market_margin": 3.0,
+        "market_margin": 3,
         "market_total": 43.5,
         "football_margin": -1.460373750323751,
         "football_total": 46.08142523772525,
@@ -3445,8 +3483,8 @@
             "home_injury_total_impact": 2.375,
             "home_injury_offense_impact": 0.35,
             "home_injury_defense_impact": 2.025,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
             "home_injury_out_weight": 1.5,
             "away_injury_count": 5,
             "away_injury_out_count": 2,
@@ -3455,8 +3493,8 @@
             "away_injury_total_impact": 3.8,
             "away_injury_offense_impact": 2.025,
             "away_injury_defense_impact": 1.775,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
             "away_injury_out_weight": 2.75,
             "diff_injury_count": 0,
             "diff_injury_out_count": -1,
@@ -3465,8 +3503,8 @@
             "diff_injury_total_impact": -1.4249999999999998,
             "diff_injury_offense_impact": -1.6749999999999998,
             "diff_injury_defense_impact": 0.25,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": -1.25
           },
           "players": [
@@ -3481,7 +3519,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-11T11:16Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -3494,9 +3532,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-15",
               "reported_at": "2026-10-10T19:52Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "PIT",
@@ -3508,7 +3546,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T23:27Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -3522,9 +3560,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T23:23Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "PIT",
@@ -3564,9 +3602,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-10T17:51Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "IND",
@@ -3578,7 +3616,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T15:55Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -3592,7 +3630,7 @@
               "injury_location": "Torso",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:08Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -3613,23 +3651,23 @@
           ]
         },
         "context": {
-          "venue_indoor": 0.0,
-          "venue_grass": 1.0,
-          "temperature": 61.0,
-          "wind_gust": 15.0,
-          "precipitation_probability": 49.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 0.0,
+          "venue_indoor": 0,
+          "venue_grass": 1,
+          "temperature": 61,
+          "wind_gust": 15,
+          "precipitation_probability": 49,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 0,
           "weather_precip_severity": 0.49,
           "home_rest_days": 9.697916666666666,
           "away_rest_days": 7.145833333333333,
           "diff_rest_days": 2.552083333333333,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 1.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 1,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "PIT",
@@ -3700,7 +3738,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-11T11:16Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -3713,9 +3751,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-15",
               "reported_at": "2026-10-10T19:52Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "PIT",
@@ -3727,7 +3765,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T23:27Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -3741,9 +3779,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T23:23Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "PIT",
@@ -3783,9 +3821,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-10T17:51Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "IND",
@@ -3797,7 +3835,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T15:55Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -3811,7 +3849,7 @@
               "injury_location": "Torso",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:08Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -3832,9 +3870,9 @@
           ],
           "weather": {
             "indoor": false,
-            "temperature": 61.0,
-            "wind_gust": 15.0,
-            "precipitation_probability": 49.0
+            "temperature": 61,
+            "wind_gust": 15,
+            "precipitation_probability": 49
           },
           "rest": {
             "home_days": 9.697916666666666,
@@ -3891,10 +3929,10 @@
         "tie_prob": 0.03894,
         "home_cover_prob": 0.48912,
         "away_cover_prob": 0.51088,
-        "spread_push_prob": 0.0,
+        "spread_push_prob": 0,
         "over_prob": 0.49104,
         "under_prob": 0.50896,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.6224665518611737,
         "market_fair_away_prob": 0.3775334481388264,
         "simulations": 50000,
@@ -3926,18 +3964,18 @@
             "home_injury_total_impact": 3.275,
             "home_injury_offense_impact": 0.5249999999999999,
             "home_injury_defense_impact": 2.75,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
             "home_injury_out_weight": 2.75,
             "away_injury_count": 5,
             "away_injury_out_count": 1,
             "away_injury_doubtful_count": 0,
             "away_injury_questionable_count": 0,
             "away_injury_total_impact": 1.25,
-            "away_injury_offense_impact": 0.0,
+            "away_injury_offense_impact": 0,
             "away_injury_defense_impact": 1.25,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
             "away_injury_out_weight": 1.25,
             "diff_injury_count": 0,
             "diff_injury_out_count": 1,
@@ -3946,8 +3984,8 @@
             "diff_injury_total_impact": 2.025,
             "diff_injury_offense_impact": 0.5249999999999999,
             "diff_injury_defense_impact": 1.5,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": 1.5
           },
           "players": [
@@ -3961,9 +3999,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-11T01:02Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "WSH",
@@ -3975,9 +4013,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-11T01:00Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 1,
+              "raw_impact": 0
             },
             {
               "team": "WSH",
@@ -4003,7 +4041,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-10T02:45Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -4017,7 +4055,7 @@
               "injury_location": "Groin",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-10T02:41Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -4031,9 +4069,9 @@
               "injury_location": "Head",
               "return_date": "2026-11-12",
               "reported_at": "2026-10-11T01:28Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "NYG",
@@ -4045,7 +4083,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:35Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -4059,9 +4097,9 @@
               "injury_location": "Leg",
               "return_date": "2027-02-15",
               "reported_at": "2026-10-07T23:25Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "NYG",
@@ -4073,9 +4111,9 @@
               "injury_location": "Leg",
               "return_date": "2027-01-17",
               "reported_at": "2026-09-30T20:35Z",
-              "status_weight": 0.0,
-              "position_weight": 5.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 5,
+              "raw_impact": 0
             },
             {
               "team": "NYG",
@@ -4087,30 +4125,30 @@
               "injury_location": "Leg",
               "return_date": "2027-02-15",
               "reported_at": "2026-09-29T23:44Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             }
           ]
         },
         "context": {
-          "venue_indoor": 0.0,
-          "venue_grass": 1.0,
-          "temperature": 63.0,
-          "wind_gust": 17.0,
-          "precipitation_probability": 49.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 2.0,
+          "venue_indoor": 0,
+          "venue_grass": 1,
+          "temperature": 63,
+          "wind_gust": 17,
+          "precipitation_probability": 49,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 2,
           "weather_precip_severity": 0.49,
           "home_rest_days": 7.145833333333333,
-          "away_rest_days": 7.0,
+          "away_rest_days": 7,
           "diff_rest_days": 0.14583333333333304,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "WSH",
@@ -4180,9 +4218,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-11T01:02Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "WSH",
@@ -4194,9 +4232,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-11T01:00Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 1,
+              "raw_impact": 0
             },
             {
               "team": "WSH",
@@ -4222,7 +4260,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-10T02:45Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -4236,7 +4274,7 @@
               "injury_location": "Groin",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-10T02:41Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -4250,9 +4288,9 @@
               "injury_location": "Head",
               "return_date": "2026-11-12",
               "reported_at": "2026-10-11T01:28Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "NYG",
@@ -4264,7 +4302,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:35Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -4278,9 +4316,9 @@
               "injury_location": "Leg",
               "return_date": "2027-02-15",
               "reported_at": "2026-10-07T23:25Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "NYG",
@@ -4292,9 +4330,9 @@
               "injury_location": "Leg",
               "return_date": "2027-01-17",
               "reported_at": "2026-09-30T20:35Z",
-              "status_weight": 0.0,
-              "position_weight": 5.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 5,
+              "raw_impact": 0
             },
             {
               "team": "NYG",
@@ -4306,20 +4344,20 @@
               "injury_location": "Leg",
               "return_date": "2027-02-15",
               "reported_at": "2026-09-29T23:44Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             }
           ],
           "weather": {
             "indoor": false,
-            "temperature": 63.0,
-            "wind_gust": 17.0,
-            "precipitation_probability": 49.0
+            "temperature": 63,
+            "wind_gust": 17,
+            "precipitation_probability": 49
           },
           "rest": {
             "home_days": 7.145833333333333,
-            "away_days": 7.0
+            "away_days": 7
           }
         },
         "training_rows": 1151,
@@ -4372,10 +4410,10 @@
         "tie_prob": 0.03974,
         "home_cover_prob": 0.52398,
         "away_cover_prob": 0.47602,
-        "spread_push_prob": 0.0,
+        "spread_push_prob": 0,
         "over_prob": 0.51192,
         "under_prob": 0.48808,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.3775334481388264,
         "market_fair_away_prob": 0.6224665518611737,
         "simulations": 50000,
@@ -4388,8 +4426,8 @@
         "base_margin": -3.175325337070337,
         "base_total": 41.703251100381095,
         "injury_margin_adjustment": 0.20350000000000004,
-        "context_margin_adjustment": 0.0,
-        "weather_total_adjustment": 0.0,
+        "context_margin_adjustment": 0,
+        "weather_total_adjustment": 0,
         "expected_margin": -2.971825337070337,
         "expected_total": 41.703251100381095,
         "qb": {
@@ -4406,19 +4444,19 @@
             "home_injury_questionable_count": 3,
             "home_injury_total_impact": 1.1375,
             "home_injury_offense_impact": 1.1375,
-            "home_injury_defense_impact": 0.0,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
-            "home_injury_out_weight": 0.0,
+            "home_injury_defense_impact": 0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
+            "home_injury_out_weight": 0,
             "away_injury_count": 5,
             "away_injury_out_count": 3,
             "away_injury_doubtful_count": 0,
             "away_injury_questionable_count": 0,
             "away_injury_total_impact": 4.25,
-            "away_injury_offense_impact": 0.0,
+            "away_injury_offense_impact": 0,
             "away_injury_defense_impact": 4.25,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
             "away_injury_out_weight": 4.25,
             "diff_injury_count": 0,
             "diff_injury_out_count": -3,
@@ -4427,8 +4465,8 @@
             "diff_injury_total_impact": -3.1125,
             "diff_injury_offense_impact": 1.1375,
             "diff_injury_defense_impact": -4.25,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": -4.25
           },
           "players": [
@@ -4456,9 +4494,9 @@
               "injury_location": "Head",
               "return_date": "2026-11-16",
               "reported_at": "2026-10-11T03:33Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "LAC",
@@ -4498,9 +4536,9 @@
               "injury_location": "Groin",
               "return_date": "2026-11-16",
               "reported_at": "2026-10-11T00:57Z",
-              "status_weight": 0.0,
-              "position_weight": 5.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 5,
+              "raw_impact": 0
             },
             {
               "team": "DEN",
@@ -4512,7 +4550,7 @@
               "injury_location": "Torso",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T16:16Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -4526,7 +4564,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T16:13Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -4540,9 +4578,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-09T21:47Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "DEN",
@@ -4554,9 +4592,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-09-26T20:36Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 1,
+              "raw_impact": 0
             },
             {
               "team": "DEN",
@@ -4568,30 +4606,30 @@
               "injury_location": "Other",
               "return_date": "2026-10-15",
               "reported_at": "2026-08-31T23:50Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             }
           ]
         },
         "context": {
-          "venue_indoor": 1.0,
-          "venue_grass": 0.0,
-          "temperature": 70.0,
-          "wind_gust": 0.0,
-          "precipitation_probability": 0.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 0.0,
-          "weather_precip_severity": 0.0,
+          "venue_indoor": 1,
+          "venue_grass": 0,
+          "temperature": 70,
+          "wind_gust": 0,
+          "precipitation_probability": 0,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 0,
+          "weather_precip_severity": 0,
           "home_rest_days": 6.986111111111111,
           "away_rest_days": 6.986111111111111,
-          "diff_rest_days": 0.0,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "diff_rest_days": 0,
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "LAC",
@@ -4675,9 +4713,9 @@
               "injury_location": "Head",
               "return_date": "2026-11-16",
               "reported_at": "2026-10-11T03:33Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "LAC",
@@ -4717,9 +4755,9 @@
               "injury_location": "Groin",
               "return_date": "2026-11-16",
               "reported_at": "2026-10-11T00:57Z",
-              "status_weight": 0.0,
-              "position_weight": 5.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 5,
+              "raw_impact": 0
             },
             {
               "team": "DEN",
@@ -4731,7 +4769,7 @@
               "injury_location": "Torso",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T16:16Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -4745,7 +4783,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T16:13Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -4759,9 +4797,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-09T21:47Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "DEN",
@@ -4773,9 +4811,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-09-26T20:36Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 1,
+              "raw_impact": 0
             },
             {
               "team": "DEN",
@@ -4787,16 +4825,16 @@
               "injury_location": "Other",
               "return_date": "2026-10-15",
               "reported_at": "2026-08-31T23:50Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             }
           ],
           "weather": {
             "indoor": true,
-            "temperature": 70.0,
-            "wind_gust": 0.0,
-            "precipitation_probability": 0.0
+            "temperature": 70,
+            "wind_gust": 0,
+            "precipitation_probability": 0
           },
           "rest": {
             "home_days": 6.986111111111111,
@@ -4853,10 +4891,10 @@
         "tie_prob": 0.03482,
         "home_cover_prob": 0.50964,
         "away_cover_prob": 0.49036,
-        "spread_push_prob": 0.0,
+        "spread_push_prob": 0,
         "over_prob": 0.47798,
         "under_prob": 0.52202,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.30920711694593195,
         "market_fair_away_prob": 0.690792883054068,
         "simulations": 50000,
@@ -4870,7 +4908,7 @@
         "base_total": 53.91387689292189,
         "injury_margin_adjustment": 0.05500000000000001,
         "context_margin_adjustment": 0.02444444444444443,
-        "weather_total_adjustment": 0.0,
+        "weather_total_adjustment": 0,
         "expected_margin": -5.213346284456284,
         "expected_total": 53.91387689292189,
         "qb": {
@@ -4888,8 +4926,8 @@
             "home_injury_total_impact": 3.625,
             "home_injury_offense_impact": 1.5,
             "home_injury_defense_impact": 2.125,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
             "home_injury_out_weight": 2.75,
             "away_injury_count": 5,
             "away_injury_out_count": 3,
@@ -4898,9 +4936,9 @@
             "away_injury_total_impact": 4.4375,
             "away_injury_offense_impact": 1.25,
             "away_injury_defense_impact": 3.1875,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
-            "away_injury_out_weight": 4.0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
+            "away_injury_out_weight": 4,
             "diff_injury_count": 0,
             "diff_injury_out_count": -1,
             "diff_injury_doubtful_count": 0,
@@ -4908,8 +4946,8 @@
             "diff_injury_total_impact": -0.8125,
             "diff_injury_offense_impact": 0.25,
             "diff_injury_defense_impact": -1.0625,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": -1.25
           },
           "players": [
@@ -4923,9 +4961,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-11T03:58Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "ARI",
@@ -4937,7 +4975,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T15:35Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -4965,7 +5003,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T22:16Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -4993,9 +5031,9 @@
               "injury_location": "Arm",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T02:36Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "DET",
@@ -5007,7 +5045,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T02:32Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5021,7 +5059,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T01:01Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -5035,7 +5073,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T00:56Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5056,23 +5094,23 @@
           ]
         },
         "context": {
-          "venue_indoor": 1.0,
-          "venue_grass": 1.0,
-          "temperature": 87.0,
-          "wind_gust": 0.0,
-          "precipitation_probability": 0.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 0.0,
-          "weather_precip_severity": 0.0,
+          "venue_indoor": 1,
+          "venue_grass": 1,
+          "temperature": 87,
+          "wind_gust": 0,
+          "precipitation_probability": 0,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 0,
+          "weather_precip_severity": 0,
           "home_rest_days": 7.142361111111111,
           "away_rest_days": 6.836805555555555,
           "diff_rest_days": 0.30555555555555536,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "ARI",
@@ -5142,9 +5180,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-11T03:58Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "ARI",
@@ -5156,7 +5194,7 @@
               "injury_location": "Other",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T15:35Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -5184,7 +5222,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-09T22:16Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5212,9 +5250,9 @@
               "injury_location": "Arm",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T02:36Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "DET",
@@ -5226,7 +5264,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T02:32Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5240,7 +5278,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T01:01Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -5254,7 +5292,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T00:56Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5275,9 +5313,9 @@
           ],
           "weather": {
             "indoor": true,
-            "temperature": 87.0,
-            "wind_gust": 0.0,
-            "precipitation_probability": 0.0
+            "temperature": 87,
+            "wind_gust": 0,
+            "precipitation_probability": 0
           },
           "rest": {
             "home_days": 7.142361111111111,
@@ -5317,8 +5355,8 @@
       },
       "market": {
         "provider": "DraftKings",
-        "spread": -3.0,
-        "market_margin": 3.0,
+        "spread": -3,
+        "market_margin": 3,
         "total": 46.5,
         "home_ml": -166,
         "away_ml": 140,
@@ -5337,20 +5375,20 @@
         "spread_push_prob": 0.03998,
         "over_prob": 0.49596,
         "under_prob": 0.50404,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.5996387718242023,
         "market_fair_away_prob": 0.4003612281757977,
         "simulations": 50000,
         "model_version": "v2.0.0",
         "football_weight": 0.1,
-        "market_margin": 3.0,
+        "market_margin": 3,
         "market_total": 46.5,
         "football_margin": -0.2614676329117503,
         "football_total": 48.86644754570051,
         "base_margin": 2.673853236708825,
         "base_total": 46.73664475457005,
         "injury_margin_adjustment": 0.16,
-        "context_margin_adjustment": 0.0,
+        "context_margin_adjustment": 0,
         "weather_total_adjustment": -0.30000000000000004,
         "expected_margin": 2.833853236708825,
         "expected_total": 46.436644754570054,
@@ -5369,8 +5407,8 @@
             "home_injury_total_impact": 2.6,
             "home_injury_offense_impact": 1.35,
             "home_injury_defense_impact": 1.25,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
             "home_injury_out_weight": 2.25,
             "away_injury_count": 5,
             "away_injury_out_count": 4,
@@ -5379,8 +5417,8 @@
             "away_injury_total_impact": 5.025,
             "away_injury_offense_impact": 0.5,
             "away_injury_defense_impact": 4.525,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
             "away_injury_out_weight": 4.5,
             "diff_injury_count": 0,
             "diff_injury_out_count": -2,
@@ -5389,8 +5427,8 @@
             "diff_injury_total_impact": -2.4250000000000003,
             "diff_injury_offense_impact": 0.8500000000000001,
             "diff_injury_defense_impact": -3.2750000000000004,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": -2.25
           },
           "players": [
@@ -5404,9 +5442,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-11T02:04Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "SEA",
@@ -5418,9 +5456,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-15",
               "reported_at": "2026-10-11T02:02Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "SEA",
@@ -5432,7 +5470,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-15",
               "reported_at": "2026-10-10T02:47Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5447,7 +5485,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-09T21:59Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -5460,9 +5498,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-15",
               "reported_at": "2026-10-05T17:05Z",
-              "status_weight": 1.0,
-              "position_weight": 1.0,
-              "raw_impact": 1.0
+              "status_weight": 1,
+              "position_weight": 1,
+              "raw_impact": 1
             },
             {
               "team": "SF",
@@ -5474,7 +5512,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-10T02:50Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5502,7 +5540,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-10T01:33Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -5516,7 +5554,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-07T18:39Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5530,30 +5568,30 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-07T18:34Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 0.5,
               "raw_impact": 0.5
             }
           ]
         },
         "context": {
-          "venue_indoor": 0.0,
-          "venue_grass": 0.0,
-          "temperature": 57.0,
-          "wind_gust": 18.0,
-          "precipitation_probability": 0.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 3.0,
-          "weather_precip_severity": 0.0,
-          "home_rest_days": 7.0,
-          "away_rest_days": 7.0,
-          "diff_rest_days": 0.0,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "venue_indoor": 0,
+          "venue_grass": 0,
+          "temperature": 57,
+          "wind_gust": 18,
+          "precipitation_probability": 0,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 3,
+          "weather_precip_severity": 0,
+          "home_rest_days": 7,
+          "away_rest_days": 7,
+          "diff_rest_days": 0,
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "SEA",
@@ -5623,9 +5661,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-11T02:04Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "SEA",
@@ -5637,9 +5675,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-15",
               "reported_at": "2026-10-11T02:02Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "SEA",
@@ -5651,7 +5689,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-15",
               "reported_at": "2026-10-10T02:47Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5666,7 +5704,7 @@
               "return_date": "2026-10-11",
               "reported_at": "2026-10-09T21:59Z",
               "status_weight": 0.35,
-              "position_weight": 1.0,
+              "position_weight": 1,
               "raw_impact": 0.35
             },
             {
@@ -5679,9 +5717,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-15",
               "reported_at": "2026-10-05T17:05Z",
-              "status_weight": 1.0,
-              "position_weight": 1.0,
-              "raw_impact": 1.0
+              "status_weight": 1,
+              "position_weight": 1,
+              "raw_impact": 1
             },
             {
               "team": "SF",
@@ -5693,7 +5731,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-10T02:50Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5721,7 +5759,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-10T01:33Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -5735,7 +5773,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-07T18:39Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -5749,20 +5787,20 @@
               "injury_location": "Leg",
               "return_date": "2026-10-19",
               "reported_at": "2026-10-07T18:34Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 0.5,
               "raw_impact": 0.5
             }
           ],
           "weather": {
             "indoor": false,
-            "temperature": 57.0,
-            "wind_gust": 18.0,
-            "precipitation_probability": 0.0
+            "temperature": 57,
+            "wind_gust": 18,
+            "precipitation_probability": 0
           },
           "rest": {
-            "home_days": 7.0,
-            "away_days": 7.0
+            "home_days": 7,
+            "away_days": 7
           }
         },
         "training_rows": 1151,
@@ -5798,8 +5836,8 @@
       },
       "market": {
         "provider": "DraftKings",
-        "spread": -3.0,
-        "market_margin": 3.0,
+        "spread": -3,
+        "market_margin": 3,
         "total": 43.5,
         "home_ml": -175,
         "away_ml": 145,
@@ -5818,13 +5856,13 @@
         "spread_push_prob": 0.03838,
         "over_prob": 0.50818,
         "under_prob": 0.49182,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.6092362344582594,
         "market_fair_away_prob": 0.39076376554174075,
         "simulations": 50000,
         "model_version": "v2.0.0",
         "football_weight": 0.1,
-        "market_margin": 3.0,
+        "market_margin": 3,
         "market_total": 43.5,
         "football_margin": 1.9912947866947894,
         "football_total": 46.46791934546939,
@@ -5832,7 +5870,7 @@
         "base_total": 43.79679193454694,
         "injury_margin_adjustment": 2.4645,
         "context_margin_adjustment": -0.30416666666666664,
-        "weather_total_adjustment": 0.0,
+        "weather_total_adjustment": 0,
         "expected_margin": 5.0594628120028124,
         "expected_total": 43.79679193454694,
         "qb": {
@@ -5850,8 +5888,8 @@
             "home_injury_total_impact": 3.0749999999999997,
             "home_injury_offense_impact": 0.6124999999999999,
             "home_injury_defense_impact": 2.4625,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
             "home_injury_out_weight": 1.5,
             "away_injury_count": 5,
             "away_injury_out_count": 3,
@@ -5860,8 +5898,8 @@
             "away_injury_total_impact": 8.8,
             "away_injury_offense_impact": 7.025,
             "away_injury_defense_impact": 1.775,
-            "away_injury_qb_impact": 5.0,
-            "away_injury_has_qb": 1.0,
+            "away_injury_qb_impact": 5,
+            "away_injury_has_qb": 1,
             "away_injury_out_weight": 7.75,
             "diff_injury_count": 0,
             "diff_injury_out_count": -2,
@@ -5870,8 +5908,8 @@
             "diff_injury_total_impact": -5.725000000000001,
             "diff_injury_offense_impact": -6.4125000000000005,
             "diff_injury_defense_impact": 0.6875,
-            "diff_injury_qb_impact": -5.0,
-            "diff_injury_has_qb": -1.0,
+            "diff_injury_qb_impact": -5,
+            "diff_injury_has_qb": -1,
             "diff_injury_out_weight": -6.25
           },
           "players": [
@@ -5885,9 +5923,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-11T03:43Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "ATL",
@@ -5899,7 +5937,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T01:12Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -5955,9 +5993,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:34Z",
-              "status_weight": 1.0,
-              "position_weight": 5.0,
-              "raw_impact": 5.0
+              "status_weight": 1,
+              "position_weight": 5,
+              "raw_impact": 5
             },
             {
               "team": "BAL",
@@ -5983,7 +6021,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:13Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -6011,30 +6049,30 @@
               "injury_location": "Arm",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T00:05Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             }
           ]
         },
         "context": {
-          "venue_indoor": 1.0,
-          "venue_grass": 0.0,
-          "temperature": 65.0,
-          "wind_gust": 0.0,
-          "precipitation_probability": 0.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 0.0,
-          "weather_precip_severity": 0.0,
+          "venue_indoor": 1,
+          "venue_grass": 0,
+          "temperature": 65,
+          "wind_gust": 0,
+          "precipitation_probability": 0,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 0,
+          "weather_precip_severity": 0,
           "home_rest_days": 6.003472222222222,
           "away_rest_days": 7.305555555555555,
           "diff_rest_days": -1.302083333333333,
-          "home_short_week": 1.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 1.0
+          "home_short_week": 1,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 1
         },
         "analysis_context": {
           "home_team": "ATL",
@@ -6104,9 +6142,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-08",
               "reported_at": "2026-10-11T03:43Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "ATL",
@@ -6118,7 +6156,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T01:12Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -6174,9 +6212,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-11T12:34Z",
-              "status_weight": 1.0,
-              "position_weight": 5.0,
-              "raw_impact": 5.0
+              "status_weight": 1,
+              "position_weight": 5,
+              "raw_impact": 5
             },
             {
               "team": "BAL",
@@ -6202,7 +6240,7 @@
               "injury_location": "Head",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T02:13Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             },
@@ -6230,16 +6268,16 @@
               "injury_location": "Arm",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T00:05Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             }
           ],
           "weather": {
             "indoor": true,
-            "temperature": 65.0,
-            "wind_gust": 0.0,
-            "precipitation_probability": 0.0
+            "temperature": 65,
+            "wind_gust": 0,
+            "precipitation_probability": 0
           },
           "rest": {
             "home_days": 6.003472222222222,
@@ -6279,8 +6317,8 @@
       },
       "market": {
         "provider": "DraftKings",
-        "spread": -3.0,
-        "market_margin": 3.0,
+        "spread": -3,
+        "market_margin": 3,
         "total": 54.5,
         "home_ml": -175,
         "away_ml": 145,
@@ -6299,21 +6337,21 @@
         "spread_push_prob": 0.04122,
         "over_prob": 0.48388,
         "under_prob": 0.51612,
-        "total_push_prob": 0.0,
+        "total_push_prob": 0,
         "market_fair_home_prob": 0.6092362344582594,
         "market_fair_away_prob": 0.39076376554174075,
         "simulations": 50000,
         "model_version": "v2.0.0",
         "football_weight": 0.1,
-        "market_margin": 3.0,
+        "market_margin": 3,
         "market_total": 54.5,
         "football_margin": 2.5527508261890612,
         "football_total": 50.5218716283717,
         "base_margin": 2.9552750826189063,
         "base_total": 54.10218716283717,
         "injury_margin_adjustment": 0.392,
-        "context_margin_adjustment": 0.0,
-        "weather_total_adjustment": 0.0,
+        "context_margin_adjustment": 0,
+        "weather_total_adjustment": 0,
         "expected_margin": 3.347275082618906,
         "expected_total": 54.10218716283717,
         "qb": {
@@ -6329,11 +6367,11 @@
             "home_injury_doubtful_count": 0,
             "home_injury_questionable_count": 1,
             "home_injury_total_impact": 0.4375,
-            "home_injury_offense_impact": 0.0,
+            "home_injury_offense_impact": 0,
             "home_injury_defense_impact": 0.4375,
-            "home_injury_qb_impact": 0.0,
-            "home_injury_has_qb": 0.0,
-            "home_injury_out_weight": 0.0,
+            "home_injury_qb_impact": 0,
+            "home_injury_has_qb": 0,
+            "home_injury_out_weight": 0,
             "away_injury_count": 5,
             "away_injury_out_count": 2,
             "away_injury_doubtful_count": 0,
@@ -6341,8 +6379,8 @@
             "away_injury_total_impact": 4.324999999999999,
             "away_injury_offense_impact": 2.025,
             "away_injury_defense_impact": 2.3,
-            "away_injury_qb_impact": 0.0,
-            "away_injury_has_qb": 0.0,
+            "away_injury_qb_impact": 0,
+            "away_injury_has_qb": 0,
             "away_injury_out_weight": 2.75,
             "diff_injury_count": 0,
             "diff_injury_out_count": -2,
@@ -6351,8 +6389,8 @@
             "diff_injury_total_impact": -3.8874999999999993,
             "diff_injury_offense_impact": -2.025,
             "diff_injury_defense_impact": -1.8624999999999998,
-            "diff_injury_qb_impact": 0.0,
-            "diff_injury_has_qb": 0.0,
+            "diff_injury_qb_impact": 0,
+            "diff_injury_has_qb": 0,
             "diff_injury_out_weight": -2.75
           },
           "players": [
@@ -6380,9 +6418,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T20:19Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "LAR",
@@ -6394,9 +6432,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-01",
               "reported_at": "2026-10-07T17:52Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "LAR",
@@ -6408,9 +6446,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-09-24T00:22Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 1,
+              "raw_impact": 0
             },
             {
               "team": "LAR",
@@ -6422,9 +6460,9 @@
               "injury_location": "Groin",
               "return_date": "2027-02-15",
               "reported_at": "2026-09-08T20:42Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "BUF",
@@ -6464,7 +6502,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T18:55Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -6492,30 +6530,30 @@
               "injury_location": "Arm",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T18:00Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             }
           ]
         },
         "context": {
-          "venue_indoor": 1.0,
-          "venue_grass": 0.0,
-          "temperature": 68.0,
-          "wind_gust": 0.0,
-          "precipitation_probability": 0.0,
-          "weather_cold_severity": 0.0,
-          "weather_heat_severity": 0.0,
-          "weather_wind_severity": 0.0,
-          "weather_precip_severity": 0.0,
+          "venue_indoor": 1,
+          "venue_grass": 0,
+          "temperature": 68,
+          "wind_gust": 0,
+          "precipitation_probability": 0,
+          "weather_cold_severity": 0,
+          "weather_heat_severity": 0,
+          "weather_wind_severity": 0,
+          "weather_precip_severity": 0,
           "home_rest_days": 8.302083333333334,
           "away_rest_days": 8.302083333333334,
-          "diff_rest_days": 0.0,
-          "home_short_week": 0.0,
-          "away_short_week": 0.0,
-          "home_extra_rest": 0.0,
-          "away_extra_rest": 0.0,
-          "diff_short_week": 0.0
+          "diff_rest_days": 0,
+          "home_short_week": 0,
+          "away_short_week": 0,
+          "home_extra_rest": 0,
+          "away_extra_rest": 0,
+          "diff_short_week": 0
         },
         "analysis_context": {
           "home_team": "LAR",
@@ -6599,9 +6637,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-10-10T20:19Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.5,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "LAR",
@@ -6613,9 +6651,9 @@
               "injury_location": "Leg",
               "return_date": "2026-11-01",
               "reported_at": "2026-10-07T17:52Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "LAR",
@@ -6627,9 +6665,9 @@
               "injury_location": "Leg",
               "return_date": "2026-10-25",
               "reported_at": "2026-09-24T00:22Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
+              "status_weight": 0,
+              "position_weight": 1,
+              "raw_impact": 0
             },
             {
               "team": "LAR",
@@ -6641,9 +6679,9 @@
               "injury_location": "Groin",
               "return_date": "2027-02-15",
               "reported_at": "2026-09-08T20:42Z",
-              "status_weight": 0.0,
+              "status_weight": 0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 0
             },
             {
               "team": "BUF",
@@ -6683,7 +6721,7 @@
               "injury_location": "Leg",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T18:55Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.25,
               "raw_impact": 1.25
             },
@@ -6711,16 +6749,16 @@
               "injury_location": "Arm",
               "return_date": "2026-10-18",
               "reported_at": "2026-10-10T18:00Z",
-              "status_weight": 1.0,
+              "status_weight": 1,
               "position_weight": 1.5,
               "raw_impact": 1.5
             }
           ],
           "weather": {
             "indoor": true,
-            "temperature": 68.0,
-            "wind_gust": 0.0,
-            "precipitation_probability": 0.0
+            "temperature": 68,
+            "wind_gust": 0,
+            "precipitation_probability": 0
           },
           "rest": {
             "home_days": 8.302083333333334,
