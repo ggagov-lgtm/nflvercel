@@ -1027,3 +1027,32 @@
 .rowTeamRecord{display:block;font-size:9px;line-height:1.1;font-weight:600;letter-spacing:.025em;color:#98adbf;white-space:nowrap;font-variant-numeric:tabular-nums}
 :root[data-theme="light"] .rowTeamRecord{color:#52647a}
 @media(max-width:760px){.rowTeamText{gap:2px}.rowTeamRecord{font-size:9px}}
+
+
+/* Historical weekly Top 3 category performance - compact and readable on phones. */
+.bettorTop3History{margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}
+.bettorTop3HistoryHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.bettorTop3HistoryHead h3{font-size:clamp(17px,2.1vw,22px);line-height:1.25;margin:5px 0 0}
+.bettorTop3HistoryHead>span{font-size:10px;color:var(--muted);text-align:right;flex-shrink:0}
+.bettorTop3Group{margin-top:17px}
+.bettorTop3Grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.bettorTop3Cell{display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;min-width:0;padding:13px 9px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
+.bettorTop3Name{font-size:12px;font-weight:850;color:var(--text);line-height:1.25}
+.bettorTop3Name small{display:block;margin-top:3px;font-size:10px;font-weight:500;color:var(--muted)}
+.bettorTop3Rate{font-size:clamp(20px,2.8vw,30px);font-weight:900;letter-spacing:-.05em;color:var(--text);font-variant-numeric:tabular-nums}
+.bettorTop3Record{font-size:11px;font-weight:750;color:var(--text);font-variant-numeric:tabular-nums}
+.bettorTop3Count,.bettorTop3NoPicks{font-size:10px;color:var(--muted)}
+.bettorTop3Details{width:100%;margin-top:5px;border-top:1px solid var(--line);text-align:left}
+.bettorTop3Details>summary{padding:8px 0 2px;font-size:11px;font-weight:750;color:var(--green);cursor:pointer;text-align:center}
+.bettorTop3PickList{max-height:265px;overflow-y:auto;overflow-x:hidden;padding:5px 0}
+.bettorTop3Pick{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:8px 0;border-bottom:1px solid var(--line)}
+.bettorTop3Pick:last-child{border-bottom:none}
+.bettorTop3PickMeta{font-size:9px;line-height:1.3;color:var(--muted)}
+.bettorTop3PickSelection{display:flex;align-items:center;justify-content:space-between;gap:5px;width:100%;font-size:10px;font-weight:800;color:var(--text);overflow-wrap:anywhere}
+.bettorTop3Outcome{font-size:9px;flex-shrink:0}
+.bettorTop3WIN{color:var(--green)}
+.bettorTop3LOSS{color:var(--red)}
+.bettorTop3PUSH{color:var(--gold)}
+:root[data-theme="light"] .bettorTop3Cell{background:#f8fafc;border-color:#dce4ed}
+@media(max-width:760px){.bettorTop3Grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bettorTop3HistoryHead>span{max-width:110px}.bettorTop3Cell{padding:13px 7px}}
+@media(max-width:380px){.bettorTop3Grid{gap:6px}.bettorTop3Rate{font-size:22px}.bettorTop3Name{font-size:11px}}
