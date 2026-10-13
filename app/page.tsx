@@ -606,7 +606,7 @@ export default async function Page({
         </div>
       </section>
 
-      <PerformanceSummary weeks={bettorWeeks} currentWeek={displayLatest?.week || 0} season={displayLatest?.season || 2026} />
+      <PerformanceSummary weeks={bettorWeeks} currentWeek={displayLatest?.week || 0} season={displayLatest?.season || 2026} overallPicks={weeklyTopPicks.overall} />
 
       <section className="topPicksSection">
         <div className="topPicksTitle">
@@ -622,7 +622,6 @@ export default async function Page({
             { title: "Top 3 Winner Picks", subtitle: "Most likely game winners", rows: weeklyTopPicks.winner, className: "topWinner" },
             { title: "Top 3 Point Spread Picks", subtitle: "Most likely to cover the point spread", rows: weeklyTopPicks.spread, className: "topSpread" },
             { title: "Top 3 Over / Under Picks", subtitle: "Highest probability total-points predictions", rows: weeklyTopPicks.total, className: "topTotal" },
-            { title: "Top 3 Overall Picks", subtitle: "Highest confidence across all categories", rows: weeklyTopPicks.overall, className: "topOverall" },
           ].map((group) => (
             <article className={`topPicksCard ${group.className}`} key={group.title}>
               <header>
@@ -636,7 +635,7 @@ export default async function Page({
                     {pick.logo ? <img src={pick.logo} alt="" /> : null}
                     <div className="topPickText">
                       <strong>{pick.selection}</strong>
-                      <span>{pick.matchup}{group.className === "topOverall" ? ` · ${pick.category}` : ""}</span>
+                      <span>{pick.matchup}</span>
                     </div>
                     <div className="topPickOutcome"><b className={`topProbability topProbability${pick.result || "UPCOMING"}`}>{pct(pick.probability)}</b><span className={`topPickResult topPickResult${pick.result || "UPCOMING"}`}>{pick.result || "UPCOMING"}</span></div>
                   </div>
