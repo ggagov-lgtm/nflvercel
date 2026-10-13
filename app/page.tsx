@@ -673,8 +673,8 @@ export default async function Page({
                 <div style={{ opacity: .7, marginTop: 6 }}>{dateLabel(game.date)}</div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <strong>{game.state === "pre" ? "Prediction pending" : "NO ARCHIVED PREDICTION"}</strong>
-                <div style={{ opacity: .7, marginTop: 6 }}>{game.state === "pre" ? "Awaiting pregame sportsbook odds" : "Historical game included · excluded from model accuracy and returns"}</div>
+                <strong>{game.state === "pre" ? "UPCOMING" : "FINAL"}</strong>
+                <div style={{ opacity: .7, marginTop: 6 }}>{game.state === "pre" ? "Model awaiting odds" : "Prediction: —"}</div>
               </div>
             </div>
           </article>
