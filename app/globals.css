@@ -1256,3 +1256,149 @@
 @media(max-width:640px){.historicalOddsDisclosure>summary{padding:14px 12px}.historicalOddsDisclosure>summary strong{font-size:13px}.historicalOddsOpen{font-size:10px}.historicalOddsContent{padding:13px 11px}.historicalOddsWarning{font-size:10px}.historicalOddsTable th,.historicalOddsTable td{padding:9px 10px}}
 
 
+
+
+/* Day mode legibility: expanded matchups must not inherit dark-theme pastels. */
+:root[data-theme="light"] .gameExpansion{
+  background:#f5f8fc;
+  color:#172a40;
+}
+:root[data-theme="light"] .gameExpansion .analysisPrediction,
+:root[data-theme="light"] .gameExpansion .whyModel,
+:root[data-theme="light"] .gameExpansion .factorCard{
+  background:#ffffff;
+  color:#172a40;
+  border-color:#ced9e4;
+}
+:root[data-theme="light"] .gameExpansion .analysisScore,
+:root[data-theme="light"] .gameExpansion .analysisScore b{
+  color:#18293d;
+}
+:root[data-theme="light"] .gameExpansion .analysisScore em{color:#506276}
+:root[data-theme="light"] .gameExpansion .analysisPick{
+  border-color:#cad6e1;
+  color:#172a40;
+}
+:root[data-theme="light"] .gameExpansion .analysisPickBest{
+  background:#e3f3e9;
+  border-color:#76b69a;
+}
+:root[data-theme="light"] .gameExpansion .analysisPickSecond{
+  background:#edf4ef;
+  border-color:#a9c6b6;
+}
+:root[data-theme="light"] .gameExpansion .analysisPickThird{
+  background:#f1f5f9;
+  border-color:#cad5df;
+}
+/* Higher contrast for the prominent bet name, line, and confidence figure. */
+:root[data-theme="light"] .gameExpansion .analysisPick .recommendationLine>strong{
+  color:#18293d;
+  font-size:clamp(14px,2.7vw,17px);
+  font-weight:850;
+  line-height:1.3;
+}
+:root[data-theme="light"] .gameExpansion .analysisPickBest .recommendationLine>strong{
+  color:#08633f;
+}
+:root[data-theme="light"] .gameExpansion .analysisPickSecond .recommendationLine>strong{
+  color:#2b5944;
+}
+:root[data-theme="light"] .gameExpansion .analysisPickThird .recommendationLine>strong{
+  color:#28384c;
+}
+:root[data-theme="light"] .gameExpansion .analysisPick>span,
+:root[data-theme="light"] .gameExpansion .pickComparison small{
+  color:#495c71;
+  font-size:11px;
+  font-weight:800;
+  line-height:1.3;
+  letter-spacing:.035em;
+}
+:root[data-theme="light"] .gameExpansion .pickComparison{
+  border-top-color:#d3dee7;
+  padding-top:8px;
+  margin-top:9px;
+}
+:root[data-theme="light"] .gameExpansion .pickComparison b,
+:root[data-theme="light"] .gameExpansion .analysisPickBest .pickComparison b,
+:root[data-theme="light"] .gameExpansion .analysisPickSecond .pickComparison b,
+:root[data-theme="light"] .gameExpansion .analysisPickThird .pickComparison b{
+  color:#1c2e42;
+  font-size:12px;
+  font-weight:850;
+  line-height:1.3;
+  overflow-wrap:anywhere;
+}
+:root[data-theme="light"] .gameExpansion .analysisPick .pickOutcome{
+  color:#1b533c;
+  font-size:14px;
+  font-weight:900;
+}
+:root[data-theme="light"] .gameExpansion .analysisPick.resultLoss .pickOutcome{
+  color:#a32d39;
+}
+:root[data-theme="light"] .gameExpansion .analysisPick.resultPush .pickOutcome{
+  color:#755217;
+}
+/* The explanatory paragraph, metric chips, and weather/injury cards. */
+:root[data-theme="light"] .gameExpansion .whyModel .sectionKicker{
+  color:#096746;
+  font-weight:900;
+}
+:root[data-theme="light"] .gameExpansion .whyModel p{
+  color:#26394e;
+  font-size:14px;
+  line-height:1.6;
+}
+:root[data-theme="light"] .gameExpansion .driverChips span{
+  color:#384e64;
+  background:#f8fafc;
+  border-color:#bdcad7;
+  font-size:12px;
+  font-weight:650;
+  line-height:1.35;
+}
+:root[data-theme="light"] .gameExpansion .driverChips b{
+  color:#17293d;
+  font-size:12px;
+  font-weight:850;
+}
+:root[data-theme="light"] .gameExpansion .factorCard span{
+  color:#45596d;
+  font-size:11px;
+  font-weight:850;
+}
+:root[data-theme="light"] .gameExpansion .factorCard strong{
+  color:#1b2e42;
+  font-size:14px;
+  font-weight:800;
+  line-height:1.35;
+}
+:root[data-theme="light"] .gameExpansion .factorCard small{
+  color:#4b5f73;
+  font-size:12px;
+  line-height:1.4;
+}
+:root[data-theme="light"] .gameExpansion .analysisNote{
+  color:#495d71;
+  font-size:11px;
+  line-height:1.5;
+}
+@media(max-width:760px){
+  :root[data-theme="light"] .gameExpansion .analysisPick{
+    padding:13px 12px;
+  }
+  :root[data-theme="light"] .gameExpansion .analysisPick .recommendationLine>strong{
+    font-size:16px;
+  }
+  :root[data-theme="light"] .gameExpansion .pickComparison small{
+    font-size:11px;
+  }
+  :root[data-theme="light"] .gameExpansion .pickComparison b{
+    font-size:12px;
+  }
+  :root[data-theme="light"] .gameExpansion .driverChips span{
+    padding:8px 10px;
+  }
+}
