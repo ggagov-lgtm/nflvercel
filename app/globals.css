@@ -973,3 +973,13 @@
 .bettorCompactFoot summary{color:#419aef;cursor:pointer;font-weight:700}
 :root[data-theme="light"] .bettorCompactCell{background:white;border-color:#dce4ed}
 @media(max-width:640px){.bettorCompact{padding:12px}.bettorCompactGrid{gap:5px}.bettorCompactCell{padding:12px 3px 8px;gap:5px}.bettorCompactLabel{font-size:10px}.bettorCompactCell>strong{font-size:17px}.bettorCompactRecord{font-size:10px}.bettorCompactMissing{font-size:9px}.bettorCompactHeading h3{font-size:16px}.bettorCompactGroup{margin-top:17px}}
+
+
+/* Minimal dollar-first performance tiles */
+.bettorCompactCell{justify-content:center;min-height:118px;gap:7px;padding:16px 6px;border-radius:13px}
+.bettorCompactCell>strong{font-size:clamp(25px,3.4vw,40px);font-weight:900;letter-spacing:-1px;line-height:1.1}
+.bettorCompactCell>strong.bettorUnknown{font-size:clamp(22px,2.8vw,31px)!important;color:var(--muted)}
+.bettorCompactLabel{font-size:12px;font-weight:750;color:var(--text)}
+.bettorCompactRecord{font-size:11px;color:var(--muted)}
+.bettorCompactMissing{font-size:9px}
+@media(max-width:640px){.bettorCompactCell{min-height:106px;padding:12px 3px;gap:6px}.bettorCompactCell>strong{font-size:clamp(20px,6vw,29px)}.bettorCompactCell>strong.bettorUnknown{font-size:20px!important}.bettorCompactRecord{font-size:10px}}
