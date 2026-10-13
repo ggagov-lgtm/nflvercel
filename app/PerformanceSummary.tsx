@@ -1,0 +1,28 @@
+"use client";
+import { useState } from "react";
+
+type Pick = {game:string;selection:string;type:string;result:"WIN"|"LOSS"|"PUSH"|"PENDING";logo?:string;odds:number|null};
+type Week = {week:number;games:number;wins:number;losses:number;pushes:number;numberOne:"WIN"|"LOSS"|"PUSH"|"PENDING"|null;picks:Pick[];profitPerDollar:number|null;missingOdds:number};
+export default function PerformanceSummary({weeks,currentWeek,season}:{weeks:Week[];currentWeek:number;season:number}) {
+ const [stake,setStake]=useState(100);
+ const [expanded,setExpanded]=useState<string|null>(null);
+ const ordered=[...weeks].sort((a,b)=>b.week-a.week);
+ const completed=ordered.filter(w=>w.wins+w.losses+w.pushes>0);
+ const last=completed[0];const prior=completed[1];
+ const seasonWeeks=[...completed].reverse();
+ const seasonWins=completed.reduce((a,w)=>a+w.wins,0),seasonLosses=completed.reduce((a,w)=>a+w.losses,0),seasonPushes=completed.reduce((a,w)=>a+w.pushes,0);
+ const seasonProfitAvailable=completed.length>0&&completed.every(w=>w.profitPerDollar!==null&&w.missingOdds===0);
+ const profit=(w:Week|undefined)=>w&&w.profitPerDollar!==null&&w.missingOdds===0?w.profitPerDollar*stake:null;
+ const fmt=(n:number|null)=>n===null?"Not available":(n>=0?"+":"−")+"$"+Math.abs(n).toLocaleString("en-US",{maximumFractionDigits:0});
+ const seasonProfit=seasonProfitAvailable?completed.reduce((a,w)=>a+(w.profitPerDollar||0)*stake,0):null;
+ const winPct=(w:number,l:number)=>w+l?Math.round(100*w/(w+l))+"%":"—";
+ const cards=[{id:"last",title:"Last Week",w:last},{id:"previous",title:"Previous Week",w:prior},{id:"season",title:"Season to Date",w:null}];
+ const current=ordered.find(w=>w.week===currentWeek);
+ const chart=seasonWeeks.map(w=>({label:"W"+w.week,value:w.wins+w.losses?w.wins/(w.wins+w.losses)*100:0,record:w.wins+"–"+w.losses}));
+ return <section className="bettorSummary" aria-label="NFL model results and recommended picks">
+  <div className="bettorHead"><div><span className="sectionKicker">MODEL TRACK RECORD</span><h2>Real predictions. Clear results.</h2><p>One best recommended pick per game — not three bets on every game.</p></div><div className="bettorStake"><span>Hypothetical wager per pick</span><div className="bettorStakeButtons">{[25,50,100,200].map(v=><button type="button" key={v} className={stake===v?"selected":""} onClick={()=>setStake(v)}>${v}</button>)}</div></div></div>
+  <div className="bettorCards">{cards.map(c=>{const w=c.w;const wins=w?w.wins:seasonWins,losses=w?w.losses:seasonLosses,pushes=w?w.pushes:seasonPushes;const n=w?w.games:completed.reduce((a,r)=>a+r.games,0);const dollars=w?profit(w):seasonProfit;const isSeason=c.id==="season";return <article className="bettorCard" key={c.id}><div className="bettorCardTitle"><strong>{c.title}</strong><span>{isSeason?season+" season":w?"Week "+w.week:"Awaiting data"}</span></div><div className="bettorCardMain"><div><small>Recommended picks</small><b>{wins}–{losses}{pushes?"–"+pushes:""}</b><span>{winPct(wins,losses)} win rate</span></div><div><small>Simulated profit</small><b className={dollars===null?"bettorUnknown":dollars>=0?"bettorPositive":"bettorNegative"}>{fmt(dollars)}</b><span>{dollars===null?"Original odds incomplete":stake+" dollars per pick"}</span></div></div><div className="bettorWinBar" aria-label={wins+" wins, "+losses+" losses, "+pushes+" pushes"}><i style={{width:(wins+losses+pushes?100*wins/(wins+losses+pushes):0)+"%"}}/><em style={{width:(wins+losses+pushes?100*losses/(wins+losses+pushes):0)+"%"}}/></div><div className="bettorCardFoot"><span>{n} predictions · {pushes} pushes</span><span>Weekly #1: {isSeason?completed.filter(r=>r.numberOne==="WIN").length+"W / "+completed.filter(r=>r.numberOne==="LOSS").length+"L":w?.numberOne||"—"}</span></div>{w&&w.picks.length>0?<><button type="button" className="bettorExpand" onClick={()=>setExpanded(expanded===c.id?null:c.id)} aria-expanded={expanded===c.id}>{expanded===c.id?"Hide picks":"View recommended picks"} <span>{expanded===c.id?"−":"›"}</span></button>{expanded===c.id?<div className="bettorPickList">{w.picks.map((p,i)=><div key={i}><div><strong>{p.game}</strong><small>{p.selection} · {p.type}</small></div><span className={"bettorResult "+p.result.toLowerCase()}>{p.result==="PENDING"?"Pending":p.result}</span></div>)}</div>:null}</>:null}</article>})}</div>
+  <div className="bettorLower"><div className="bettorChart"><h3>How often did our picks win?</h3><p>Weekly win rate · recommended picks only</p><div className="bettorBars">{chart.map(x=><div className="bettorBarColumn" key={x.label}><div className="bettorBarTrack"><div style={{height:x.value+"%"}}/></div><b>{Math.round(x.value)}%</b><span>{x.label}</span></div>)}</div></div><div className="bettorCurrent"><h3>This Week's Picks <span>Week {currentWeek}</span></h3><p>Model's top recommendation for each game</p>{current?.picks?.length?current.picks.slice(0,4).map((p,i)=><div className="bettorCurrentPick" key={i}><div><strong>{p.game}</strong><span>{p.selection} · {p.type}</span></div><span className={"bettorResult "+p.result.toLowerCase()}>{p.result==="PENDING"?"Upcoming":p.result}</span></div>):<p className="bettorEmpty">No predictions saved for this week yet.</p>}</div></div>
+  <p className="bettorDisclosure"><strong>How is profit calculated?</strong> We simulate a ${stake} wager on the single highest-probability selection saved for each game before kickoff. Wins use the original sportsbook odds; losses subtract the stake; pushes return it. <strong>Profit is not displayed if required original odds are missing.</strong> This is a historical simulation, not actual money won. Week 2 historical performance may be excluded from per-pick charts where original locked recommendations are unavailable.</p>
+ </section>;
+}
