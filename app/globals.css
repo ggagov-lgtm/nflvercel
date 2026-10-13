@@ -1146,3 +1146,69 @@
   .bettorCompactSecondary{font-size:clamp(11px,3.2vw,15px)}
   .bettorCompactCell .bettorCompactSecondary.bettorUnknown{font-size:clamp(11px,3.2vw,15px)!important}
 }
+
+
+/* Performance cards now open a scrollable, transparent bet-by-bet breakdown. */
+.bettorCompactClickable{width:100%;font-family:inherit;color:inherit;appearance:none;cursor:pointer}
+.bettorCompactClickable:hover{border-color:var(--green);box-shadow:0 3px 18px #00000016}
+.bettorCompactClickable:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+.bettorCompactViewCue{font-size:11px;font-weight:800;color:var(--green);line-height:1.15;margin-top:1px}
+.bettorDetailBackdrop{position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;padding:14px;background:#05101dd9;backdrop-filter:blur(5px)}
+.bettorDetailDialog{width:min(760px,100%);max-height:min(850px,94dvh);overflow:hidden;display:flex;flex-direction:column;min-height:0;border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--text);box-shadow:0 22px 90px #0009}
+.bettorDetailHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:19px 20px 13px;border-bottom:1px solid var(--line)}
+.bettorDetailHeader h3{margin:6px 0 0;font-size:clamp(20px,3vw,27px);line-height:1.2}
+.bettorDetailClose{width:36px;height:36px;flex:none;font-size:27px;line-height:1;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px}
+.bettorDetailClose:focus-visible,.bettorDetailFooter button:focus-visible,.bettorDetailFilters button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.bettorDetailMetrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:15px 20px 8px}
+.bettorDetailMetrics>div{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:11px 6px;border:1px solid var(--line);background:var(--panel2);border-radius:11px;min-width:0}
+.bettorDetailMetrics small{font-size:10px;font-weight:700;color:var(--muted)}
+.bettorDetailMetrics strong{font-size:clamp(15px,3vw,25px);font-weight:900;letter-spacing:-.035em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bettorDetailBreakdown{padding:6px 20px 0;display:flex;flex-wrap:wrap;gap:6px 19px;font-size:11px;color:var(--muted)}
+.bettorDetailNote{padding:7px 20px 3px;font-size:10px;line-height:1.45;color:var(--muted);margin:0}
+.bettorDetailFilters{display:flex;gap:7px;overflow-x:auto;flex:none;padding:12px 20px;border-bottom:1px solid var(--line)}
+.bettorDetailFilters button{display:inline-flex;align-items:center;gap:6px;flex:none;border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:var(--panel2);color:var(--muted);font-size:11px;font-weight:800;cursor:pointer}
+.bettorDetailFilters button[aria-pressed="true"]{border-color:var(--green);background:var(--green2);color:var(--text)}
+.bettorDetailFilters button small{font-size:10px;opacity:.8}
+.bettorDetailList{min-height:90px;overflow:auto;overscroll-behavior:contain;flex:1;padding:3px 20px}
+.bettorDetailBet{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.bettorDetailBet:last-child{border-bottom:0}
+.bettorDetailBetInfo{display:flex;flex-direction:column;gap:4px;min-width:0}
+.bettorDetailBetInfo strong{font-size:13px;color:var(--text);overflow-wrap:anywhere}
+.bettorDetailBetInfo span{font-size:11px;color:var(--muted)}
+.bettorDetailBetInfo small{font-size:10px;color:var(--muted);line-height:1.4}
+.bettorDetailBetOutcome{display:flex;align-items:flex-end;flex-direction:column;gap:6px;flex:none;text-align:right}
+.bettorDetailBetOutcome>strong{font-size:14px;font-weight:900;font-variant-numeric:tabular-nums}
+.bettorDetailBetOutcome>strong.bettorUnknown{font-size:14px!important}
+.bettorDetailResult{font-size:10px;letter-spacing:.03em;border-radius:5px;padding:3px 6px;background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
+.bettorDetailResultWIN{color:var(--green)}
+.bettorDetailResultLOSS{color:var(--red)}
+.bettorDetailResultPUSH{color:var(--gold)}
+.bettorDetailEmpty{padding:25px 0;text-align:center;font-size:12px;color:var(--muted)}
+.bettorDetailFooter{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 20px;border-top:1px solid var(--line)}
+.bettorDetailFooter span{font-size:10px;color:var(--muted)}
+.bettorDetailFooter button{border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:800;font-size:11px;border-radius:8px;padding:8px 15px;cursor:pointer}
+:root[data-theme="light"] .bettorDetailDialog{background:#fff}
+:root[data-theme="light"] .bettorDetailMetrics>div{background:#f7f9fc}
+:root[data-theme="light"] .bettorDetailResultWIN{color:#087b50}
+:root[data-theme="light"] .bettorDetailResultLOSS{color:#b52b3a}
+@media(max-width:640px){
+  .bettorCompactViewCue{font-size:9px}
+  .bettorDetailBackdrop{padding:8px;align-items:center}
+  .bettorDetailDialog{max-height:95dvh;border-radius:14px}
+  .bettorDetailHeader{padding:13px 12px 10px}
+  .bettorDetailHeader h3{font-size:21px}
+  .bettorDetailMetrics{padding:11px 12px 5px;gap:5px}
+  .bettorDetailMetrics>div{padding:9px 3px;gap:5px}
+  .bettorDetailMetrics strong{font-size:clamp(13px,4.1vw,19px)}
+  .bettorDetailMetrics small{font-size:9px}
+  .bettorDetailBreakdown{padding:7px 12px 0;font-size:10px}
+  .bettorDetailNote{padding:8px 12px 0;font-size:9px}
+  .bettorDetailFilters{padding:11px 12px;gap:5px}
+  .bettorDetailFilters button{padding:7px 9px}
+  .bettorDetailList{padding:0 12px}
+  .bettorDetailBet{padding:11px 0;gap:8px}
+  .bettorDetailBetInfo strong{font-size:12px}
+  .bettorDetailBetInfo span,.bettorDetailBetInfo small{font-size:10px}
+  .bettorDetailBetOutcome>strong{font-size:12px}
+  .bettorDetailFooter{padding:8px 12px}
+}
