@@ -993,3 +993,9 @@
 .topPickResultPUSH{color:#9a6b1a}
 .topPickResultLIVE{color:#2563eb}
 .topPickResultUNAVAILABLE{color:#64748b}
+
+/* Keep confidence and graded result on a single compact line */
+.topPickOutcome{flex-direction:row;align-items:center;justify-content:flex-end;gap:9px;flex-shrink:0}
+.topPickOutcome .topProbability{white-space:nowrap}
+.topPickOutcome .topPickResult{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
+@media(max-width:640px){.topPickOutcome{gap:6px}.topPickOutcome .topProbability{font-size:12px}.topPickOutcome .topPickResult{font-size:10px;padding:4px 6px;min-width:0}}
