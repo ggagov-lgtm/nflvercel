@@ -69,12 +69,25 @@ function confidenceClass(rank: number) {
   return "pick pickThird";
 }
 
+// ESPN scoreboard competitors include an overall season record (e.g. "4-2").
+// Show all three W-L-T fields, with zero ties when ESPN omits that field.
+function espnTeamRecord(competitor: AnyObj | undefined): string | undefined {
+  const records = Array.isArray(competitor?.records) ? competitor.records : [];
+  const overall = records.find((r: AnyObj) =>
+    r?.type === "total" || String(r?.name || "").toLowerCase() === "overall"
+  );
+  const match = /^(\d+)-(\d+)(?:-(\d+))?$/.exec(String(overall?.summary || "").trim());
+  return match ? `${match[1]}-${match[2]}-${match[3] || "0"}` : undefined;
+}
+
 type LiveGame = {
   date?: string;
   state: "pre" | "in" | "post";
   detail?: string;
   homeScore?: number;
   awayScore?: number;
+  homeRecord?: string;
+  awayRecord?: string;
 };
 
 async function getEspnGameStates(season: number, week: number) {
@@ -96,6 +109,8 @@ async function getEspnGameStates(season: number, week: number) {
         detail: event.status?.type?.shortDetail || event.status?.type?.detail,
         homeScore: Number.isFinite(Number(home?.score)) ? Number(home.score) : undefined,
         awayScore: Number.isFinite(Number(away?.score)) ? Number(away.score) : undefined,
+        homeRecord: espnTeamRecord(home),
+        awayRecord: espnTeamRecord(away),
       });
     }
     return out;
@@ -105,7 +120,7 @@ async function getEspnGameStates(season: number, week: number) {
 }
 
 
-type ScheduledGame = { id: string; date: string; state: string; home: string; away: string; homeLogo: string; awayLogo: string };
+type ScheduledGame = { id: string; date: string; state: string; home: string; away: string; homeLogo: string; awayLogo: string; homeRecord?: string; awayRecord?: string };
 
 async function getScheduledGames(season: number, week: number): Promise<ScheduledGame[]> {
   try {
@@ -115,11 +130,14 @@ async function getScheduledGames(season: number, week: number): Promise<Schedule
     const data = await response.json();
     return (data.events || []).map((event: AnyObj) => {
       const competitors = event.competitions?.[0]?.competitors || [];
-      const home = competitors.find((x: AnyObj) => x.homeAway === "home")?.team;
-      const away = competitors.find((x: AnyObj) => x.homeAway === "away")?.team;
+      const homeCompetitor = competitors.find((x: AnyObj) => x.homeAway === "home");
+      const awayCompetitor = competitors.find((x: AnyObj) => x.homeAway === "away");
+      const home = homeCompetitor?.team;
+      const away = awayCompetitor?.team;
       return { id: String(event.id), date: event.date as string, state: event.status?.type?.state || "pre",
         home: home?.abbreviation || "HOME", away: away?.abbreviation || "AWAY",
-        homeLogo: home?.logo || "", awayLogo: away?.logo || "" };
+        homeLogo: home?.logo || "", awayLogo: away?.logo || "",
+        homeRecord: espnTeamRecord(homeCompetitor), awayRecord: espnTeamRecord(awayCompetitor) };
     });
   } catch { return []; }
 }
@@ -673,9 +691,9 @@ export default async function Page({
               <summary className="gameRow">
                 <div className="rowWhen"><strong>{isFinal ? "FINAL" : dateLabel(game.date).split(",")[0]}</strong><span>{dateLabel(game.date)}</span></div>
                 <div className="rowMatchup">
-                  <span className="rowTeam"><img src={game.awayLogo} alt="" /><b>{game.away}</b></span>
+                  <span className="rowTeam"><img src={game.awayLogo} alt="" /><span className="rowTeamText"><b>{game.away}</b><small className="rowTeamRecord" title="Wins-Losses-Ties">{game.awayRecord || "—"}</small></span></span>
                   <em>@</em>
-                  <span className="rowTeam"><img src={game.homeLogo} alt="" /><b>{game.home}</b></span>
+                  <span className="rowTeam"><img src={game.homeLogo} alt="" /><span className="rowTeamText"><b>{game.home}</b><small className="rowTeamRecord" title="Wins-Losses-Ties">{game.homeRecord || "—"}</small></span></span>
                 </div>
                 <div className="rowMetric"><span>WIN PROBABILITY</span><b>—</b></div>
                 <div className="rowMetric rowScore"><span>FINAL SCORE</span><b>{live?.awayScore ?? "—"}–{live?.homeScore ?? "—"}</b></div>
@@ -866,9 +884,9 @@ export default async function Page({
               <summary className="gameRow">
                 <div className="rowWhen"><strong>{isLive ? "● LIVE" : isFinal ? "FINAL" : dateLabel(displayDate).split(",")[0]}</strong><span>{isLive ? live?.detail : dateLabel(displayDate)}</span></div>
                 <div className="rowMatchup">
-                  <span className="rowTeam"><img src={g.away?.logo || ""} alt="" /><b>{g.away?.abbr || "AWAY"}</b></span>
+                  <span className="rowTeam"><img src={g.away?.logo || ""} alt="" /><span className="rowTeamText"><b>{g.away?.abbr || "AWAY"}</b><small className="rowTeamRecord" title="Wins-Losses-Ties">{live?.awayRecord || "—"}</small></span></span>
                   <em>@</em>
-                  <span className="rowTeam"><img src={g.home?.logo || ""} alt="" /><b>{g.home?.abbr || "HOME"}</b></span>
+                  <span className="rowTeam"><img src={g.home?.logo || ""} alt="" /><span className="rowTeamText"><b>{g.home?.abbr || "HOME"}</b><small className="rowTeamRecord" title="Wins-Losses-Ties">{live?.homeRecord || "—"}</small></span></span>
                 </div>
                 <div className="rowMetric"><span>WIN PROBABILITY</span><b>{favoredTeam} {pct(mlProb)}</b></div>
                 <div className="rowMetric rowScore"><span>{isFinal ? "FINAL / MODEL" : isLive ? "LIVE / MODEL" : "MODEL SCORE"}</span><b>{isFinal || isLive ? `${live?.awayScore ?? "—"}–${live?.homeScore ?? "—"} / ${num(x.pred_away)}–${num(x.pred_home)}` : `${num(x.pred_away)}–${num(x.pred_home)}`}</b></div>
