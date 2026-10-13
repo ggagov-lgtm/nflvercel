@@ -45,7 +45,13 @@ jobs:
               rows=d["predictions"]
               assert d["kind"] == "historical_model_replay_not_original_pregame_predictions"
               assert len(rows) == len({r["event_id"] for r in rows}) == 16
-              assert all(r["model"]["training_through_week"] < week or r["model"]["training_through_season"] < 2026 for r in rows)
+              assert all(
+                  (lambda cutoff: int(cutoff.split("-W")[0]) < 2026
+                   or (int(cutoff.split("-W")[0]) == 2026
+                       and int(cutoff.split("-W")[1]) < week))
+                  (r["model"]["training_cutoff"])
+                  for r in rows
+              )
               assert all(r["model"]["home_win_prob"] + r["model"]["away_win_prob"] <= 1.00001 for r in rows)
               print(f"Valid Week {week}: {len(rows)} transparently labeled replay forecasts")
           PY
