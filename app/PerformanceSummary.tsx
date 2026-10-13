@@ -22,6 +22,8 @@ type Stats = {
   estimatedOdds: number;
   settled: number;
   picks: Pick[];
+  aggregateOnly?: boolean;
+  missingArchiveWeeks?: number[];
 };
 type Key = "all" | "best" | "top3" | "moneyline" | "spread" | "total";
 type Week = { week: number } & Record<Key, Stats>;
@@ -60,12 +62,13 @@ function merge(rows: Stats[]): Stats {
   const settled = rows.reduce((n, r) => n + r.settled, 0);
   const missingOdds = rows.reduce((n, r) => n + r.missingOdds, 0);
   const estimatedOdds = rows.reduce((n, r) => n + r.estimatedOdds, 0);
+  const missingArchiveWeeks = Array.from(new Set(rows.flatMap(r => r.missingArchiveWeeks || []))).sort((a, b) => a - b);
   return {
     wins: rows.reduce((n, r) => n + r.wins, 0),
     losses: rows.reduce((n, r) => n + r.losses, 0),
     pushes: rows.reduce((n, r) => n + r.pushes, 0),
-    settled, missingOdds, estimatedOdds, picks,
-    profit: settled > 0 && missingOdds === 0 && rows.every(r => r.settled === 0 || r.profit !== null)
+    settled, missingOdds, estimatedOdds, picks, missingArchiveWeeks,
+    profit: settled > 0 && missingOdds === 0 && rows.every(r => !r.missingArchiveWeeks?.length && (r.settled === 0 || r.profit !== null))
       ? rows.reduce((n, r) => n + (r.profit || 0), 0)
       : null,
   };
@@ -103,6 +106,9 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
   // Last Week means the previous NFL week, not a partially played current week.
   const previousWeek = ordered.find(w => w.week === currentWeek - 1 && w.all.settled > 0);
   const gradedWeeks = ordered.filter(w => w.all.settled > 0);
+  const unavailableWeeks = Array.from({ length: Math.max(0, Math.min(currentWeek, 18)) }, (_, i) => i + 1)
+    .filter(week => !ordered.some(w => w.week === week && w.all.settled > 0));
+  const aggregateWeeks = ordered.filter(w => w.all.aggregateOnly && w.all.settled > 0).map(w => w.week);
   const summaries = Object.fromEntries(
     labels.map(({ key }) => [key, merge(gradedWeeks.map(w => w[key]))])
   ) as Record<Key, Stats>;
@@ -125,6 +131,14 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
         </div>
       </div>
 
+      {(aggregateWeeks.length > 0 || unavailableWeeks.length > 0) && (
+        <p className="bettorCompactCoverage">
+          Historical coverage: {aggregateWeeks.length > 0 && `Week ${aggregateWeeks.join(", ")} includes verified aggregate records only (no saved individual picks or odds).`}
+          {aggregateWeeks.length > 0 && unavailableWeeks.length > 0 ? " " : ""}
+          {unavailableWeeks.length > 0 && `No archived predictions for Week ${unavailableWeeks.join(", ")}; excluded from calculations.`}
+        </p>
+      )}
+
       {panels.map(panel => (
         <div className="bettorCompactGroup" key={panel.id}>
           <div className="bettorCompactHeading">
@@ -138,7 +152,15 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
               const winTone = graded === 0 ? "bettorUnknown" : s.wins > s.losses ? "bettorPositive" : s.wins < s.losses ? "bettorNegative" : "bettorNeutral";
               const dollarTone = profitTone(s.profit);
               const showDollars = view === "dollars";
-              const estimateNote = s.missingOdds > 0
+              const hasDetail = s.picks.length > 0;
+              const unavailableTop3 = Boolean(s.missingArchiveWeeks?.length) && graded === 0;
+              const estimateNote = unavailableTop3
+                ? "Top 3 archive unavailable"
+                : s.aggregateOnly
+                  ? "Aggregate only · odds unavailable"
+                  : s.missingArchiveWeeks?.length
+                    ? `Includes aggregate-only W${s.missingArchiveWeeks.join(", ")}`
+                    : s.missingOdds > 0
                 ? "Moneyline odds missing"
                 : s.estimatedOdds > 0
                   ? "Est. −110 odds"
@@ -152,8 +174,9 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
                   type="button"
                   className="bettorCompactCell bettorCompactClickable"
                   key={key}
-                  onClick={() => setSelected({ title, period: panel.title, stats: s })}
-                  aria-label={`View bet-by-bet details for ${title}, ${panel.title}`}
+                  onClick={() => hasDetail && setSelected({ title, period: panel.title, stats: s })}
+                  disabled={!hasDetail}
+                  aria-label={hasDetail ? `View bet-by-bet details for ${title}, ${panel.title}` : `No saved individual picks for ${title}, ${panel.title}`}
                 >
                   <span className="bettorCompactLabel">{title}</span>
                   <strong className={`${showDollars ? dollarTone : winTone} bettorCompactPrimary ${showDollars ? "bettorProfitPrimary" : ""}`}>
@@ -164,7 +187,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
                   </span>
                   <span className="bettorCompactRecord">{s.wins}W–{s.losses}L{s.pushes ? "–" + s.pushes + "P" : ""}</span>
                   <span className="bettorCompactMissing">{estimateNote}</span>
-                  <span className="bettorCompactViewCue" aria-hidden="true">View bets ›</span>
+                  {hasDetail ? <span className="bettorCompactViewCue" aria-hidden="true">View bets ›</span> : <span className="bettorCompactNoDetails">No bet details</span>}
                 </button>
               );
             })}
@@ -175,6 +198,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
       <details className="bettorCompactFoot">
         <summary>How are these calculated?</summary>
         <p>Win % is the historical accuracy of graded model selections: wins divided by wins plus losses, displayed to one decimal place. Pushes and pending bets are excluded. Dollar profit/loss is hypothetical, assuming $10 staked on each selection and saved sportsbook odds where available. Spread and total bets without saved prices use estimated −110 odds; when any selected moneyline price is missing, the dollar result shows N/A rather than inventing a return. Win rate can be positive while the betting strategy loses money.</p>
+        <p>Some older weeks have only summary results. Those weeks contribute to verified win/loss percentages, but profit is N/A if the individual betting odds are unavailable. A missing weekly Top 3 list is not reconstructed; only archived selections count toward Top 3. Weeks without any archived results are excluded, and the bet-by-bet drilldown displays only saved individual picks.</p>
         <p>All Bets includes one moneyline, one spread and one over/under selection per game. Best / Game uses the highest-confidence selection in each game. Top 3 shows the three highest-confidence predictions from each week, regardless of market. Moneyline, Spread and Over/Under show the strongest selection in their respective markets per game. Season to Date totals the available archived weeks. These are modeled hypothetical returns, not actual betting winnings. The toggle changes the primary number, while both measures remain visible.</p>
       </details>
       {selected && (
