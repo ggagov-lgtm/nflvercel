@@ -465,49 +465,58 @@ export default async function Page({
     preds[0]?.model?.simulations || 50000;
 
 
-  // Grade only the single highest-probability pregame recommendation per game.
-  // Never fabricate sportsbook prices: spread and total odds are not necessarily archived.
+  // Three transparent, fixed-$10 strategies. Select before grading each game.
   const bettorWeeks = await Promise.all(
     availableWeeks.filter(w => w.season === (displayLatest?.season || 2026) && w.week <= (displayLatest?.week || 99))
       .map(async ({season,week}) => {
         const records = await loadWeek(season,week);
         const live = await getEspnGameStates(season,week);
-        const picks = records.map(p => {
+        type Selection = {game:string;selection:string;type:string;confidence:number;odds:number|null;result:"WIN"|"LOSS"|"PUSH"|"PENDING";eventId:string};
+        const all:Selection[]=[];
+        const bestPerGame:Selection[]=[];
+        for(const p of records) {
           const x=p.model||{}, m=p.market||{}, g=p.game||{};
           const home=String(g.home?.abbr||"HOME"),away=String(g.away?.abbr||"AWAY");
-          const candidates=[
-            {type:"Moneyline",prob:Number(x.home_win_prob),selection:home,side:"home",odds:Number(m.home_ml)},
-            {type:"Moneyline",prob:Number(x.away_win_prob),selection:away,side:"away",odds:Number(m.away_ml)},
-            {type:"Spread",prob:Number(x.home_cover_prob),selection:home+" spread",side:"home",odds:Number(m.home_spread_odds??m.spread_home_odds)},
-            {type:"Spread",prob:Number(x.away_cover_prob),selection:away+" spread",side:"away",odds:Number(m.away_spread_odds??m.spread_away_odds)},
-            {type:"Total",prob:Number(x.over_prob),selection:"Over "+String(x.market_total??m.total),side:"over",odds:Number(m.over_odds)},
-            {type:"Total",prob:Number(x.under_prob),selection:"Under "+String(x.market_total??m.total),side:"under",odds:Number(m.under_odds)}
-          ].filter(r=>Number.isFinite(r.prob)&&r.prob>=0&&r.prob<=1).sort((a,b)=>b.prob-a.prob);
-          const best=candidates[0];const final=live.get(String(p.event_id));
-          let result:"WIN"|"LOSS"|"PUSH"|"PENDING"="PENDING";
-          if(best&&final?.state==="post"&&final.homeScore!==undefined&&final.awayScore!==undefined){
-            const margin=final.homeScore-final.awayScore, total=final.homeScore+final.awayScore;
-            let diff:number|null=null;
-            if(best.type==="Moneyline")diff=best.side==="home"?margin:-margin;
-            if(best.type==="Spread"){
-              const line=Number(x.market_margin??m.market_margin);
-              if(Number.isFinite(line))diff=best.side==="home"?margin-line:line-margin;
+          const lineTotal=Number(m.total??x.market_total);
+          const margin=Number(x.market_margin??m.market_margin);
+          const options=[
+            {type:"Moneyline",prob:Number(x.home_win_prob),selection:home+" to win",side:"home",odds:m.home_ml},
+            {type:"Moneyline",prob:Number(x.away_win_prob),selection:away+" to win",side:"away",odds:m.away_ml},
+            {type:"Spread",prob:Number(x.home_cover_prob),selection:home+" spread",side:"home",odds:m.home_spread_odds??m.spread_home_odds},
+            {type:"Spread",prob:Number(x.away_cover_prob),selection:away+" spread",side:"away",odds:m.away_spread_odds??m.spread_away_odds},
+            {type:"Total",prob:Number(x.over_prob),selection:"Over "+lineTotal,side:"over",odds:m.over_odds},
+            {type:"Total",prob:Number(x.under_prob),selection:"Under "+lineTotal,side:"under",odds:m.under_odds}
+          ].filter(v=>Number.isFinite(v.prob)&&v.prob>=0&&v.prob<=1);
+          const final=live.get(String(p.event_id));
+          const byMarket=["Moneyline","Spread","Total"].map(type=>options.filter(o=>o.type===type).sort((u,v)=>v.prob-u.prob)[0]).filter((o):o is (typeof options)[number]=>Boolean(o));
+          const selections:Selection[]=byMarket.map(o=>{
+            let result:Selection["result"]="PENDING";
+            if(final?.state==="post"&&final.homeScore!==undefined&&final.awayScore!==undefined){
+              const diff=final.homeScore-final.awayScore;
+              const total=final.homeScore+final.awayScore;
+              let delta:number|null=null;
+              if(o.type==="Moneyline")delta=o.side==="home"?diff:-diff;
+              if(o.type==="Spread"&&Number.isFinite(margin))delta=o.side==="home"?diff-margin:margin-diff;
+              if(o.type==="Total"&&Number.isFinite(lineTotal))delta=o.side==="over"?total-lineTotal:lineTotal-total;
+              if(delta!==null)result=Math.abs(delta)<0.000001?"PUSH":delta>0?"WIN":"LOSS";
             }
-            if(best.type==="Total"){
-              const line=Number(x.market_total??m.total);
-              if(Number.isFinite(line))diff=best.side==="over"?total-line:line-total;
-            }
-            if(diff!==null)result=Math.abs(diff)<0.00001?"PUSH":diff>0?"WIN":"LOSS";
-          }
-          const rawOdds=best?.odds;
-          const odds=Number.isFinite(rawOdds)&&rawOdds!==0&&Math.abs(rawOdds)>=100?rawOdds:null;
-          return {game:away+" @ "+home,selection:best?.selection||"—",type:best?.type||"—",result,odds,confidence:best?.prob||0};
-        });
-        const settled=picks.filter(p=>p.result!=="PENDING");
-        const missingOdds=settled.filter(p=>p.odds===null).length;
-        const profitPerDollar=missingOdds?null:settled.reduce((sum,p)=>sum+(p.result==="LOSS"?-1:p.result==="WIN"&&p.odds!==null?(p.odds>0?p.odds/100:100/Math.abs(p.odds)):0),0);
-        const top=[...picks].sort((a,b)=>b.confidence-a.confidence)[0];
-        return {week,games:picks.length,wins:settled.filter(p=>p.result==="WIN").length,losses:settled.filter(p=>p.result==="LOSS").length,pushes:settled.filter(p=>p.result==="PUSH").length,numberOne:top?.result||null,picks,profitPerDollar,missingOdds};
+            const raw=Number(o.odds);
+            const odds=o.odds!==null&&o.odds!==undefined&&Number.isFinite(raw)&&Math.abs(raw)>=100?raw:null;
+            return {game:away+" @ "+home,selection:o.selection,type:o.type,confidence:o.prob,odds,result,eventId:String(p.event_id)};
+          });
+          all.push(...selections);
+          const best=[...selections].sort((u,v)=>v.confidence-u.confidence)[0];
+          if(best)bestPerGame.push(best);
+        }
+        // Three highest-confidence selections for the entire week, including different markets.
+        const topThree=[...all].sort((u,v)=>v.confidence-u.confidence).slice(0,3);
+        const strategy=(picks:Selection[])=>{
+          const settled=picks.filter(p=>p.result!=="PENDING");
+          const missingOdds=settled.filter(p=>p.odds===null).length;
+          const profit=settled.length&&!missingOdds?settled.reduce((sum,p)=>sum+(p.result==="LOSS"?-10:p.result==="WIN"&&p.odds!==null?(p.odds>0?p.odds/100*10:100/Math.abs(p.odds)*10):0),0):null;
+          return {wins:settled.filter(p=>p.result==="WIN").length,losses:settled.filter(p=>p.result==="LOSS").length,pushes:settled.filter(p=>p.result==="PUSH").length,profit,missingOdds,settled:settled.length,picks};
+        };
+        return {week,all:strategy(all),best:strategy(bestPerGame),top3:strategy(topThree)};
       })
   );
 
