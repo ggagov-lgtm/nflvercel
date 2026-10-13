@@ -512,9 +512,16 @@ export default async function Page({
         const topThree=[...all].sort((u,v)=>v.confidence-u.confidence).slice(0,3);
         const strategy=(picks:Selection[])=>{
           const settled=picks.filter(p=>p.result!=="PENDING");
-          const missingOdds=settled.filter(p=>p.odds===null).length;
-          const profit=settled.length&&!missingOdds?settled.reduce((sum,p)=>sum+(p.result==="LOSS"?-10:p.result==="WIN"&&p.odds!==null?(p.odds>0?p.odds/100*10:100/Math.abs(p.odds)*10):0),0):null;
-          return {wins:settled.filter(p=>p.result==="WIN").length,losses:settled.filter(p=>p.result==="LOSS").length,pushes:settled.filter(p=>p.result==="PUSH").length,profit,missingOdds,settled:settled.length,picks};
+          // Use the saved sportsbook price where present. For historical spread/total
+          // picks without a saved price, estimate at standard -110 (not an actual quote).
+          // Never invent a missing moneyline price.
+          const estimatedOdds=settled.filter(p=>p.odds===null&&p.type!=="Moneyline").length;
+          const missingOdds=settled.filter(p=>p.odds===null&&p.type==="Moneyline").length;
+          const profit=settled.length&&!missingOdds?settled.reduce((sum,p)=>{
+            const price=p.odds??-110;
+            return sum+(p.result==="LOSS"?-10:p.result==="WIN"?(price>0?price/100*10:100/Math.abs(price)*10):0);
+          },0):null;
+          return {wins:settled.filter(p=>p.result==="WIN").length,losses:settled.filter(p=>p.result==="LOSS").length,pushes:settled.filter(p=>p.result==="PUSH").length,profit,missingOdds,estimatedOdds,settled:settled.length,picks};
         };
         return {week,all:strategy(all),best:strategy(bestPerGame),top3:strategy(topThree),moneyline:strategy(all.filter(p=>p.type==="Moneyline")),spread:strategy(all.filter(p=>p.type==="Spread")),total:strategy(all.filter(p=>p.type==="Total"))};
       })
