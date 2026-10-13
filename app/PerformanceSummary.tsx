@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 type Pick={game:string;selection:string;type:string;confidence:number;odds:number|null;result:"WIN"|"LOSS"|"PUSH"|"PENDING";eventId:string};
 type Stats={wins:number;losses:number;pushes:number;profit:number|null;missingOdds:number;settled:number;picks:Pick[]};
 type Week={week:number;all:Stats;best:Stats;top3:Stats};
@@ -17,7 +16,6 @@ function merge(rows:Stats[]):Stats {
  return {wins:rows.reduce((n,r)=>n+r.wins,0),losses:rows.reduce((n,r)=>n+r.losses,0),pushes:rows.reduce((n,r)=>n+r.pushes,0),settled,missingOdds,picks,profit:settled>0&&missingOdds===0&&rows.every(r=>r.settled===0||r.profit!==null)?rows.reduce((n,r)=>n+(r.profit||0),0):null};
 }
 export default function PerformanceSummary({weeks,currentWeek,season}:{weeks:Week[];currentWeek:number;season:number}) {
- const [open,setOpen]=useState<string|null>(null);
  const ordered=[...weeks].sort((a,b)=>b.week-a.week);
  const completed=ordered.filter(w=>w.best.settled>0);
  const latest=completed[0];
@@ -29,15 +27,13 @@ export default function PerformanceSummary({weeks,currentWeek,season}:{weeks:Wee
     <div className="bettorCompactHeading"><h3>{panel.title}</h3><span>{panel.week?"Week "+panel.week:season+" season"}</span></div>
     <div className="bettorCompactGrid">{labels.map(({key,title})=>{
       const s=panel.stats?panel.stats[key]:summaries[key];
-      const id=panel.id+key;
-      const label=key==="all"?"All 3 Bets":key==="best"?"Best / Game":"Top 3";
+      const label=key==="all"?"All Bets":key==="best"?"Best / Game":"Top 3";
       return <div className="bettorCompactCell" key={key}>
         <span className="bettorCompactLabel">{label}</span>
-        <strong className={s.profit===null?"bettorUnknown":s.profit>=0?"bettorPositive":"bettorNegative"}>{s.profit===null?"—":money(s.profit)}</strong>
+        <strong className={s.profit===null?"bettorUnknown":s.profit>=0?"bettorPositive":"bettorNegative"}>{s.profit===null?"N/A":money(s.profit)}</strong>
         <span className="bettorCompactRecord">{s.wins}W–{s.losses}L{s.pushes?"–"+s.pushes+"P":""}</span>
         {s.profit===null?<span className="bettorCompactMissing">Odds missing</span>:null}
-        {s.picks.length>0?<button type="button" className="bettorCompactDetails" onClick={()=>setOpen(open===id?null:id)} aria-expanded={open===id}>{open===id?"Close":"Details"}</button>:null}
-        {open===id?<div className="bettorCompactDetailList">{s.picks.filter(p=>p.result!=="PENDING").slice(0,48).map((p,i)=><div key={i}><b>{p.game}</b><span>{p.selection} · {p.result}</span></div>)}</div>:null}
+
       </div>;
     })}</div>
   </div>)}
