@@ -665,20 +665,29 @@ export default async function Page({
       )}
 
       <section className="games">
-        {pendingGames.map(game => (
-          <article className="panel" key={game.id} style={{ padding: 24, marginBottom: 16 }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-              <div>
-                <strong style={{ fontSize: 18 }}>{game.away} @ {game.home}</strong>
-                <div style={{ opacity: .7, marginTop: 6 }}>{dateLabel(game.date)}</div>
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <strong>{game.state === "pre" ? "UPCOMING" : "FINAL"}</strong>
-                <div style={{ opacity: .7, marginTop: 6 }}>{game.state === "pre" ? "Model awaiting odds" : "Prediction: —"}</div>
-              </div>
-            </div>
-          </article>
-        ))}
+        {pendingGames.map(game => {
+          const live = gameStates.get(game.id);
+          const isFinal = game.state === "post";
+          return (
+            <details className={`gameRowCard ${isFinal ? "gameFinal" : ""}`} key={game.id}>
+              <summary className="gameRow">
+                <div className="rowWhen"><strong>{isFinal ? "FINAL" : dateLabel(game.date).split(",")[0]}</strong><span>{dateLabel(game.date)}</span></div>
+                <div className="rowMatchup">
+                  <span className="rowTeam"><img src={game.awayLogo} alt="" /><b>{game.away}</b></span>
+                  <em>@</em>
+                  <span className="rowTeam"><img src={game.homeLogo} alt="" /><b>{game.home}</b></span>
+                </div>
+                <div className="rowMetric"><span>WIN PROBABILITY</span><b>—</b></div>
+                <div className="rowMetric rowScore"><span>FINAL SCORE</span><b>{live?.awayScore ?? "—"}–{live?.homeScore ?? "—"}</b></div>
+                <div className="rowMetric"><span>POINT SPREAD</span><b>—</b></div>
+                <div className="rowMetric"><span>OVER / UNDER</span><b>—</b></div>
+                <div className="rowTopPick"><span>TOP PICK</span><b>—</b><small>—</small></div>
+                <div className="rowChevron" aria-hidden="true">⌄</div>
+              </summary>
+              <div className="gameExpansion"><p>Historical schedule entry. No verified pregame prediction is available for this game.</p></div>
+            </details>
+          );
+        })}
         {preds.map((p) => {
           const g = p.game || {};
           const m = p.market || {};
