@@ -9,6 +9,7 @@ type Pick = {
   type: string;
   confidence: number;
   odds: number | null;
+  oddsSource?: string;
   result: "WIN" | "LOSS" | "PUSH" | "PENDING";
   eventId: string;
   week: number;
@@ -75,6 +76,7 @@ export default function PerformanceDrilldown({
   const filtered = filter === "ALL" ? allPicks : allPicks.filter(p => p.result === filter);
   const pending = allPicks.filter(p => p.result === "PENDING").length;
   const hasUnitemizedWeeks = Boolean(stats.missingArchiveWeeks?.length);
+  const usesRetrospectivePrices = allPicks.some(p => Boolean(p.oddsSource));
   const winners = allPicks.filter(p => p.result === "WIN");
   const winProfits = winners.map(betProfit);
   const winningReturns = winProfits.every((p): p is number => p !== null)
@@ -128,6 +130,7 @@ export default function PerformanceDrilldown({
           </p>
         )}
         <p className="bettorDetailNote" id="bettorDetailNote">
+          {usesRetrospectivePrices && <strong>Includes September preview selections and retrospectively sourced sportsbook prices; not verified pregame P/L. </strong>}
           Hypothetical $10 stake per pick · archived odds when available · missing spread/total prices estimated at −110.
           Missing moneyline odds show N/A; pending picks are not graded.
         </p>
@@ -146,7 +149,7 @@ export default function PerformanceDrilldown({
                 <div className="bettorDetailBetInfo">
                   <strong>{p.selection}</strong>
                   <span>W{p.week} · {p.game}</span>
-                  <small>{p.type} · Odds {oddLabel(p)} · Model confidence {(p.confidence * 100).toFixed(1)}%</small>
+                  <small>{p.type} · Odds {oddLabel(p)}{p.oddsSource ? " · Later historical quote" : ""} · Model confidence {(p.confidence * 100).toFixed(1)}%</small>
                 </div>
                 <div className="bettorDetailBetOutcome">
                   <b className={"bettorDetailResult bettorDetailResult" + p.result}>{p.result}</b>
