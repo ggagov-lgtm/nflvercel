@@ -607,7 +607,7 @@ export default async function Page({
         </div>
       </section>
 
-      <PerformanceSummary weeks={bettorWeeks} currentWeek={displayLatest?.week || 0} season={displayLatest?.season || 2026} overallPicks={weeklyTopPicks.overall} />
+      <PerformanceSummary weeks={bettorWeeks} currentWeek={displayLatest?.week || 0} season={displayLatest?.season || 2026} />
 
       <section className="topPicksSection">
         <div className="topPicksTitle">
