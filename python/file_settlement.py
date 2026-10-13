@@ -26,7 +26,14 @@ def main():
             continue
         settled = [settle_prediction(p, finals[str(p["event_id"])]) for p in predictions]
         summary = summarize_settlements(settled)
-        summary.update({"season": season, "week": week})
+        eligible = [s for s in settled if s.get("top_pick_result") in ("WIN", "LOSS", "PUSH") and s.get("top_pick_confidence") is not None]
+        top = max(eligible, key=lambda s: float(s["top_pick_confidence"])) if eligible else None
+        top_result = top["top_pick_result"] if top else None
+        summary.update({"season": season, "week": week,
+            "weekly_top_pick_wins": int(top_result == "WIN"),
+            "weekly_top_pick_losses": int(top_result == "LOSS"),
+            "weekly_top_pick_pushes": int(top_result == "PUSH"),
+            "weekly_top_pick_accuracy": (1.0 if top_result == "WIN" else 0.0) if top_result in ("WIN", "LOSS") else None})
         # Preserve previously migrated authoritative performance records.
         dest = ROOT / "performance" / f"{season}-week-{week}.json"
         if not dest.exists():
