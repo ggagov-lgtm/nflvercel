@@ -925,3 +925,5 @@
 :root[data-theme="light"] .bettorStakeButtons button.selected{background:#186bda;color:white}
 @media(max-width:900px){.bettorCards{grid-template-columns:1fr 1fr}.bettorCards .bettorCard:last-child{grid-column:1/-1}}
 @media(max-width:640px){.bettorSummary{padding:13px;margin:14px 0}.bettorHead{align-items:stretch;flex-direction:column;gap:12px}.bettorStakeButtons button{flex:1}.bettorCards,.bettorLower{grid-template-columns:1fr}.bettorCards .bettorCard:last-child{grid-column:auto}.bettorCard{padding:14px}.bettorCardMain b{font-size:26px}.bettorBars{height:135px;gap:5px}.bettorCardTitle strong{font-size:16px}}
+
+.bettorWagerNotice{margin:0 0 14px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:rgba(37,111,201,.09);font-size:13px;line-height:1.55;color:var(--text)}.bettorWagerNotice strong{font-weight:800}.bettorCardFoot strong{color:var(--text)}@media(max-width:640px){.bettorWagerNotice{font-size:12px;padding:11px}}
