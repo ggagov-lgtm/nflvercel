@@ -158,7 +158,7 @@ export default async function Page({
   const loadWeek = async (season: number, week: number): Promise<Pred[]> => {
     try {
       const raw = await fs.readFile(path.join(predictionDir, `${season}-week-${week}.json`), "utf8");
-      return (JSON.parse(raw).predictions || []) as Pred[];
+      return (JSON.parse(raw).predictions || []).filter((p: AnyObj) => p.model && !p.backfill_status) as Pred[];
     } catch { return []; }
   };
   const loadPerformance = async (season: number, week: number): Promise<AnyObj | null> => {
