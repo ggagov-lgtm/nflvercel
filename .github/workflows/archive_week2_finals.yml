@@ -1,0 +1,70 @@
+name: Archive Week 2 final scores
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/archive_week2_finals.yml"
+  workflow_dispatch:
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Read and verify all Week 2 ESPN final scores
+        run: |
+          python -m pip install requests
+          python - <<'PY'
+          import json
+          import pathlib
+          import requests
+          import datetime
+          url="https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+          r=requests.get(url,params={"dates":2026,"week":2,"seasontype":2},timeout=35)
+          r.raise_for_status()
+          data=r.json()
+          rows=[]
+          for event in data.get("events",[]):
+              if not event.get("status",{}).get("type",{}).get("completed"):
+                  raise ValueError(f"Not final: {event.get('id')}")
+              competitors=event["competitions"][0]["competitors"]
+              home=next(x for x in competitors if x["homeAway"]=="home")
+              away=next(x for x in competitors if x["homeAway"]=="away")
+              rows.append({
+                  "event_id":str(event["id"]),
+                  "home":home["team"]["abbreviation"],
+                  "away":away["team"]["abbreviation"],
+                  "home_score":int(home["score"]),
+                  "away_score":int(away["score"]),
+              })
+          ids={row["event_id"] for row in rows}
+          assert len(rows)==len(ids)==16,f"Unexpected Week 2 final score coverage: {len(rows)}"
+          target=pathlib.Path("data/results/2026-week-2-scores.json")
+          target.parent.mkdir(parents=True,exist_ok=True)
+          target.write_text(json.dumps({
+              "season":2026,"week":2,"source":"ESPN final scoreboard",
+              "source_url":url+"?dates=2026&week=2&seasontype=2",
+              "archived_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              "games":rows
+          },indent=2)+"\n",encoding="utf8")
+          print(f"Archived {len(rows)} actual Week 2 final scores from ESPN")
+          PY
+      - name: Commit immutable final score snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/results/2026-week-2-scores.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive verified Week 2 final scores [skip ci]"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
