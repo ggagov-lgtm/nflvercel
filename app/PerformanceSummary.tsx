@@ -1,6 +1,6 @@
 "use client";
 type Pick={game:string;selection:string;type:string;confidence:number;odds:number|null;result:"WIN"|"LOSS"|"PUSH"|"PENDING";eventId:string};
-type Stats={wins:number;losses:number;pushes:number;profit:number|null;missingOdds:number;settled:number;picks:Pick[]};
+type Stats={wins:number;losses:number;pushes:number;profit:number|null;missingOdds:number;estimatedOdds:number;settled:number;picks:Pick[]};
 type Week={week:number;all:Stats;best:Stats;top3:Stats;moneyline:Stats;spread:Stats;total:Stats};
 type Key="all"|"best"|"top3"|"moneyline"|"spread"|"total";
 const labels:{key:Key;title:string}[]=[
@@ -16,7 +16,8 @@ function merge(rows:Stats[]):Stats {
  const picks=rows.flatMap(r=>r.picks);
  const settled=rows.reduce((n,r)=>n+r.settled,0);
  const missingOdds=rows.reduce((n,r)=>n+r.missingOdds,0);
- return {wins:rows.reduce((n,r)=>n+r.wins,0),losses:rows.reduce((n,r)=>n+r.losses,0),pushes:rows.reduce((n,r)=>n+r.pushes,0),settled,missingOdds,picks,profit:settled>0&&missingOdds===0&&rows.every(r=>r.settled===0||r.profit!==null)?rows.reduce((n,r)=>n+(r.profit||0),0):null};
+ const estimatedOdds=rows.reduce((n,r)=>n+r.estimatedOdds,0);
+ return {wins:rows.reduce((n,r)=>n+r.wins,0),losses:rows.reduce((n,r)=>n+r.losses,0),pushes:rows.reduce((n,r)=>n+r.pushes,0),settled,missingOdds,estimatedOdds,picks,profit:settled>0&&missingOdds===0&&rows.every(r=>r.settled===0||r.profit!==null)?rows.reduce((n,r)=>n+(r.profit||0),0):null};
 }
 export default function PerformanceSummary({weeks,currentWeek,season}:{weeks:Week[];currentWeek:number;season:number}) {
  const ordered=[...weeks].sort((a,b)=>b.week-a.week);
@@ -35,11 +36,11 @@ export default function PerformanceSummary({weeks,currentWeek,season}:{weeks:Wee
         <span className="bettorCompactLabel">{label}</span>
         <strong className={s.profit===null?"bettorUnknown":s.profit>=0?"bettorPositive":"bettorNegative"}>{s.profit===null?"N/A":money(s.profit)}</strong>
         <span className="bettorCompactRecord">{s.wins}W–{s.losses}L{s.pushes?"–"+s.pushes+"P":""}</span>
-        {s.profit===null?<span className="bettorCompactMissing">Odds missing</span>:null}
+        {s.profit===null?<span className="bettorCompactMissing">Odds missing</span>:s.estimatedOdds>0?<span className="bettorCompactMissing">Est. −110 odds</span>:null}
 
       </div>;
     })}</div>
   </div>)}
-  <details className="bettorCompactFoot"><summary>How are these calculated?</summary><p>All Bets means one moneyline, one spread and one over/under selection per game. Best / Game means the highest-confidence selection in each game. Top 3 means the three highest-confidence selections in each week. Moneyline, Spread and Over/Under each show the strongest selection in that market per game. Results assume $10 on each selection, using archived sportsbook odds and final scores. A dash means some required original odds are missing, so we cannot calculate an accurate dollar return. These are hypothetical results, not actual winnings. Only weeks with archived individual predictions are included.</p></details>
+  <details className="bettorCompactFoot"><summary>How are these calculated?</summary><p>All Bets means one moneyline, one spread and one over/under selection per game. Best / Game means the highest-confidence selection in each game. Top 3 means the three highest-confidence selections in each week. Moneyline, Spread and Over/Under each show the strongest selection in that market per game. Results assume $10 on each selection, using archived sportsbook odds and final scores. Missing spread and total odds are estimated at −110; actual saved prices are used where available. Missing moneyline prices are not estimated and show N/A. Estimated returns are not historical sportsbook quotes. These are hypothetical results, not actual winnings. Only weeks with archived individual predictions are included.</p></details>
  </section>;
 }
