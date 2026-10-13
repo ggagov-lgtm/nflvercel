@@ -1,4 +1,5 @@
 import PerformanceSummary from "./PerformanceSummary";
+import HistoricalOdds, { type ArchivedOddsWeek } from "./HistoricalOdds";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import week2Preview from "@/data/week2-preview.json";
@@ -605,6 +606,20 @@ export default async function Page({
     ...aggregatePerformanceWeeks.filter((w): w is NonNullable<typeof w> => w !== null),
   ];
 
+  // VegasInsider archive is reference material, not the original bookmaker
+  // snapshot. Keep it separate from locked predictions and P/L calculations.
+  const historicalOddsArchive = await Promise.all([1, 2, 3].map(async week => {
+    try {
+      const file = path.join(process.cwd(), "data", "historical_odds", `2026-week-${week}.json`);
+      const data = JSON.parse(await fs.readFile(file, "utf8")) as ArchivedOddsWeek;
+      return data.kind === "retrospective_reference_odds" && data.games.length === 16
+        ? data
+        : null;
+    } catch {
+      return null;
+    }
+  }));
+
   return (
     <main className="dashboard">
       <section className="dashboardIntro">
@@ -651,6 +666,10 @@ export default async function Page({
       </section>
 
       <PerformanceSummary weeks={performanceWeeks} currentWeek={displayLatest?.week || 0} season={displayLatest?.season || 2026} />
+      <HistoricalOdds
+        archives={historicalOddsArchive.filter((a): a is ArchivedOddsWeek => a !== null)}
+        currentWeek={displayLatest?.week || 3}
+      />
 
       <section className="topPicksSection">
         <div className="topPicksTitle">
