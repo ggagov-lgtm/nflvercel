@@ -562,6 +562,49 @@ export default async function Page({
       })
   );
 
+  // Week 2 has verified aggregate performance, but no archived individual
+  // predictions or sportsbook prices. Recover win/loss rates without
+  // synthesizing picks or returns. Prefer archived selections whenever they exist.
+  const archivedPerformanceWeeks = new Set(bettorWeeks.map(w => w.week));
+  const aggregatePerformanceWeeks = await Promise.all(
+    Array.from({ length: Math.max(0, displayLatest?.week || 0) }, (_, i) => i + 1)
+      .filter(week => !archivedPerformanceWeeks.has(week))
+      .map(async week => {
+        const row = await loadPerformance(displayLatest?.season || 2026, week);
+        if (!row || Number(row.games) <= 0) return null;
+        const summary = (wins: unknown, losses: unknown, pushes: unknown = 0) => {
+          const w = Number(wins || 0), l = Number(losses || 0), p = Number(pushes || 0);
+          return {
+            wins: w, losses: l, pushes: p, settled: w + l + p,
+            profit: null, missingOdds: 0, estimatedOdds: 0,
+            picks: [] as never[], aggregateOnly: true,
+            missingArchiveWeeks: w + l + p ? [week] : [],
+          };
+        };
+        const blankTop3 = {
+          ...summary(0, 0),
+          missingArchiveWeeks: [week],
+        };
+        return {
+          week,
+          all: summary(
+            Number(row.ml_wins || 0) + Number(row.spread_wins || 0) + Number(row.total_wins || 0),
+            Number(row.ml_losses || 0) + Number(row.spread_losses || 0) + Number(row.total_losses || 0),
+            Number(row.spread_pushes || 0) + Number(row.total_pushes || 0)
+          ),
+          best: summary(row.top_pick_wins, row.top_pick_losses, row.top_pick_pushes),
+          top3: blankTop3,
+          moneyline: summary(row.ml_wins, row.ml_losses),
+          spread: summary(row.spread_wins, row.spread_losses, row.spread_pushes),
+          total: summary(row.total_wins, row.total_losses, row.total_pushes),
+        };
+      })
+  );
+  const performanceWeeks = [
+    ...bettorWeeks,
+    ...aggregatePerformanceWeeks.filter((w): w is NonNullable<typeof w> => w !== null),
+  ];
+
   return (
     <main className="dashboard">
       <section className="dashboardIntro">
@@ -607,7 +650,7 @@ export default async function Page({
         </div>
       </section>
 
-      <PerformanceSummary weeks={bettorWeeks} currentWeek={displayLatest?.week || 0} season={displayLatest?.season || 2026} />
+      <PerformanceSummary weeks={performanceWeeks} currentWeek={displayLatest?.week || 0} season={displayLatest?.season || 2026} />
 
       <section className="topPicksSection">
         <div className="topPicksTitle">
