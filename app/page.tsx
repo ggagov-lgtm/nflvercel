@@ -1,3 +1,4 @@
+import PerformanceSummary from "./PerformanceSummary";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import week2Preview from "@/data/week2-preview.json";
@@ -463,6 +464,53 @@ export default async function Page({
   const simulationCount =
     preds[0]?.model?.simulations || 50000;
 
+
+  // Grade only the single highest-probability pregame recommendation per game.
+  // Never fabricate sportsbook prices: spread and total odds are not necessarily archived.
+  const bettorWeeks = await Promise.all(
+    availableWeeks.filter(w => w.season === (displayLatest?.season || 2026) && w.week <= (displayLatest?.week || 99))
+      .map(async ({season,week}) => {
+        const records = await loadWeek(season,week);
+        const live = await getEspnGameStates(season,week);
+        const picks = records.map(p => {
+          const x=p.model||{}, m=p.market||{}, g=p.game||{};
+          const home=String(g.home?.abbr||"HOME"),away=String(g.away?.abbr||"AWAY");
+          const candidates=[
+            {type:"Moneyline",prob:Number(x.home_win_prob),selection:home,side:"home",odds:Number(m.home_ml)},
+            {type:"Moneyline",prob:Number(x.away_win_prob),selection:away,side:"away",odds:Number(m.away_ml)},
+            {type:"Spread",prob:Number(x.home_cover_prob),selection:home+" spread",side:"home",odds:Number(m.home_spread_odds??m.spread_home_odds)},
+            {type:"Spread",prob:Number(x.away_cover_prob),selection:away+" spread",side:"away",odds:Number(m.away_spread_odds??m.spread_away_odds)},
+            {type:"Total",prob:Number(x.over_prob),selection:"Over "+String(x.market_total??m.total),side:"over",odds:Number(m.over_odds)},
+            {type:"Total",prob:Number(x.under_prob),selection:"Under "+String(x.market_total??m.total),side:"under",odds:Number(m.under_odds)}
+          ].filter(r=>Number.isFinite(r.prob)&&r.prob>=0&&r.prob<=1).sort((a,b)=>b.prob-a.prob);
+          const best=candidates[0];const final=live.get(String(p.event_id));
+          let result:"WIN"|"LOSS"|"PUSH"|"PENDING"="PENDING";
+          if(best&&final?.state==="post"&&final.homeScore!==undefined&&final.awayScore!==undefined){
+            const margin=final.homeScore-final.awayScore, total=final.homeScore+final.awayScore;
+            let diff:number|null=null;
+            if(best.type==="Moneyline")diff=best.side==="home"?margin:-margin;
+            if(best.type==="Spread"){
+              const line=Number(x.market_margin??m.market_margin);
+              if(Number.isFinite(line))diff=best.side==="home"?margin-line:line-margin;
+            }
+            if(best.type==="Total"){
+              const line=Number(x.market_total??m.total);
+              if(Number.isFinite(line))diff=best.side==="over"?total-line:line-total;
+            }
+            if(diff!==null)result=Math.abs(diff)<0.00001?"PUSH":diff>0?"WIN":"LOSS";
+          }
+          const rawOdds=best?.odds;
+          const odds=Number.isFinite(rawOdds)&&rawOdds!==0&&Math.abs(rawOdds)>=100?rawOdds:null;
+          return {game:away+" @ "+home,selection:best?.selection||"—",type:best?.type||"—",result,odds,confidence:best?.prob||0};
+        });
+        const settled=picks.filter(p=>p.result!=="PENDING");
+        const missingOdds=settled.filter(p=>p.odds===null).length;
+        const profitPerDollar=missingOdds?null:settled.reduce((sum,p)=>sum+(p.result==="LOSS"?-1:p.result==="WIN"&&p.odds!==null?(p.odds>0?p.odds/100:100/Math.abs(p.odds)):0),0);
+        const top=[...picks].sort((a,b)=>b.confidence-a.confidence)[0];
+        return {week,games:picks.length,wins:settled.filter(p=>p.result==="WIN").length,losses:settled.filter(p=>p.result==="LOSS").length,pushes:settled.filter(p=>p.result==="PUSH").length,numberOne:top?.result||null,picks,profitPerDollar,missingOdds};
+      })
+  );
+
   return (
     <main className="dashboard">
       <section className="dashboardIntro">
@@ -508,59 +556,7 @@ export default async function Page({
         </div>
       </section>
 
-      <section className="modelSummary">
-        <div className="summaryHead">
-          <div><span className="sectionKicker">MODEL SUMMARY</span><h2>Completed-game performance</h2></div>
-          <small>{completedPerformance.finals} of {preds.length} games completed</small>
-        </div>
-        <div className="summaryGrid">
-          <div className="summaryPrimary summaryPrimaryThree">
-            <div className="summaryPanel">
-              <div className="summaryLabel">TOP PICK SUCCESS<button type="button" className="infoTip" aria-label="Explain top pick success" data-tip="Season-to-date success rate of the model’s single highest-confidence prediction from each completed week.">i</button></div>
-              <div className="donutWrap">
-                <div className={`donut ${weeklyNumberOneWins + weeklyNumberOneLosses === 0 ? "donutPending" : ""}`} style={{"--value": weeklyNumberOneHistoryRate != null ? `${Math.max(0, Math.min(100, weeklyNumberOneHistoryRate * 100))}%` : "0%"} as React.CSSProperties}>
-                  <div>
-                    <b>{weeklyNumberOneHistoryRate != null ? pct(weeklyNumberOneHistoryRate) : "N/A"}</b>
-                    <span>{weeklyNumberOneWins + weeklyNumberOneLosses ? `${weeklyNumberOneWins}–${weeklyNumberOneLosses} weekly #1 picks` : "No completed weekly #1 picks"}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="summaryPanel">
-              <div className="summaryLabel">SEASON SUCCESS<button type="button" className="infoTip" aria-label="Explain season success percentage" data-tip="Season-to-date success rate of the model’s single highest-confidence prediction from each completed week.">i</button></div>
-              <div className="donutWrap">
-                <div className={`donut donutBlue ${seasonTopPerformance.games === 0 ? "donutPending" : ""}`} style={{"--value": seasonTopPerformance.games ? `${Math.max(0, Math.min(100, Number(seasonTopPerformance.rate || 0) * 100))}%` : "0%"} as React.CSSProperties}>
-                  <div><b>{seasonTopPerformance.games ? pct(seasonTopPerformance.rate) : "N/A"}</b><span>{seasonTopPerformance.games ? `${seasonTopPerformance.wins} of ${seasonTopPerformance.games} correct` : "No completed games"}</span></div>
-                </div>
-              </div>
-            </div>
-
-            <div className="summaryPanel">
-              <div className="summaryLabel">PREVIOUS WEEK<button type="button" className="infoTip" aria-label="Explain previous week top pick percentage" data-tip="Result of the model’s single highest-confidence prediction from the immediately preceding completed week.">i</button></div>
-              <div className="donutWrap">
-                <div className={`donut donutPurple ${!previousWeekPerformance ? "donutPending" : ""}`} style={{"--value": previousWeekPerformance ? `${Math.max(0, Math.min(100, Number(previousWeekPerformance.top_pick_accuracy || 0) * 100))}%` : "0%"} as React.CSSProperties}>
-                  <div><b>{previousWeekPerformance ? pct(previousWeekPerformance.top_pick_accuracy) : "N/A"}</b><span>{previousWeekPerformance ? `${previousWeekPerformance.ml_wins} of ${Number(previousWeekPerformance.ml_wins) + Number(previousWeekPerformance.ml_losses)} correct · Week ${previousWeekPerformance.week}` : "No previous week data"}</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="summarySecondary">
-            {[
-              ["WINNER PREDICTION SUCCESS",previousWeekPerformance?.ml_accuracy,previousWeekPerformance?.ml_wins,previousWeekPerformance?.ml_losses],
-              ["POINT SPREAD SUCCESS",previousWeekPerformance?.spread_accuracy,previousWeekPerformance?.spread_wins,previousWeekPerformance?.spread_losses],
-              ["OVER / UNDER SUCCESS",previousWeekPerformance?.total_accuracy,previousWeekPerformance?.total_wins,previousWeekPerformance?.total_losses],
-            ].map(([label,rate,wins,losses])=><div className="miniMetric" key={String(label)}>
-              <div className="miniDonut" style={{"--value":`${Math.max(0,Math.min(100,Number(rate||0)*100))}%`} as React.CSSProperties} />
-              <div><span>{String(label)}<button type="button" className="infoTip" aria-label={`Explain ${String(label).toLowerCase()}`} data-tip={String(label)==="WINNER PREDICTION SUCCESS" ? "Winner-prediction accuracy from the previous completed week." : String(label)==="POINT SPREAD SUCCESS" ? "Point-spread accuracy from the previous completed week. Pushes are excluded." : "Over / under accuracy from the previous completed week. Pushes are excluded."}>i</button></span><b>{previousWeekPerformance ? pct(rate) : "N/A"}</b><small>{previousWeekPerformance ? `${Number(wins)}–${Number(losses)} · Week ${previousWeekPerformance.week}` : "No previous week data"}</small></div>
-            </div>)}
-            <div className="miniMetric errorMetric">
-              <div className="errorIcon">▥</div>
-              <div><span>AVERAGE SCORE ERROR<button type="button" className="infoTip" aria-label="Explain average score error" data-tip="Average absolute difference between predicted team scores and actual final scores for the previous completed week. Lower is better.">i</button></span><b>{previousWeekPerformance ? num(previousWeekPerformance.score_mae) : "N/A"}</b><small>{previousWeekPerformance ? `Week ${previousWeekPerformance.week} · Lower is better` : "No previous week data"}</small></div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PerformanceSummary weeks={bettorWeeks} currentWeek={displayLatest?.week || 0} season={displayLatest?.season || 2026} />
 
       <section className="topPicksSection">
         <div className="topPicksTitle">
