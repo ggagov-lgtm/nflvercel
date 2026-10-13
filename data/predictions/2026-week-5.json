@@ -7,30 +7,30 @@
       "week": 5,
       "event_id": "401872980",
       "backfill_status": "retrospective_unmodeled",
-      "backfill_note": "Added after kickoff to complete schedule coverage. No verified pregame model output exists. Excluded from model performance.",
+      "backfill_note": "Schedule-only retrospective backfill. No verified historical pregame odds or model prediction; excluded from performance.",
       "game": {
         "event_id": "401872980",
         "date": "2026-10-09T00:15:00Z",
-        "status": "Final",
+        "status": "Historical schedule entry",
         "completed": true,
         "home": {
           "name": "Dallas Cowboys",
           "abbr": "DAL",
           "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/dal.png",
-          "score": "16"
+          "score": null
         },
         "away": {
           "name": "Tampa Bay Buccaneers",
           "abbr": "TB",
           "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/tb.png",
-          "score": "24"
+          "score": null
         }
       },
       "market": {
-        "provider": "Historical pregame reporting",
-        "spread": -8.5,
-        "market_margin": 8.5,
-        "total": 48.5,
+        "provider": null,
+        "spread": null,
+        "market_margin": null,
+        "total": null,
         "home_ml": null,
         "away_ml": null,
         "captured_at": null
