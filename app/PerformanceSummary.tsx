@@ -23,26 +23,24 @@ export default function PerformanceSummary({weeks,currentWeek,season}:{weeks:Wee
  const latest=completed[0];
  const panels=[{id:"last",title:"Last Week",week:latest?.week,stats:latest||null},{id:"season",title:"Season to Date",week:null,stats:null}];
  const summaries=Object.fromEntries(labels.map(({key})=>[key,merge(completed.map(w=>w[key]))])) as Record<Key,Stats>;
- return <section className="bettorSummary" aria-label="Model betting performance">
-  <div className="bettorHead"><div><span className="sectionKicker">MODEL PERFORMANCE</span><h2>What if you followed our picks?</h2><p>Assuming a <strong>$10 bet on each selection.</strong> Compare three ways to follow the model.</p></div></div>
-  <div className="bettorComparison">{panels.map(panel=><div className="bettorComparisonPanel" key={panel.id}>
-   <div className="bettorComparisonHeading"><h3>{panel.title}</h3><span>{panel.week?"Week "+panel.week:season+" NFL Season"}</span></div>
-   <div className="bettorStrategyGrid">{labels.map(({key,title,subtitle})=>{
-    const s=panel.stats?panel.stats[key]:summaries[key];
-    const record=s.wins+"W · "+s.losses+"L"+(s.pushes?" · "+s.pushes+"P":"");
-    const id=panel.id+key;
-    return <article className="bettorStrategy" key={key}>
-      <div className="bettorStrategyLabel">{title}</div>
-      <strong className={s.profit===null?"bettorUnknown":s.profit>=0?"bettorPositive":"bettorNegative"}>{money(s.profit)}</strong>
-      <div className="bettorStrategyRecord">{record} <span>· {s.settled} settled bets</span></div>
-      <div className="bettorWinBar" aria-label={record}><i style={{width:(s.settled?100*s.wins/s.settled:0)+"%"}}/><em style={{width:(s.settled?100*s.losses/s.settled:0)+"%"}}/></div>
-      <p>{subtitle}</p>
-      <small>{s.settled?("$"+(s.settled*10).toLocaleString()+" total hypothetical wagers"):"No completed bets yet"}</small>
-      {s.missingOdds>0?<small className="bettorMissing">Original odds missing for {s.missingOdds} settled bets</small>:null}
-      {s.picks.length>0?<><button type="button" className="bettorExpand" onClick={()=>setOpen(open===id?null:id)}>{open===id?"Hide picks":"See picks"} <span>{open===id?"−":"›"}</span></button>{open===id?<div className="bettorPickList">{s.picks.filter(p=>p.result!=="PENDING").slice(0,48).map((p,i)=><div key={i}><div><strong>{p.game}</strong><small>{p.selection} · {p.type}</small></div><span className={"bettorResult "+p.result.toLowerCase()}>{p.result}</span></div>)}</div>:null}</>:null}
-    </article>;
-   })}</div>
-  </div>)}</div>
-  <p className="bettorDisclosure"><strong>How to read this:</strong> Each column represents a different betting strategy, not three amounts you should wager simultaneously. The model's recorded probabilities determine its selections. Profit is simulated at $10 per bet using archived sportsbook odds and official final scores; if required odds are missing, profit is marked unavailable. These are historical hypothetical results, not actual winnings. Only weeks with archived individual predictions are included in this comparison.</p>
+ return <section className="bettorSummary bettorCompact" aria-label="Model betting performance">
+  <div className="bettorCompactIntro"><span className="sectionKicker">MODEL PERFORMANCE</span><h2>How our picks performed</h2><p>Hypothetical $10 per bet</p></div>
+  {panels.map(panel=><div className="bettorCompactGroup" key={panel.id}>
+    <div className="bettorCompactHeading"><h3>{panel.title}</h3><span>{panel.week?"Week "+panel.week:season+" season"}</span></div>
+    <div className="bettorCompactGrid">{labels.map(({key,title})=>{
+      const s=panel.stats?panel.stats[key]:summaries[key];
+      const id=panel.id+key;
+      const label=key==="all"?"All 3 Bets":key==="best"?"Best / Game":"Top 3";
+      return <div className="bettorCompactCell" key={key}>
+        <span className="bettorCompactLabel">{label}</span>
+        <strong className={s.profit===null?"bettorUnknown":s.profit>=0?"bettorPositive":"bettorNegative"}>{s.profit===null?"—":money(s.profit)}</strong>
+        <span className="bettorCompactRecord">{s.wins}W–{s.losses}L{s.pushes?"–"+s.pushes+"P":""}</span>
+        {s.profit===null?<span className="bettorCompactMissing">Odds missing</span>:null}
+        {s.picks.length>0?<button type="button" className="bettorCompactDetails" onClick={()=>setOpen(open===id?null:id)} aria-expanded={open===id}>{open===id?"Close":"Details"}</button>:null}
+        {open===id?<div className="bettorCompactDetailList">{s.picks.filter(p=>p.result!=="PENDING").slice(0,48).map((p,i)=><div key={i}><b>{p.game}</b><span>{p.selection} · {p.result}</span></div>)}</div>:null}
+      </div>;
+    })}</div>
+  </div>)}
+  <details className="bettorCompactFoot"><summary>How are these calculated?</summary><p>All 3 Bets means one moneyline, one spread and one over/under selection per game. Best / Game means the highest-confidence selection in each game. Top 3 means the three highest-confidence selections in each week. Results assume $10 on each selection, using archived sportsbook odds and final scores. A dash means some required original odds are missing, so we cannot calculate an accurate dollar return. These are hypothetical results, not actual winnings. Only weeks with archived individual predictions are included.</p></details>
  </section>;
 }
