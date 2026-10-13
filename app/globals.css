@@ -1212,3 +1212,12 @@
   .bettorDetailBetOutcome>strong{font-size:12px}
   .bettorDetailFooter{padding:8px 12px}
 }
+
+
+/* Clearly distinguish archived itemized bets from aggregate-only early weeks. */
+.bettorCompactCoverage{margin:12px 0 3px;font-size:11px;line-height:1.5;color:var(--muted)}
+.bettorCompactNoDetails{font-size:10px;font-weight:700;line-height:1.15;color:var(--muted)}
+.bettorCompactClickable:disabled{cursor:default;opacity:1}
+.bettorCompactClickable:disabled:hover{border-color:var(--line);box-shadow:none}
+:root[data-theme="light"] .bettorCompactClickable:disabled:hover{border-color:#dce3ea}
+@media(max-width:640px){.bettorCompactCoverage{font-size:10px}.bettorCompactNoDetails{font-size:9px}}
