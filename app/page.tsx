@@ -615,7 +615,7 @@ export default async function Page({
                       <strong>{pick.selection}</strong>
                       <span>{pick.matchup}{group.className === "topOverall" ? ` · ${pick.category}` : ""}</span>
                     </div>
-                    <div className="topPickOutcome"><b className="topProbability">{pct(pick.probability)}</b><span className={`topPickResult topPickResult${pick.result || "UPCOMING"}`}>{pick.result || "UPCOMING"}</span></div>
+                    <div className="topPickOutcome"><b className={`topProbability topProbability${pick.result || "UPCOMING"}`}>{pct(pick.probability)}</b><span className={`topPickResult topPickResult${pick.result || "UPCOMING"}`}>{pick.result || "UPCOMING"}</span></div>
                   </div>
                 ))}
                 {!group.rows.length && <div className="noTopPicks">No predictions available</div>}
@@ -633,7 +633,7 @@ export default async function Page({
           <h2>
             {previewMode
               ? `${preds.length} Display-Only Games`
-              : `${preds.length} Predictions · ${pendingGames.length} Pending`}
+              : `${preds.length} Locked Predictions${pendingGames.filter(g => g.state === "pre").length ? ` · ${pendingGames.filter(g => g.state === "pre").length} Awaiting` : ""}`}
           </h2>
         </div>
 
@@ -664,8 +664,12 @@ export default async function Page({
         </section>
       )}
 
+      {pendingGames.some(game => game.state !== "pre") && (
+        <p className="missingPredictionNote">{pendingGames.filter(game => game.state !== "pre").length} completed game(s) have no archived pregame prediction and are excluded from model performance. {pendingGames.filter(game => game.state !== "pre").map(game => game.away + " @ " + game.home).join(", ")}</p>
+      )}
+
       <section className="games">
-        {pendingGames.map(game => (
+        {pendingGames.filter(game => game.state === "pre").map(game => (
           <article className="panel" key={game.id} style={{ padding: 24, marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
               <div>
