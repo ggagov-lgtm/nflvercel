@@ -508,6 +508,29 @@ export default async function Page({
           ? week2Preview.games as unknown as Pred[]
           : await loadWeek(season,week);
         const live = await getEspnGameStates(season,week);
+        if (season === 2026 && week === 2) {
+          // Stable audited final-score snapshot, once generated. Avoid the
+          // historical dashboard reverting to N/A during an ESPN API outage.
+          try {
+            const text = await fs.readFile(
+              path.join(process.cwd(), "data", "results", "2026-week-2-scores.json"), "utf8"
+            );
+            const archived = JSON.parse(text);
+            if (archived.season === 2026 && archived.week === 2 && archived.games?.length === 16) {
+              for (const game of archived.games) {
+                const preview = records.find(p => String(p.event_id) === String(game.event_id));
+                if (!preview || preview.game.home?.abbr !== game.home || preview.game.away?.abbr !== game.away) continue;
+                live.set(String(game.event_id), {
+                  state: "post",
+                  homeScore: game.home_score,
+                  awayScore: game.away_score,
+                });
+              }
+            }
+          } catch {
+            // ESPN's live scoreboard remains the fallback until snapshot exists.
+          }
+        }
         type Selection = {game:string;selection:string;type:string;confidence:number;odds:number|null;oddsSource?:string;result:"WIN"|"LOSS"|"PUSH"|"PENDING";eventId:string;week:number};
         const all:Selection[]=[];
         const bestPerGame:Selection[]=[];
