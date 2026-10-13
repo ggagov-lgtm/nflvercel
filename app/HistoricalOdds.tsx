@@ -114,6 +114,11 @@ export default function HistoricalOdds({
             </table>
           </div>
           <p className="historicalOddsFootnote">
+            <a href="/replays" style={{ color: "inherit", textDecoration: "underline", fontWeight: 800 }}>
+              View Week 2–3 current-model historical replays ↗
+            </a>
+          </p>
+          <p className="historicalOddsFootnote">
             Table team order follows VegasInsider, not home/away order. Lines from
             a later sportsbook snapshot can differ from locked DraftKings lines;
             do not use a mismatched spread or total to price a historical bet.
