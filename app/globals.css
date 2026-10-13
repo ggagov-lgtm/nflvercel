@@ -1116,3 +1116,33 @@
   .bettorCompactRecord{font-size:clamp(9px,2.7vw,12px)}
   .bettorCompactMissing{font-size:clamp(9px,2.5vw,11px)}
 }
+
+
+/* Model Performance display switch: both historical win % and hypothetical $ P/L. */
+.bettorCompactHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.bettorCompactHeader .bettorCompactIntro{min-width:0;flex:1 1 250px}
+.bettorCompactSwitch{display:inline-flex;align-items:center;gap:3px;padding:4px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);flex:none}
+.bettorCompactSwitch button{appearance:none;border:0;border-radius:9px;padding:9px 13px;font-size:12px;line-height:1.2;font-weight:800;white-space:nowrap;background:transparent;color:var(--muted);cursor:pointer;transition:background .18s,color .18s,box-shadow .18s}
+.bettorCompactSwitch button[aria-pressed="true"]{background:var(--green2);color:var(--text);box-shadow:0 1px 5px #0002}
+.bettorCompactSwitch button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.bettorCompactCell{gap:8px}
+.bettorCompactCell>strong.bettorCompactPrimary{font-size:clamp(27px,3.8vw,47px);font-weight:900;line-height:1.12;letter-spacing:-.04em;white-space:nowrap}
+.bettorCompactCell>strong.bettorProfitPrimary{font-size:clamp(21px,3.4vw,43px);letter-spacing:-.045em}
+.bettorCompactSecondary{font-size:clamp(14px,1.7vw,20px);line-height:1.15;font-weight:800;letter-spacing:-.025em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bettorCompactCell .bettorCompactSecondary.bettorUnknown{font-size:clamp(14px,1.7vw,20px)!important}
+:root[data-theme="light"] .bettorCompactSwitch{background:#eef3f7}
+:root[data-theme="light"] .bettorCompactSwitch button[aria-pressed="true"]{background:#fff;color:#16263c;box-shadow:0 1px 5px #10182820}
+:root[data-theme="light"] .bettorCompactSecondary.bettorPositive{color:#159b61}
+:root[data-theme="light"] .bettorCompactSecondary.bettorNegative{color:#d94c58}
+:root[data-theme="light"] .bettorCompactSecondary.bettorNeutral{color:#16263c}
+@media(max-width:640px){
+  .bettorCompactHeader{gap:11px}
+  .bettorCompactHeader .bettorCompactIntro{flex-basis:180px}
+  .bettorCompactSwitch{padding:3px;gap:2px}
+  .bettorCompactSwitch button{font-size:11px;padding:8px 9px}
+  .bettorCompactCell{gap:7px}
+  .bettorCompactCell>strong.bettorCompactPrimary{font-size:clamp(20px,6.2vw,32px)}
+  .bettorCompactCell>strong.bettorProfitPrimary{font-size:clamp(16px,4.7vw,24px)}
+  .bettorCompactSecondary{font-size:clamp(11px,3.2vw,15px)}
+  .bettorCompactCell .bettorCompactSecondary.bettorUnknown{font-size:clamp(11px,3.2vw,15px)!important}
+}
