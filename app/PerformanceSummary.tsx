@@ -20,9 +20,8 @@ type Stats = {
   settled: number;
   picks: Pick[];
 };
-type HistoryKey = "top3Winner" | "top3Spread" | "top3Total";
 type Key = "all" | "best" | "top3" | "moneyline" | "spread" | "total";
-type Week = { week: number } & Record<Key | HistoryKey, Stats>;
+type Week = { week: number } & Record<Key, Stats>;
 
 const labels: { key: Key; title: string }[] = [
   { key: "all", title: "All Bets" },
@@ -31,12 +30,6 @@ const labels: { key: Key; title: string }[] = [
   { key: "moneyline", title: "Moneyline" },
   { key: "spread", title: "Spread" },
   { key: "total", title: "Over/Under" },
-];
-
-const historyLabels: { key: HistoryKey; title: string; subtitle: string }[] = [
-  { key: "top3Winner", title: "Top 3 Winners", subtitle: "Moneyline" },
-  { key: "top3Spread", title: "Top 3 Spreads", subtitle: "Point spread" },
-  { key: "top3Total", title: "Top 3 Over/Unders", subtitle: "Game totals" },
 ];
 
 // Historical accuracy is the share of graded picks that won (pushes excluded).
@@ -78,12 +71,6 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
   const summaries = Object.fromEntries(
     labels.map(({ key }) => [key, merge(gradedWeeks.map(w => w[key]))])
   ) as Record<Key, Stats>;
-  const historicalSummaries = Object.fromEntries(
-    (["top3Winner", "top3Spread", "top3Total"] as HistoryKey[]).map(key =>
-      [key, merge(gradedWeeks.map(w => w[key]))]
-    )
-  ) as Record<HistoryKey, Stats>;
-
   const panels = [
     { id: "last", title: "Last Week", week: previousWeek?.week, isLast: true },
     { id: "season", title: "Season to Date", week: null, isLast: false },
@@ -121,59 +108,9 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
         </div>
       ))}
 
-      <div className="bettorTop3History">
-        <div className="bettorTop3HistoryHead">
-          <div>
-            <span className="sectionKicker">HISTORICAL TOP 3 RESULTS</span>
-            <h3>How the strongest weekly picks performed</h3>
-          </div>
-          <span>Win rate excludes pushes</span>
-        </div>
-        {panels.map(panel => (
-          <div className="bettorCompactGroup bettorTop3Group" key={panel.id}>
-            <div className="bettorCompactHeading">
-              <h3>{panel.title}</h3>
-              <span>{panel.week ? "Week " + panel.week : panel.isLast ? "No graded prior week" : season + " season"}</span>
-            </div>
-            <div className="bettorTop3Grid">
-              {historyLabels.map(({ key, title, subtitle }) => {
-                const s = panel.isLast ? previousWeek?.[key] ?? empty : historicalSummaries[key];
-                const attempts = s.wins + s.losses;
-                const winRate = attempts ? Math.round(1000 * s.wins / attempts) / 10 : null;
-                const gradedPicks = s.picks.filter(p => p.result !== "PENDING");
-                const pending = s.picks.length - gradedPicks.length;
-                return (
-                  <article className="bettorTop3Cell" key={key}>
-                    <div className="bettorTop3Name">{title}<small>{subtitle}</small></div>
-                    <strong className="bettorTop3Rate">{winRate === null ? "—" : winRate.toFixed(1) + "%"}</strong>
-                    <span className="bettorTop3Record">{s.wins}W · {s.losses}L · {s.pushes}P</span>
-                    <span className="bettorTop3Count">{s.settled} graded pick{s.settled === 1 ? "" : "s"}{pending > 0 ? " · " + pending + " pending" : ""}</span>
-                    {gradedPicks.length > 0 ? (
-                      <details className="bettorTop3Details">
-                        <summary>View picks</summary>
-                        <div className="bettorTop3PickList">
-                          {gradedPicks.map((pick, index) => (
-                            <div className="bettorTop3Pick" key={pick.week + "-" + pick.eventId + "-" + pick.type + "-" + index}>
-                              <span className="bettorTop3PickMeta">W{pick.week} · {pick.game}</span>
-                              <span className="bettorTop3PickSelection">{pick.selection} <b className={"bettorTop3Outcome bettorTop3" + pick.result}>{pick.result}</b></span>
-                              <span className="bettorTop3PickMeta">Model confidence {(pick.confidence * 100).toFixed(1)}%</span>
-                            </div>
-                          ))}
-                        </div>
-                      </details>
-                    ) : <span className="bettorTop3NoPicks">No graded results yet</span>}
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-
       <details className="bettorCompactFoot">
         <summary>How are these calculated?</summary>
         <p>Each large percentage is the actual win rate for graded selections: wins divided by wins plus losses, displayed to one decimal place. Pushes and pending bets are excluded from the percentage. All Bets means one moneyline, one spread and one over/under selection per game. Best / Game means the highest-confidence selection in each game. Top 3 means the three highest-confidence selections in each week, regardless of market. Moneyline, Spread and Over/Under each show the strongest selection in that market per game. These are actual outcomes of archived model selections, not the model's predicted confidence percentages. Only archived individual predictions are included.</p>
-        <p>The historical Top 3 breakdown shows the three most-confident winner, spread and over/under predictions from each week. Predictions are ranked from saved confidence before outcomes are known. Only graded picks count toward win/loss records; pushes and pending bets are excluded from the win-rate denominator. Season-to-date uses archived weeks and excludes unverified retrospective backfills. Model confidence is not a measured win rate.</p>
       </details>
     </section>
   );
