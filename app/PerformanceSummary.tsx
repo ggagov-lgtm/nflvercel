@@ -8,7 +8,7 @@ export default function PerformanceSummary({weeks,currentWeek,season}:{weeks:Wee
  const [expanded,setExpanded]=useState<string|null>(null);
  const ordered=[...weeks].sort((a,b)=>b.week-a.week);
  const completed=ordered.filter(w=>w.wins+w.losses+w.pushes>0);
- const last=completed[0];const prior=completed[1];
+ const last=completed[0];
  const seasonWeeks=[...completed].reverse();
  const seasonWins=completed.reduce((a,w)=>a+w.wins,0),seasonLosses=completed.reduce((a,w)=>a+w.losses,0),seasonPushes=completed.reduce((a,w)=>a+w.pushes,0);
  const seasonProfitAvailable=completed.length>0&&completed.every(w=>w.profitPerDollar!==null&&w.missingOdds===0);
@@ -17,7 +17,7 @@ export default function PerformanceSummary({weeks,currentWeek,season}:{weeks:Wee
  const fmt=(n:number|null)=>n===null?"Not available":(n>=0?"+":"−")+"$"+Math.abs(n).toLocaleString("en-US",{maximumFractionDigits:0});
  const seasonProfit=seasonProfitAvailable?completed.reduce((a,w)=>a+(w.profitPerDollar||0)*stake,0):null;
  const winPct=(w:number,l:number)=>w+l?Math.round(100*w/(w+l))+"%":"—";
- const cards=[{id:"last",title:"Last Week",w:last},{id:"previous",title:"Previous Week",w:prior},{id:"season",title:"Season to Date",w:null}];
+ const cards=[{id:"last",title:"Last Week",w:last},{id:"season",title:"Season to Date",w:null}];
  const current=ordered.find(w=>w.week===currentWeek);
  const chart=seasonWeeks.map(w=>({label:"W"+w.week,value:w.wins+w.losses?w.wins/(w.wins+w.losses)*100:0,record:w.wins+"–"+w.losses}));
  return <section className="bettorSummary" aria-label="NFL model results and recommended picks">
