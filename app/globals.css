@@ -889,6 +889,13 @@
 :root[data-theme="light"] .topPicksCard header{color:#16263c}
 :root[data-theme="light"] .noTopPicks{color:#53647a}
 
+/* Keep model selections readable on white cards in daylight mode. */
+:root[data-theme="light"] .rowTopPick{background:linear-gradient(90deg,#eaf6ef 0%,#ffffff 100%)}
+:root[data-theme="light"] .rowTopPick b{color:#087b50}
+:root[data-theme="light"] .rowTopPick small{color:#334155}
+:root[data-theme="light"] .analysisPickBest .recommendationLine>strong,
+:root[data-theme="light"] .analysisPickTop b{color:#087b50}
+
 
 /* Bettor-facing responsive performance dashboard */
 .bettorSummary{margin:20px 0 26px;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--panel,#111d31);color:var(--text);overflow:hidden}
