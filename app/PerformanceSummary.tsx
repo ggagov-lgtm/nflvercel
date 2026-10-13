@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import PerformanceDrilldown from "./PerformanceDrilldown";
 
 type Pick = {
   game: string;
@@ -76,6 +77,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
   season: number;
 }) {
   const [view, setView] = useState<MetricView>("percentage");
+  const [selected, setSelected] = useState<{ title: string; period: string; stats: Stats } | null>(null);
 
   // Read the preference after hydration; keep the server/client first render identical.
   useEffect(() => {
@@ -146,7 +148,13 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
                       ? "Pushes excluded"
                       : "Win rate";
               return (
-                <div className="bettorCompactCell" key={key}>
+                <button
+                  type="button"
+                  className="bettorCompactCell bettorCompactClickable"
+                  key={key}
+                  onClick={() => setSelected({ title, period: panel.title, stats: s })}
+                  aria-label={`View bet-by-bet details for ${title}, ${panel.title}`}
+                >
                   <span className="bettorCompactLabel">{title}</span>
                   <strong className={`${showDollars ? dollarTone : winTone} bettorCompactPrimary ${showDollars ? "bettorProfitPrimary" : ""}`}>
                     {showDollars ? money(s.profit) : winPercentage(s.wins, s.losses)}
@@ -156,7 +164,8 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
                   </span>
                   <span className="bettorCompactRecord">{s.wins}W–{s.losses}L{s.pushes ? "–" + s.pushes + "P" : ""}</span>
                   <span className="bettorCompactMissing">{estimateNote}</span>
-                </div>
+                  <span className="bettorCompactViewCue" aria-hidden="true">View bets ›</span>
+                </button>
               );
             })}
           </div>
@@ -168,6 +177,14 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
         <p>Win % is the historical accuracy of graded model selections: wins divided by wins plus losses, displayed to one decimal place. Pushes and pending bets are excluded. Dollar profit/loss is hypothetical, assuming $10 staked on each selection and saved sportsbook odds where available. Spread and total bets without saved prices use estimated −110 odds; when any selected moneyline price is missing, the dollar result shows N/A rather than inventing a return. Win rate can be positive while the betting strategy loses money.</p>
         <p>All Bets includes one moneyline, one spread and one over/under selection per game. Best / Game uses the highest-confidence selection in each game. Top 3 shows the three highest-confidence predictions from each week, regardless of market. Moneyline, Spread and Over/Under show the strongest selection in their respective markets per game. Season to Date totals the available archived weeks. These are modeled hypothetical returns, not actual betting winnings. The toggle changes the primary number, while both measures remain visible.</p>
       </details>
+      {selected && (
+        <PerformanceDrilldown
+          title={selected.title}
+          period={selected.period}
+          stats={selected.stats}
+          onClose={() => setSelected(null)}
+        />
+      )}
     </section>
   );
 }
