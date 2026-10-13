@@ -1,8 +1,10 @@
 import math
 import numpy as np
 
+from .recent_form import adjustment_from_form
 
-MODEL_VERSION = "v2.1.0"
+
+MODEL_VERSION = "v2.2.0"
 SIMULATIONS = 50000
 
 
@@ -476,6 +478,7 @@ def run_production_game(
     football_total=None,
     injury_features=None,
     context_features=None,
+    recent_form_features=None,
     football_weight=0.10,
     total_football_weight=TOTAL_FOOTBALL_WEIGHT,
     simulations=SIMULATIONS,
@@ -514,15 +517,24 @@ def run_production_game(
         context_features
     )
 
+    recent_adjustments = adjustment_from_form(
+        recent_form_features,
+        market_margin,
+        market_total,
+    )
+
     expected_margin = (
         base_margin
         + inj_adj
         + ctx_adj
+        + recent_adjustments["recent_margin_adjustment"]
+        + recent_adjustments["graph_margin_adjustment"]
     )
 
     expected_total = (
         base_total
         + weather_adj
+        + recent_adjustments["recent_total_adjustment"]
     )
 
     result = simulate_game(
@@ -601,6 +613,11 @@ def run_production_game(
 
         "weather_total_adjustment":
             float(weather_adj),
+
+        "recent_form":
+            recent_form_features or {},
+
+        **recent_adjustments,
 
         "expected_margin":
             float(expected_margin),
