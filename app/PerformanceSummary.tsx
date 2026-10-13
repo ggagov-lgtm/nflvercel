@@ -24,6 +24,7 @@ type Stats = {
   picks: Pick[];
   aggregateOnly?: boolean;
   missingArchiveWeeks?: number[];
+  previewWeek?: boolean;
 };
 type Key = "all" | "best" | "top3" | "moneyline" | "spread" | "total";
 type Week = { week: number } & Record<Key, Stats>;
@@ -63,11 +64,12 @@ function merge(rows: Stats[]): Stats {
   const missingOdds = rows.reduce((n, r) => n + r.missingOdds, 0);
   const estimatedOdds = rows.reduce((n, r) => n + r.estimatedOdds, 0);
   const missingArchiveWeeks = Array.from(new Set(rows.flatMap(r => r.missingArchiveWeeks || []))).sort((a, b) => a - b);
+  const previewWeek = rows.some(r => r.previewWeek);
   return {
     wins: rows.reduce((n, r) => n + r.wins, 0),
     losses: rows.reduce((n, r) => n + r.losses, 0),
     pushes: rows.reduce((n, r) => n + r.pushes, 0),
-    settled, missingOdds, estimatedOdds, picks, missingArchiveWeeks,
+    settled, missingOdds, estimatedOdds, picks, missingArchiveWeeks, previewWeek,
     profit: settled > 0 && missingOdds === 0 && rows.every(r => r.settled === 0 || (r.profit !== null && !r.missingArchiveWeeks?.length))
       ? rows.reduce((n, r) => n + (r.profit || 0), 0)
       : null,
@@ -105,6 +107,12 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
   const ordered = [...weeks].sort((a, b) => b.week - a.week);
   // Last Week means the previous NFL week, not a partially played current week.
   const previousWeek = ordered.find(w => w.week === currentWeek - 1 && w.all.settled > 0);
+  // The Week 2 screen has no Week 1 history; show its own saved preview
+  // results in the first row instead of six empty "Last Week" tiles.
+  const week2Preview = currentWeek === 2
+    ? ordered.find(w => w.week === 2 && w.all.settled > 0 && w.all.previewWeek)
+    : undefined;
+  const firstPanelWeek = week2Preview ?? previousWeek;
   const gradedWeeks = ordered.filter(w => w.all.settled > 0);
   const unavailableWeeks = Array.from({ length: Math.max(0, Math.min(currentWeek, 18)) }, (_, i) => i + 1)
     .filter(week => !ordered.some(w => w.week === week && (w.all.settled > 0 || w.all.picks.length > 0)));
@@ -113,7 +121,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
     labels.map(({ key }) => [key, merge(gradedWeeks.map(w => w[key]))])
   ) as Record<Key, Stats>;
   const panels = [
-    { id: "last", title: "Last Week", week: previousWeek?.week, isLast: true },
+    { id: "last", title: week2Preview ? "Week 2 Preview Results" : "Last Week", week: firstPanelWeek?.week, isLast: true },
     { id: "season", title: "Season to Date", week: null, isLast: false },
   ];
 
@@ -131,6 +139,15 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
         </div>
       </div>
 
+      {ordered.some(w => w.all.previewWeek) && (
+        <p className="bettorCompactCoverage">
+          Week 2 figures use a saved September 18 preview, not official pre-kickoff locks.
+          Profit is hypothetical using retrospective VegasInsider odds or estimated −110
+          where exact prices were unavailable. The preview may postdate some Week 2 kickoffs.
+          Combined season results containing it are illustrative, not an officially verified betting record.
+        </p>
+      )}
+
       {(aggregateWeeks.length > 0 || unavailableWeeks.length > 0) && (
         <p className="bettorCompactCoverage">
           Historical coverage: {aggregateWeeks.length > 0 && `Week ${aggregateWeeks.join(", ")} includes verified aggregate records only (no saved individual picks or odds).`}
@@ -147,16 +164,18 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
           </div>
           <div className="bettorCompactGrid">
             {labels.map(({ key, title }) => {
-              const s = panel.isLast ? previousWeek?.[key] ?? empty : summaries[key];
+              const s = panel.isLast ? firstPanelWeek?.[key] ?? empty : summaries[key];
               const graded = s.wins + s.losses;
               const winTone = graded === 0 ? "bettorUnknown" : s.wins > s.losses ? "bettorPositive" : s.wins < s.losses ? "bettorNegative" : "bettorNeutral";
               const dollarTone = profitTone(s.profit);
               const showDollars = view === "dollars";
               const hasDetail = s.picks.length > 0;
               const unavailableTop3 = Boolean(s.missingArchiveWeeks?.length) && graded === 0;
-              const estimateNote = unavailableTop3
-                ? "Top 3 archive unavailable"
-                : s.aggregateOnly
+              const estimateNote = s.previewWeek
+                ? s.missingOdds ? "Preview · moneyline price unavailable" : "Preview · retrospective odds"
+                : unavailableTop3
+                  ? "Top 3 archive unavailable"
+                  : s.aggregateOnly
                   ? "Aggregate only · odds unavailable"
                   : s.missingArchiveWeeks?.length
                     ? key === "top3"
@@ -200,6 +219,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
       <details className="bettorCompactFoot">
         <summary>How are these calculated?</summary>
         <p>Win % is the historical accuracy of graded model selections: wins divided by wins plus losses, displayed to one decimal place. Pushes and pending bets are excluded. Dollar profit/loss is hypothetical, assuming $10 staked on each selection and saved sportsbook odds where available. Spread and total bets without saved prices use estimated −110 odds; when any selected moneyline price is missing, the dollar result shows N/A rather than inventing a return. Win rate can be positive while the betting strategy loses money.</p>
+        <p>Week 2 is evaluated using a saved September 18 preview, not verified original locked picks; some games may already have started when that file was created. VegasInsider prices are retrospective reference odds, and unmatched spread and total prices use estimated −110. These returns are hypothetical and should not be interpreted as a live pregame track record.</p>
         <p>Some older weeks have only summary results. Those weeks contribute to verified win/loss percentages, but profit is N/A if the individual betting odds are unavailable. A missing weekly Top 3 list is not reconstructed; only archived selections count toward Top 3. Weeks without any archived results are excluded, and the bet-by-bet drilldown displays only saved individual picks.</p>
         <p>All Bets includes one moneyline, one spread and one over/under selection per game. Best / Game uses the highest-confidence selection in each game. Top 3 shows the three highest-confidence predictions from each week, regardless of market. Moneyline, Spread and Over/Under show the strongest selection in their respective markets per game. Season to Date totals the available archived weeks. These are modeled hypothetical returns, not actual betting winnings. The toggle changes the primary number, while both measures remain visible.</p>
       </details>
