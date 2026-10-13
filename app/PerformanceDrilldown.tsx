@@ -22,6 +22,8 @@ type Stats = {
   estimatedOdds: number;
   settled: number;
   picks: Pick[];
+  aggregateOnly?: boolean;
+  missingArchiveWeeks?: number[];
 };
 type Filter = "ALL" | Pick["result"];
 
@@ -72,6 +74,7 @@ export default function PerformanceDrilldown({
   );
   const filtered = filter === "ALL" ? allPicks : allPicks.filter(p => p.result === filter);
   const pending = allPicks.filter(p => p.result === "PENDING").length;
+  const hasUnitemizedWeeks = Boolean(stats.missingArchiveWeeks?.length);
   const winners = allPicks.filter(p => p.result === "WIN");
   const winProfits = winners.map(betProfit);
   const winningReturns = winProfits.every((p): p is number => p !== null)
@@ -81,9 +84,9 @@ export default function PerformanceDrilldown({
   const accuracy = settledDenominator ? (100 * stats.wins / settledDenominator).toFixed(1) + "%" : "—";
   const counts = {
     ALL: allPicks.length,
-    WIN: stats.wins,
-    LOSS: stats.losses,
-    PUSH: stats.pushes,
+    WIN: allPicks.filter(p => p.result === "WIN").length,
+    LOSS: allPicks.filter(p => p.result === "LOSS").length,
+    PUSH: allPicks.filter(p => p.result === "PUSH").length,
     PENDING: pending,
   };
   const availableFilters: { value: Filter; label: string }[] = [
@@ -113,10 +116,17 @@ export default function PerformanceDrilldown({
           <div><small>Net $10 bets</small><strong className={stats.profit !== null && stats.profit < 0 ? "bettorNegative" : stats.profit !== null && stats.profit > 0 ? "bettorPositive" : ""}>{dollars(stats.profit)}</strong></div>
           <div><small>Record</small><strong>{stats.wins}W–{stats.losses}L{stats.pushes ? "–" + stats.pushes + "P" : ""}</strong></div>
         </div>
-        <div className="bettorDetailBreakdown">
+        {!hasUnitemizedWeeks && <div className="bettorDetailBreakdown">
           <span>Winning bets earned <b className="bettorPositive">{dollars(winningReturns)}</b></span>
           <span>Losing bets cost <b className="bettorNegative">{"−$" + (stats.losses * 10).toFixed(2)}</b></span>
-        </div>
+        </div>}
+        {hasUnitemizedWeeks && (
+          <p className="bettorDetailNote">
+            Week {stats.missingArchiveWeeks?.join(", ")} has aggregate results but no archived individual bets.
+            The summary win rate includes those results where known, while the list below shows archived selections only.
+            Total dollar profit cannot be reconstructed without original odds.
+          </p>
+        )}
         <p className="bettorDetailNote" id="bettorDetailNote">
           Hypothetical $10 stake per pick · archived odds when available · missing spread/total prices estimated at −110.
           Missing moneyline odds show N/A; pending picks are not graded.
@@ -150,7 +160,7 @@ export default function PerformanceDrilldown({
           {!filtered.length && <div className="bettorDetailEmpty">No {filter === "ALL" ? "" : filter.toLowerCase() + " "}bets available in this period.</div>}
         </div>
         <div className="bettorDetailFooter">
-          <span>{filtered.length} displayed · {stats.settled} graded · pushes excluded from win rate</span>
+          <span>{filtered.length} archived bets displayed · {stats.settled} graded in summary · pushes excluded</span>
           <button type="button" onClick={onClose}>Close</button>
         </div>
       </div>
