@@ -999,3 +999,18 @@
 .topPickOutcome .topProbability{white-space:nowrap}
 .topPickOutcome .topPickResult{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
 @media(max-width:640px){.topPickOutcome{gap:6px}.topPickOutcome .topProbability{font-size:12px}.topPickOutcome .topPickResult{font-size:10px;padding:4px 6px;min-width:0}}
+
+
+/* Override legacy full-width result-card styles for Top 3 picks only. */
+.topPicksRows .topPickOutcome{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;min-width:0}
+.topPicksRows .topPickOutcome .topPickResult{display:inline-flex!important;position:static!important;margin:0!important;padding:4px 7px!important;border:1px solid currentColor!important;border-radius:6px!important;width:auto!important;min-width:0!important;height:auto!important;font-size:10px!important;line-height:1.2!important}
+.topPicksRows .topPickOutcome .topProbability{margin:0!important;line-height:1.2!important}
+.topPicksRows .topProbabilityWIN{color:#15985e!important}
+.topPicksRows .topProbabilityLOSS{color:#db4656!important}
+.topPicksRows .topProbabilityPUSH{color:#ad831f!important}
+.topPicksRows .topProbabilityLIVE,.topPicksRows .topProbabilityUPCOMING{color:var(--text)!important}
+.topPicksRows .topPickResultWIN{color:#15985e!important}
+.topPicksRows .topPickResultLOSS{color:#db4656!important}
+.topPicksRows .topPickResultPUSH{color:#ad831f!important}
+.missingPredictionNote{font-size:11px;color:var(--muted);margin:0 0 12px;line-height:1.5}
+@media(max-width:560px){.topPicksRows .topPickOutcome{gap:5px!important}.topPicksRows .topPickOutcome .topProbability{font-size:12px!important}.topPicksRows .topPickOutcome .topPickResult{font-size:9px!important;padding:3px 5px!important}}
