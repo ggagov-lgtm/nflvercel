@@ -107,7 +107,7 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
   const previousWeek = ordered.find(w => w.week === currentWeek - 1 && w.all.settled > 0);
   const gradedWeeks = ordered.filter(w => w.all.settled > 0);
   const unavailableWeeks = Array.from({ length: Math.max(0, Math.min(currentWeek, 18)) }, (_, i) => i + 1)
-    .filter(week => !ordered.some(w => w.week === week && w.all.settled > 0));
+    .filter(week => !ordered.some(w => w.week === week && (w.all.settled > 0 || w.all.picks.length > 0)));
   const aggregateWeeks = ordered.filter(w => w.all.aggregateOnly && w.all.settled > 0).map(w => w.week);
   const summaries = Object.fromEntries(
     labels.map(({ key }) => [key, merge(gradedWeeks.map(w => w[key]))])
@@ -159,7 +159,9 @@ export default function PerformanceSummary({ weeks, currentWeek, season }: {
                 : s.aggregateOnly
                   ? "Aggregate only · odds unavailable"
                   : s.missingArchiveWeeks?.length
-                    ? `Includes aggregate-only W${s.missingArchiveWeeks.join(", ")}`
+                    ? key === "top3"
+                      ? `W${s.missingArchiveWeeks.join(", ")} Top 3 not archived`
+                      : `Includes aggregate-only W${s.missingArchiveWeeks.join(", ")}`
                     : s.missingOdds > 0
                 ? "Moneyline odds missing"
                 : s.estimatedOdds > 0
