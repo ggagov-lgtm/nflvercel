@@ -4,6 +4,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import week2Preview from "@/data/week2-preview.json";
 import week2Vegas from "@/data/historical_odds/2026-week-2.json";
+import week1Odds from "@/data/historical_odds/2026-week-1.json";
 
 // Predictions change independently of Vercel deployments via GitHub Actions.
 // Never serve a cached HTML snapshot of the weekly prediction board.
@@ -23,7 +24,9 @@ type Pred = {
   model: AnyObj;
   model_version: string;
   prediction_run_at: string;
-  locked_at: string;
+  locked_at?: string;
+  historicalReplay?: boolean;
+  replayFinal?: { home_score: number; away_score: number } | null;
 };
 
 function pct(v: any) {
@@ -205,6 +208,7 @@ export default async function Page({
   let displayLatest: { season: number; week: number } | null =
     hasRequestedWeek ? { season: requestedSeason, week: requestedWeek } : latest;
   let previewMode = false;
+  let historicalReplayMode = false;
   if (!hasRequestedWeek) {
     const current = await getCurrentEspnWeek();
     if (current && (!displayLatest || current.season > displayLatest.season || (current.season === displayLatest.season && current.week > displayLatest.week))) {
@@ -213,6 +217,65 @@ export default async function Page({
   }
 
   if (displayLatest) preds = await loadWeek(displayLatest.season, displayLatest.week);
+
+  if (!preds.length && displayLatest?.season === 2026 && displayLatest.week === 1) {
+    try {
+      const raw = await fs.readFile(
+        path.join(process.cwd(), "data", "backtests", "2026-week-1-model-replay.json"),
+        "utf8"
+      );
+      const replay = JSON.parse(raw);
+      // A replay may power the historical display, but it is never copied
+      // into the official archived predictions or actual betting performance.
+      if (replay.kind === "historical_model_replay_not_original_pregame_predictions" &&
+          replay.season === 2026 && replay.week === 1 &&
+          Array.isArray(replay.predictions) && replay.predictions.length === 16 &&
+          new Set(replay.predictions.map((p: AnyObj) => String(p.event_id))).size === 16 &&
+          replay.predictions.every((p: AnyObj) =>
+            p.reference_source === "week1_reconstructed_schedule_and_retrospective_odds" &&
+            p.model?.training_cutoff?.startsWith("2025-W") &&
+            Number.isFinite(Number(p.model?.home_win_prob)) &&
+            Number.isFinite(Number(p.model?.pred_home))
+          )
+      ) {
+        preds = replay.predictions.map((p: AnyObj): Pred => {
+          const [away, home] = String(p.matchup).split(" @ ");
+          const vegas = (week1Odds.games as AnyObj[]).find(g =>
+            [g.team_1,g.team_2].includes(home) &&
+            [g.team_1,g.team_2].includes(away)
+          );
+          const isHomeFirst = vegas?.team_1 === home;
+          return {
+            id: "historical-replay-" + String(p.event_id),
+            event_id: String(p.event_id),
+            season: 2026,
+            week: 1,
+            prediction_run_at: replay.replayed_at,
+            historicalReplay: true,
+            replayFinal: p.evaluation_after_games || null,
+            game: {
+              home: {abbr:home, logo:`https://a.espncdn.com/i/teamlogos/nfl/500/${home.toLowerCase()}.png`,date:p.kickoff},
+              away: {abbr:away, logo:`https://a.espncdn.com/i/teamlogos/nfl/500/${away.toLowerCase()}.png`,date:p.kickoff},
+              date: p.kickoff,
+            },
+            market: {
+              ...p.market,
+              spread: -Number(p.market.market_margin),
+              home_spread_odds: isHomeFirst ? vegas?.team_1_spread_price : vegas?.team_2_spread_price,
+              away_spread_odds: isHomeFirst ? vegas?.team_2_spread_price : vegas?.team_1_spread_price,
+              over_odds: vegas?.over_price,
+              under_odds: vegas?.under_price,
+            },
+            model: p.model,
+            model_version: replay.model_version,
+          };
+        });
+        historicalReplayMode = true;
+      }
+    } catch {
+      // The report remains empty until the verified backtest is committed.
+    }
+  }
 
   if (!preds.length && displayLatest?.season === week2Preview.season && displayLatest?.week === week2Preview.week) {
     preds = week2Preview.games as unknown as Pred[];
@@ -233,10 +296,22 @@ export default async function Page({
   const gameStates = displayLatest
     ? await getEspnGameStates(displayLatest.season, displayLatest.week)
     : new Map<string, LiveGame>();
+  if (historicalReplayMode) {
+    for (const p of preds) {
+      if (gameStates.get(String(p.event_id))?.state === "post") continue;
+      const e = p.replayFinal;
+      if (e && Number.isFinite(Number(e.home_score)) && Number.isFinite(Number(e.away_score))) {
+        gameStates.set(String(p.event_id), {
+          state: "post", date: p.game?.date,
+          homeScore: Number(e.home_score), awayScore: Number(e.away_score),
+        });
+      }
+    }
+  }
 
   const scheduledGames = displayLatest ? await getScheduledGames(displayLatest.season, displayLatest.week) : [];
   const savedEventIds = new Set(preds.map(p => String(p.event_id)));
-  const pendingGames = previewMode ? [] : scheduledGames.filter((g: ScheduledGame) => !savedEventIds.has(g.id));
+  const pendingGames = previewMode || historicalReplayMode ? [] : scheduledGames.filter((g: ScheduledGame) => !savedEventIds.has(g.id));
 
   const completedPerformance = (() => {
     let finals = 0;
@@ -687,7 +762,9 @@ export default async function Page({
             <h1>Week {displayLatest?.week || "—"}</h1>
             {nextWeekHref ? <a className="weekArrow" href={nextWeekHref} aria-label="Next week">›</a> : <span className="weekArrow weekArrowDisabled">›</span>}
           </div>
-          <p>Market-anchored quantitative predictions · locked before kickoff</p>
+          <p>{historicalReplayMode
+            ? "Historical model replay · calculated after games, using pre-Week-1 data and retrospective odds"
+            : "Market-anchored quantitative predictions · locked before kickoff"}</p>
         </div>
 
         <div className="introOperations">
@@ -715,7 +792,7 @@ export default async function Page({
           <div className="introModelStatus">
             <span className="statusDot" />
             <div>
-              <strong>{previewMode ? "Model Preview" : latest ? "Predictions Locked" : "Awaiting First Run"}</strong>
+              <strong>{historicalReplayMode ? "Historical Model Replay" : previewMode ? "Model Preview" : latest ? "Predictions Locked" : "Awaiting First Run"}</strong>
               <span>{modelVersion} · {simulationCount.toLocaleString()} simulations</span>
             </div>
           </div>
@@ -731,10 +808,10 @@ export default async function Page({
       <section className="topPicksSection">
         <div className="topPicksTitle">
           <div>
-            <span className="sectionKicker">THIS WEEK&apos;S TOP PICKS</span>
+            <span className="sectionKicker">{historicalReplayMode ? "HISTORICAL MODEL PICKS" : "THIS WEEK’S TOP PICKS"}</span>
             <h2>Highest-probability model predictions</h2>
           </div>
-          <small>Week {displayLatest?.week ?? "—"} · Ranked by model confidence</small>
+          <small>Week {displayLatest?.week ?? "—"} · {historicalReplayMode ? "Historical replay, not original locked picks" : "Ranked by model confidence"}</small>
         </div>
 
         <div className="topPicksGrid">
@@ -773,9 +850,11 @@ export default async function Page({
             WEEKLY BOARD
           </span>
           <h2>
-            {previewMode
-              ? `${preds.length} Display-Only Games`
-              : `${preds.length + pendingGames.length} Games · ${preds.length} Locked Predictions`}
+            {historicalReplayMode
+              ? `${preds.length} Games · ${preds.length} Historical Replay Forecasts`
+              : previewMode
+                ? `${preds.length} Display-Only Games`
+                : `${preds.length + pendingGames.length} Games · ${preds.length} Locked Predictions`}
           </h2>
         </div>
 
@@ -1021,6 +1100,11 @@ export default async function Page({
               </summary>
 
               <div className="gameExpansion">
+                {historicalReplayMode && <p className="historicalReplayNotice">
+                  Historical backtest: this v2.2 forecast was computed after the game using pre-2026
+                  training and retrospectively sourced sportsbook odds. It is not an originally locked
+                  pregame prediction and does not count toward the official performance record.
+                </p>}
                 <div className="analysisLead">
                   <div className="analysisPrediction">
                     <span className="sectionKicker">LOCKED MODEL PREDICTION</span>
