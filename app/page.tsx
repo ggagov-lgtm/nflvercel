@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 type AnyObj = Record<string, any>;
+type TopPick = { eventId: string; category: string; probability: number; selection: string; logo: string; matchup: string; result?: string };
 
 type Pred = {
   id: string;
@@ -362,7 +363,7 @@ export default async function Page({
     const winner: AnyObj[] = [];
     const spread: AnyObj[] = [];
     const total: AnyObj[] = [];
-    const overall: AnyObj[] = [];
+    const overall: TopPick[] = [];
 
     for (const p of preds) {
       const g = p.game || {};
@@ -431,7 +432,7 @@ export default async function Page({
       winner.push(ml); spread.push(sp); total.push(tot);
     }
 
-    const top3 = (rows: AnyObj[]) =>
+    const top3 = <T extends { probability: number },>(rows: T[]): T[] =>
       rows.filter(r => Number.isFinite(r.probability))
         .sort((a, b) => b.probability - a.probability).slice(0, 3);
 
