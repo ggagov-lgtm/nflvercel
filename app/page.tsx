@@ -612,10 +612,10 @@ export default async function Page({
       <section className="topPicksSection">
         <div className="topPicksTitle">
           <div>
-            <span className="sectionKicker">TOP PICKS &amp; RESULTS</span>
+            <span className="sectionKicker">THIS WEEK&apos;S TOP PICKS</span>
             <h2>Highest-probability model predictions</h2>
           </div>
-          <small>Original locked predictions · final games show results</small>
+          <small>Week {displayLatest?.week ?? "—"} · Ranked by model confidence</small>
         </div>
 
         <div className="topPicksGrid">
