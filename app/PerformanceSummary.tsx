@@ -1,12 +1,15 @@
 "use client";
 type Pick={game:string;selection:string;type:string;confidence:number;odds:number|null;result:"WIN"|"LOSS"|"PUSH"|"PENDING";eventId:string};
 type Stats={wins:number;losses:number;pushes:number;profit:number|null;missingOdds:number;settled:number;picks:Pick[]};
-type Week={week:number;all:Stats;best:Stats;top3:Stats};
-type Key="all"|"best"|"top3";
-const labels:{key:Key;title:string;subtitle:string}[]=[
- {key:"all",title:"Every Prediction",subtitle:"Moneyline, spread and total for each game"},
- {key:"best",title:"Best Bet Per Game",subtitle:"One highest-confidence pick for each game"},
- {key:"top3",title:"Top 3 Picks",subtitle:"Three highest-confidence picks each week"}
+type Week={week:number;all:Stats;best:Stats;top3:Stats;moneyline:Stats;spread:Stats;total:Stats};
+type Key="all"|"best"|"top3"|"moneyline"|"spread"|"total";
+const labels:{key:Key;title:string}[]=[
+ {key:"all",title:"All Bets"},
+ {key:"best",title:"Best / Game"},
+ {key:"top3",title:"Top 3"},
+ {key:"moneyline",title:"Moneyline"},
+ {key:"spread",title:"Spread"},
+ {key:"total",title:"Over/Under"}
 ];
 const money=(n:number|null)=>n===null?"Odds unavailable":(n<0?"−":"+")+"$"+Math.abs(n).toFixed(2);
 function merge(rows:Stats[]):Stats {
@@ -27,7 +30,7 @@ export default function PerformanceSummary({weeks,currentWeek,season}:{weeks:Wee
     <div className="bettorCompactHeading"><h3>{panel.title}</h3><span>{panel.week?"Week "+panel.week:season+" season"}</span></div>
     <div className="bettorCompactGrid">{labels.map(({key,title})=>{
       const s=panel.stats?panel.stats[key]:summaries[key];
-      const label=key==="all"?"All Bets":key==="best"?"Best / Game":"Top 3";
+      const label=title;
       return <div className="bettorCompactCell" key={key}>
         <span className="bettorCompactLabel">{label}</span>
         <strong className={s.profit===null?"bettorUnknown":s.profit>=0?"bettorPositive":"bettorNegative"}>{s.profit===null?"N/A":money(s.profit)}</strong>
@@ -37,6 +40,6 @@ export default function PerformanceSummary({weeks,currentWeek,season}:{weeks:Wee
       </div>;
     })}</div>
   </div>)}
-  <details className="bettorCompactFoot"><summary>How are these calculated?</summary><p>All 3 Bets means one moneyline, one spread and one over/under selection per game. Best / Game means the highest-confidence selection in each game. Top 3 means the three highest-confidence selections in each week. Results assume $10 on each selection, using archived sportsbook odds and final scores. A dash means some required original odds are missing, so we cannot calculate an accurate dollar return. These are hypothetical results, not actual winnings. Only weeks with archived individual predictions are included.</p></details>
+  <details className="bettorCompactFoot"><summary>How are these calculated?</summary><p>All Bets means one moneyline, one spread and one over/under selection per game. Best / Game means the highest-confidence selection in each game. Top 3 means the three highest-confidence selections in each week. Moneyline, Spread and Over/Under each show the strongest selection in that market per game. Results assume $10 on each selection, using archived sportsbook odds and final scores. A dash means some required original odds are missing, so we cannot calculate an accurate dollar return. These are hypothetical results, not actual winnings. Only weeks with archived individual predictions are included.</p></details>
  </section>;
 }
