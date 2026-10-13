@@ -516,7 +516,7 @@ export default async function Page({
           const profit=settled.length&&!missingOdds?settled.reduce((sum,p)=>sum+(p.result==="LOSS"?-10:p.result==="WIN"&&p.odds!==null?(p.odds>0?p.odds/100*10:100/Math.abs(p.odds)*10):0),0):null;
           return {wins:settled.filter(p=>p.result==="WIN").length,losses:settled.filter(p=>p.result==="LOSS").length,pushes:settled.filter(p=>p.result==="PUSH").length,profit,missingOdds,settled:settled.length,picks};
         };
-        return {week,all:strategy(all),best:strategy(bestPerGame),top3:strategy(topThree)};
+        return {week,all:strategy(all),best:strategy(bestPerGame),top3:strategy(topThree),moneyline:strategy(all.filter(p=>p.type==="Moneyline")),spread:strategy(all.filter(p=>p.type==="Spread")),total:strategy(all.filter(p=>p.type==="Total"))};
       })
   );
 
