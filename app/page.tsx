@@ -3,6 +3,7 @@ import HistoricalOdds, { type ArchivedOddsWeek } from "./HistoricalOdds";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import week2Preview from "@/data/week2-preview.json";
+import week2Vegas from "@/data/historical_odds/2026-week-2.json";
 
 // Predictions change independently of Vercel deployments via GitHub Actions.
 // Never serve a cached HTML snapshot of the weekly prediction board.
@@ -498,18 +499,42 @@ export default async function Page({
 
   // Three transparent, fixed-$10 strategies. Select before grading each game.
   const bettorWeeks = await Promise.all(
-    availableWeeks.filter(w => w.season === (displayLatest?.season || 2026) && w.week <= (displayLatest?.week || 99))
-      .map(async ({season,week}) => {
-        const records = await loadWeek(season,week);
+    [
+      ...availableWeeks.filter(w => w.season === (displayLatest?.season || 2026) && w.week <= (displayLatest?.week || 99)),
+      ...(displayLatest?.season === 2026 && (displayLatest?.week || 0) >= 2
+        ? [{season: 2026, week: 2}] : []),
+    ].map(async ({season,week}) => {
+        const records = week === 2 && season === 2026
+          ? week2Preview.games as unknown as Pred[]
+          : await loadWeek(season,week);
         const live = await getEspnGameStates(season,week);
-        type Selection = {game:string;selection:string;type:string;confidence:number;odds:number|null;result:"WIN"|"LOSS"|"PUSH"|"PENDING";eventId:string;week:number};
+        type Selection = {game:string;selection:string;type:string;confidence:number;odds:number|null;oddsSource?:string;result:"WIN"|"LOSS"|"PUSH"|"PENDING";eventId:string;week:number};
         const all:Selection[]=[];
         const bestPerGame:Selection[]=[];
         for(const p of records) {
           const x=p.model||{}, m=p.market||{}, g=p.game||{};
           const home=String(g.home?.abbr||"HOME"),away=String(g.away?.abbr||"AWAY");
           const lineTotal=Number(m.total??x.market_total);
-          const margin=Number(x.market_margin??m.market_margin);
+          const margin=Number(x.market_margin??m.market_margin??(m.spread === undefined ? NaN : -m.spread));
+          const historic = week === 2 && season === 2026
+            ? week2Vegas.games.find(row => [row.team_1,row.team_2].includes(home) && [row.team_1,row.team_2].includes(away))
+            : undefined;
+          const laterQuote = (type:string, side:string):number|null => {
+            if (!historic) return null;
+            const homeIsFirst = historic.team_1 === home;
+            if(type==="Moneyline"){
+              const first = side==="home" ? homeIsFirst : !homeIsFirst;
+              return first ? historic.team_1_moneyline : historic.team_2_moneyline;
+            }
+            if(type==="Total"){
+              if(Math.abs(historic.total-lineTotal)>0.0001)return null;
+              return side==="over" ? historic.over_price : historic.under_price;
+            }
+            const first = side==="home" ? homeIsFirst : !homeIsFirst;
+            const quoteSpread = first ? historic.team_1_spread : historic.team_2_spread;
+            if(Math.abs(quoteSpread-(side==="home" ? -margin : margin))>0.0001)return null;
+            return first ? historic.team_1_spread_price : historic.team_2_spread_price;
+          };
           const options=[
             {type:"Moneyline",prob:Number(x.home_win_prob),selection:home+" to win",side:"home",odds:m.home_ml},
             {type:"Moneyline",prob:Number(x.away_win_prob),selection:away+" to win",side:"away",odds:m.away_ml},
@@ -517,7 +542,16 @@ export default async function Page({
             {type:"Spread",prob:Number(x.away_cover_prob),selection:away+" "+(Number.isFinite(margin)?signed(margin):"spread"),side:"away",odds:m.away_spread_odds??m.spread_away_odds},
             {type:"Total",prob:Number(x.over_prob),selection:"Over "+lineTotal,side:"over",odds:m.over_odds},
             {type:"Total",prob:Number(x.under_prob),selection:"Under "+lineTotal,side:"under",odds:m.under_odds}
-          ].filter(v=>Number.isFinite(v.prob)&&v.prob>=0&&v.prob<=1);
+          ].filter(v=>Number.isFinite(v.prob)&&v.prob>=0&&v.prob<=1)
+            .map(o=>{
+              const ref = week===2 ? laterQuote(o.type,o.side) : null;
+              const useRef = ref!==null && Number.isFinite(ref) && Math.abs(ref)>=100;
+              return {
+                ...o,
+                odds: useRef ? ref : o.odds,
+                oddsSource: useRef ? "VegasInsider postgame reference" : undefined,
+              };
+            });
           const final=live.get(String(p.event_id));
           const byMarket=["Moneyline","Spread","Total"].map(type=>options.filter(o=>o.type===type).sort((u,v)=>v.prob-u.prob)[0]).filter((o):o is (typeof options)[number]=>Boolean(o));
           const selections:Selection[]=byMarket.map(o=>{
@@ -533,7 +567,7 @@ export default async function Page({
             }
             const raw=Number(o.odds);
             const odds=o.odds!==null&&o.odds!==undefined&&Number.isFinite(raw)&&Math.abs(raw)>=100?raw:null;
-            return {game:away+" @ "+home,selection:o.selection,type:o.type,confidence:o.prob,odds,result,eventId:String(p.event_id),week};
+            return {game:away+" @ "+home,selection:o.selection,type:o.type,confidence:o.prob,odds,oddsSource:o.oddsSource,result,eventId:String(p.event_id),week};
           });
           all.push(...selections);
           const best=[...selections].sort((u,v)=>v.confidence-u.confidence)[0];
@@ -557,15 +591,15 @@ export default async function Page({
             const price=p.odds??-110;
             return sum+(p.result==="LOSS"?-10:p.result==="WIN"?(price>0?price/100*10:100/Math.abs(price)*10):0);
           },0):null;
-          return {wins:settled.filter(p=>p.result==="WIN").length,losses:settled.filter(p=>p.result==="LOSS").length,pushes:settled.filter(p=>p.result==="PUSH").length,profit,missingOdds,estimatedOdds,settled:settled.length,picks};
+          return {wins:settled.filter(p=>p.result==="WIN").length,losses:settled.filter(p=>p.result==="LOSS").length,pushes:settled.filter(p=>p.result==="PUSH").length,profit,missingOdds,estimatedOdds,settled:settled.length,picks,previewWeek:week===2};
         };
         return {week,all:strategy(all),best:strategy(bestPerGame),top3:strategy(topThree),moneyline:strategy(all.filter(p=>p.type==="Moneyline")),spread:strategy(all.filter(p=>p.type==="Spread")),total:strategy(all.filter(p=>p.type==="Total")),top3Winner:strategy(top3Winner),top3Spread:strategy(top3Spread),top3Total:strategy(top3Total),top3Overall:strategy(topThree)};
       })
   );
 
-  // Week 2 has verified aggregate performance, but no archived individual
-  // predictions or sportsbook prices. Recover win/loss rates without
-  // synthesizing picks or returns. Prefer archived selections whenever they exist.
+  // For other missing weeks only, retain verified aggregate statistics.
+  // Week 2 above uses saved September preview forecasts, not official locks;
+  // retrospective VegasInsider prices are transparently identified.
   const archivedPerformanceWeeks = new Set(bettorWeeks.map(w => w.week));
   const aggregatePerformanceWeeks = await Promise.all(
     Array.from({ length: Math.max(0, displayLatest?.week || 0) }, (_, i) => i + 1)
