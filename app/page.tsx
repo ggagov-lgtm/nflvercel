@@ -500,7 +500,7 @@ export default async function Page({
       .map(async ({season,week}) => {
         const records = await loadWeek(season,week);
         const live = await getEspnGameStates(season,week);
-        type Selection = {game:string;selection:string;type:string;confidence:number;odds:number|null;result:"WIN"|"LOSS"|"PUSH"|"PENDING";eventId:string};
+        type Selection = {game:string;selection:string;type:string;confidence:number;odds:number|null;result:"WIN"|"LOSS"|"PUSH"|"PENDING";eventId:string;week:number};
         const all:Selection[]=[];
         const bestPerGame:Selection[]=[];
         for(const p of records) {
@@ -531,14 +531,19 @@ export default async function Page({
             }
             const raw=Number(o.odds);
             const odds=o.odds!==null&&o.odds!==undefined&&Number.isFinite(raw)&&Math.abs(raw)>=100?raw:null;
-            return {game:away+" @ "+home,selection:o.selection,type:o.type,confidence:o.prob,odds,result,eventId:String(p.event_id)};
+            return {game:away+" @ "+home,selection:o.selection,type:o.type,confidence:o.prob,odds,result,eventId:String(p.event_id),week};
           });
           all.push(...selections);
           const best=[...selections].sort((u,v)=>v.confidence-u.confidence)[0];
           if(best)bestPerGame.push(best);
         }
-        // Three highest-confidence selections for the entire week, including different markets.
-        const topThree=[...all].sort((u,v)=>v.confidence-u.confidence).slice(0,3);
+        // Rank the original locked bets, before grading, to match the next-week Top 3 cards.
+        // Each category selects at most three per week; incomplete games remain pending.
+        const rankTopThree=(rows:Selection[])=>[...rows].sort((u,v)=>v.confidence-u.confidence).slice(0,3);
+        const topThree=rankTopThree(all);
+        const top3Winner=rankTopThree(all.filter(p=>p.type==="Moneyline"));
+        const top3Spread=rankTopThree(all.filter(p=>p.type==="Spread"));
+        const top3Total=rankTopThree(all.filter(p=>p.type==="Total"));
         const strategy=(picks:Selection[])=>{
           const settled=picks.filter(p=>p.result!=="PENDING");
           // Use the saved sportsbook price where present. For historical spread/total
@@ -552,7 +557,7 @@ export default async function Page({
           },0):null;
           return {wins:settled.filter(p=>p.result==="WIN").length,losses:settled.filter(p=>p.result==="LOSS").length,pushes:settled.filter(p=>p.result==="PUSH").length,profit,missingOdds,estimatedOdds,settled:settled.length,picks};
         };
-        return {week,all:strategy(all),best:strategy(bestPerGame),top3:strategy(topThree),moneyline:strategy(all.filter(p=>p.type==="Moneyline")),spread:strategy(all.filter(p=>p.type==="Spread")),total:strategy(all.filter(p=>p.type==="Total"))};
+        return {week,all:strategy(all),best:strategy(bestPerGame),top3:strategy(topThree),moneyline:strategy(all.filter(p=>p.type==="Moneyline")),spread:strategy(all.filter(p=>p.type==="Spread")),total:strategy(all.filter(p=>p.type==="Total")),top3Winner:strategy(top3Winner),top3Spread:strategy(top3Spread),top3Total:strategy(top3Total),top3Overall:strategy(topThree)};
       })
   );
 
