@@ -1,0 +1,121 @@
+{
+  "season": 2026,
+  "week": 2,
+  "source": "ESPN final scoreboard",
+  "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&week=2&seasontype=2",
+  "archived_at": "2026-10-13T20:54:59.258725+00:00",
+  "games": [
+    {
+      "event_id": "401872932",
+      "home": "BUF",
+      "away": "DET",
+      "home_score": 41,
+      "away_score": 31
+    },
+    {
+      "event_id": "401872933",
+      "home": "ATL",
+      "away": "CAR",
+      "home_score": 3,
+      "away_score": 34
+    },
+    {
+      "event_id": "401872937",
+      "home": "CHI",
+      "away": "MIN",
+      "home_score": 3,
+      "away_score": 9
+    },
+    {
+      "event_id": "401872939",
+      "home": "TEN",
+      "away": "PHI",
+      "home_score": 20,
+      "away_score": 24
+    },
+    {
+      "event_id": "401872946",
+      "home": "NE",
+      "away": "PIT",
+      "home_score": 20,
+      "away_score": 3
+    },
+    {
+      "event_id": "401872936",
+      "home": "NYJ",
+      "away": "GB",
+      "home_score": 17,
+      "away_score": 20
+    },
+    {
+      "event_id": "401872935",
+      "home": "TB",
+      "away": "CLE",
+      "home_score": 19,
+      "away_score": 23
+    },
+    {
+      "event_id": "401872938",
+      "home": "BAL",
+      "away": "NO",
+      "home_score": 17,
+      "away_score": 24
+    },
+    {
+      "event_id": "401872934",
+      "home": "HOU",
+      "away": "CIN",
+      "home_score": 6,
+      "away_score": 20
+    },
+    {
+      "event_id": "401872940",
+      "home": "DEN",
+      "away": "JAX",
+      "home_score": 20,
+      "away_score": 13
+    },
+    {
+      "event_id": "401872941",
+      "home": "LAC",
+      "away": "LV",
+      "home_score": 14,
+      "away_score": 26
+    },
+    {
+      "event_id": "401872944",
+      "home": "DAL",
+      "away": "WSH",
+      "home_score": 37,
+      "away_score": 20
+    },
+    {
+      "event_id": "401872943",
+      "home": "ARI",
+      "away": "SEA",
+      "home_score": 7,
+      "away_score": 31
+    },
+    {
+      "event_id": "401872942",
+      "home": "SF",
+      "away": "MIA",
+      "home_score": 35,
+      "away_score": 13
+    },
+    {
+      "event_id": "401872945",
+      "home": "KC",
+      "away": "IND",
+      "home_score": 33,
+      "away_score": 30
+    },
+    {
+      "event_id": "401872947",
+      "home": "LAR",
+      "away": "NYG",
+      "home_score": 28,
+      "away_score": 6
+    }
+  ]
+}
