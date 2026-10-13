@@ -1086,3 +1086,33 @@
 @media(max-width:900px){.topPicksGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.bettorOverallFeaturedGrid{grid-template-columns:1fr}.bettorOverallHistoryGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.bettorTop3Grid{grid-template-columns:repeat(3,minmax(0,1fr))}.bettorTop3Cell{padding:12px 4px}.bettorTop3Name{font-size:10px}.bettorTop3Rate{font-size:23px}.bettorTop3Record{font-size:10px}.bettorTop3Count{font-size:9px}}
 @media(max-width:560px){.topPicksGrid{grid-template-columns:1fr!important}.bettorTop3Grid{grid-template-columns:1fr}.bettorOverallFeatured{padding:12px}.bettorOverallFeaturedHeading small{max-width:100px;font-size:9px}.bettorOverallHistory,.bettorOverallUpcoming{padding:10px}.bettorTop3Cell{padding:12px}.bettorTop3Name{font-size:12px}.bettorTop3Rate{font-size:26px}}
+
+
+/* Percent-first Model Performance tiles: match the rounded 3-column layout. */
+.bettorCompactGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.bettorCompactGroup{margin-top:24px}
+.bettorCompactHeading{margin-bottom:13px}
+.bettorCompactHeading h3{font-size:clamp(19px,2.2vw,27px);font-weight:850}
+.bettorCompactHeading>span{font-size:clamp(12px,1.45vw,17px)}
+.bettorCompactCell{min-height:165px;padding:22px 10px 19px;gap:12px;border:1.5px solid var(--line);border-radius:20px;background:var(--panel);box-shadow:none}
+.bettorCompactLabel{font-size:clamp(13px,1.55vw,17px);font-weight:850;line-height:1.2;white-space:normal}
+.bettorCompactCell>strong{font-size:clamp(27px,3.8vw,47px);font-weight:900;line-height:1.12;letter-spacing:-.04em;font-variant-numeric:tabular-nums;overflow-wrap:normal}
+.bettorCompactCell>strong.bettorUnknown{font-size:clamp(26px,3.8vw,44px)!important}
+.bettorNeutral{color:var(--text)}
+.bettorCompactRecord{font-size:clamp(11px,1.45vw,16px);white-space:nowrap;font-variant-numeric:tabular-nums}
+.bettorCompactMissing{font-size:clamp(10px,1.25vw,13px);line-height:1.25}
+:root[data-theme="light"] .bettorCompactCell{background:#fff;border-color:#dce3ea}
+:root[data-theme="light"] .bettorCompactCell>strong.bettorPositive{color:#159b61}
+:root[data-theme="light"] .bettorCompactCell>strong.bettorNegative{color:#d94c58}
+:root[data-theme="light"] .bettorCompactCell>strong.bettorNeutral{color:#16263c}
+@media(max-width:640px){
+  .bettorCompactGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .bettorCompactGroup{margin-top:22px}
+  .bettorCompactHeading{margin-bottom:10px}
+  .bettorCompactCell{min-height:126px;padding:13px 4px 11px;gap:9px;border-radius:15px}
+  .bettorCompactLabel{font-size:clamp(10px,3vw,14px)}
+  .bettorCompactCell>strong{font-size:clamp(20px,6.2vw,32px);letter-spacing:-.045em}
+  .bettorCompactCell>strong.bettorUnknown{font-size:clamp(20px,6.2vw,32px)!important}
+  .bettorCompactRecord{font-size:clamp(9px,2.7vw,12px)}
+  .bettorCompactMissing{font-size:clamp(9px,2.5vw,11px)}
+}
