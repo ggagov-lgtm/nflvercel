@@ -68,7 +68,7 @@ function merge(rows: Stats[]): Stats {
     losses: rows.reduce((n, r) => n + r.losses, 0),
     pushes: rows.reduce((n, r) => n + r.pushes, 0),
     settled, missingOdds, estimatedOdds, picks, missingArchiveWeeks,
-    profit: settled > 0 && missingOdds === 0 && rows.every(r => !r.missingArchiveWeeks?.length && (r.settled === 0 || r.profit !== null))
+    profit: settled > 0 && missingOdds === 0 && rows.every(r => r.settled === 0 || (r.profit !== null && !r.missingArchiveWeeks?.length))
       ? rows.reduce((n, r) => n + (r.profit || 0), 0)
       : null,
   };
