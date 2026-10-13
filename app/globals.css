@@ -1021,3 +1021,9 @@
 .topPicksRows .topPickResultPUSH{color:#ad831f!important}
 .missingPredictionNote{font-size:11px;color:var(--muted);margin:0 0 12px;line-height:1.5}
 @media(max-width:560px){.topPicksRows .topPickOutcome{gap:5px!important}.topPicksRows .topPickOutcome .topProbability{font-size:12px!important}.topPicksRows .topPickOutcome .topPickResult{font-size:9px!important;padding:3px 5px!important}}
+
+/* Compact W-L-T season records beneath each matchup team abbreviation. */
+.rowTeamText{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;min-width:0}
+.rowTeamRecord{display:block;font-size:9px;line-height:1.1;font-weight:600;letter-spacing:.025em;color:#98adbf;white-space:nowrap;font-variant-numeric:tabular-nums}
+:root[data-theme="light"] .rowTeamRecord{color:#52647a}
+@media(max-width:760px){.rowTeamText{gap:2px}.rowTeamRecord{font-size:9px}}
