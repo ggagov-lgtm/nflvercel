@@ -27,6 +27,7 @@ from src.qb_features import (
 )
 from src.injuries import build_game_injury_features
 from src.game_context import build_game_context_features
+from src.recent_form import completed_games, recent_form_for_matchup
 from src.production_model import (
     run_production_game,
     MODEL_VERSION,
@@ -984,6 +985,21 @@ def run(season, week, dry_run=False, refresh=False):
         target_week=week,
     )
 
+    # Historical scores strictly before the target week (no lookahead).
+    # If any scoreboard fails, disable the entire form signal rather than
+    # biasing opponent ratings with an incomplete schedule.
+    prior_game_history = []
+    if week > 1:
+        try:
+            pages = [
+                (prior_week, scoreboard(season, prior_week))
+                for prior_week in range(1, week)
+            ]
+            prior_game_history = completed_games(pages, week)
+            print(f"Verified opponent history: {len(prior_game_history)} games")
+        except Exception as exc:
+            print(f"WARNING recent-form data unavailable: {exc}")
+            prior_game_history = []
 
     print()
     print("=" * 78)
@@ -1182,6 +1198,11 @@ def run(season, week, dry_run=False, refresh=False):
         # Production model + 50K simulations
         # -----------------------------------------------------
 
+        # Only completed previous-week results can enter recent form.
+        recent_form_features = recent_form_for_matchup(
+            home, away, prior_game_history
+        )
+
         try:
 
             result = run_production_game(
@@ -1208,6 +1229,9 @@ def run(season, week, dry_run=False, refresh=False):
 
                 context_features=
                     context_features,
+
+                recent_form_features=
+                    recent_form_features,
 
                 football_weight=
                     FOOTBALL_WEIGHT,
@@ -1287,7 +1311,13 @@ def run(season, week, dry_run=False, refresh=False):
             f"context "
             f"{result['context_margin_adjustment']:+.2f} | "
             f"weather total "
-            f"{result['weather_total_adjustment']:+.2f}"
+            f"{result['weather_total_adjustment']:+.2f} | "
+            f"recent margin "
+            f"{result['recent_margin_adjustment']:+.2f} | "
+            f"graph "
+            f"{result['graph_margin_adjustment']:+.2f} | "
+            f"recent total "
+            f"{result['recent_total_adjustment']:+.2f}"
         )
 
         print(
