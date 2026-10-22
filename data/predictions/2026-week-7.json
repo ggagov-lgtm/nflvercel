@@ -31,41 +31,41 @@
         "total": 50.5,
         "home_ml": -155,
         "away_ml": 130,
-        "captured_at": "2026-10-22T01:27:36.247547+00:00"
+        "captured_at": "2026-10-22T04:27:18.551234+00:00"
       },
       "model": {
-        "pred_home": 26.01954,
-        "pred_away": 24.07094,
-        "model_margin": 1.9486,
-        "model_total": 50.09048,
-        "home_win_prob": 0.5606066394112836,
-        "away_win_prob": 0.40159336058871625,
-        "tie_prob": 0.0378,
-        "home_cover_prob": 0.44026,
-        "away_cover_prob": 0.52036,
-        "spread_push_prob": 0.03938,
-        "over_prob": 0.48538,
-        "under_prob": 0.51462,
+        "pred_home": 26.11996,
+        "pred_away": 23.9717,
+        "model_margin": 2.14826,
+        "model_total": 50.09166,
+        "home_win_prob": 0.5621468029435813,
+        "away_win_prob": 0.3994131970564187,
+        "tie_prob": 0.03844,
+        "home_cover_prob": 0.44844,
+        "away_cover_prob": 0.51192,
+        "spread_push_prob": 0.03964,
+        "over_prob": 0.48592,
+        "under_prob": 0.51408,
         "total_push_prob": 0.0,
         "market_fair_home_prob": 0.5829926410466066,
         "market_fair_away_prob": 0.4170073589533933,
         "simulations": 50000,
-        "raw_home_win_prob": 0.55956,
-        "raw_away_win_prob": 0.40264,
+        "raw_home_win_prob": 0.56684,
+        "raw_away_win_prob": 0.39472,
         "moneyline_market_weight": 0.75,
-        "home_ml_expected_profit_10": -0.399116577427268,
-        "away_ml_expected_profit_10": -0.3853527064595257,
+        "home_ml_expected_profit_10": -0.3673784031862435,
+        "away_ml_expected_profit_10": -0.42909646770236964,
         "moneyline_value_side": null,
         "model_version": "v2.2.0",
         "football_weight": 0.1,
         "total_football_weight": 0.05,
         "market_margin": 3.0,
         "market_total": 50.5,
-        "football_margin": 1.3074492895992897,
+        "football_margin": 1.3074492895992895,
         "football_total": 48.137618043938566,
         "base_margin": 2.830744928959929,
         "base_total": 50.381880902196926,
-        "injury_margin_adjustment": 0.008000000000000007,
+        "injury_margin_adjustment": 0.20649999999999996,
         "context_margin_adjustment": 0.0,
         "weather_total_adjustment": -0.0,
         "recent_form": {
@@ -94,7 +94,7 @@
         "recent_margin_adjustment": -0.6851147540983606,
         "recent_total_adjustment": -0.3553770491803274,
         "graph_margin_adjustment": -0.12386982055548759,
-        "expected_margin": 2.029760354306081,
+        "expected_margin": 2.228260354306081,
         "expected_total": 50.0265038530166,
         "qb": {
           "home_qb_id": "00-0039918",
@@ -105,35 +105,35 @@
         "injuries": {
           "features": {
             "home_injury_count": 5,
-            "home_injury_out_count": 2,
+            "home_injury_out_count": 3,
             "home_injury_doubtful_count": 1,
             "home_injury_questionable_count": 1,
-            "home_injury_total_impact": 3.7125,
+            "home_injury_total_impact": 4.9625,
             "home_injury_offense_impact": 1.0,
-            "home_injury_defense_impact": 2.7125,
+            "home_injury_defense_impact": 3.9625,
             "home_injury_qb_impact": 0.0,
             "home_injury_has_qb": 0.0,
-            "home_injury_out_weight": 2.25,
+            "home_injury_out_weight": 3.5,
             "away_injury_count": 5,
-            "away_injury_out_count": 2,
+            "away_injury_out_count": 4,
             "away_injury_doubtful_count": 0,
-            "away_injury_questionable_count": 3,
-            "away_injury_total_impact": 4.3125,
-            "away_injury_offense_impact": 0.0,
-            "away_injury_defense_impact": 4.3125,
+            "away_injury_questionable_count": 1,
+            "away_injury_total_impact": 6.3625,
+            "away_injury_offense_impact": 3.3625,
+            "away_injury_defense_impact": 3.0,
             "away_injury_qb_impact": 0.0,
             "away_injury_has_qb": 0.0,
-            "away_injury_out_weight": 3.0,
+            "away_injury_out_weight": 5.75,
             "diff_injury_count": 0,
-            "diff_injury_out_count": 0,
+            "diff_injury_out_count": -1,
             "diff_injury_doubtful_count": 1,
-            "diff_injury_questionable_count": -2,
-            "diff_injury_total_impact": -0.6000000000000001,
-            "diff_injury_offense_impact": 1.0,
-            "diff_injury_defense_impact": -1.6,
+            "diff_injury_questionable_count": 0,
+            "diff_injury_total_impact": -1.3999999999999995,
+            "diff_injury_offense_impact": -2.3625,
+            "diff_injury_defense_impact": 0.9624999999999999,
             "diff_injury_qb_impact": 0.0,
             "diff_injury_has_qb": 0.0,
-            "diff_injury_out_weight": -0.75
+            "diff_injury_out_weight": -2.25
           },
           "players": [
             {
@@ -141,14 +141,28 @@
               "player_id": "4361748",
               "player": "Anthony Johnson Jr.",
               "position": "S",
-              "status": "injured reserve",
+              "status": "out",
               "injury_type": "Undisclosed",
               "injury_location": "Other",
               "return_date": "2026-10-18",
-              "reported_at": "2026-10-22T01:01Z",
-              "status_weight": 0.0,
+              "reported_at": "2026-10-22T04:00Z",
+              "status_weight": 1.0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 1.25
+            },
+            {
+              "team": "CHI",
+              "player_id": "4372576",
+              "player": "Jack Sanborn",
+              "position": "LB",
+              "status": "out",
+              "injury_type": "Concussion",
+              "injury_location": "Head",
+              "return_date": "2026-11-02",
+              "reported_at": "2026-10-22T01:31Z",
+              "status_weight": 1.0,
+              "position_weight": 1.25,
+              "raw_impact": 1.25
             },
             {
               "team": "CHI",
@@ -193,74 +207,18 @@
               "raw_impact": 1.0
             },
             {
-              "team": "CHI",
-              "player_id": "4372576",
-              "player": "Jack Sanborn",
-              "position": "LB",
-              "status": "out",
-              "injury_type": "Concussion",
-              "injury_location": "Head",
-              "return_date": "2026-11-02",
-              "reported_at": "2026-10-21T00:30Z",
-              "status_weight": 1.0,
-              "position_weight": 1.25,
-              "raw_impact": 1.25
-            },
-            {
               "team": "NE",
-              "player_id": "4245273",
-              "player": "Christian Elliss",
-              "position": "LB",
+              "player_id": "16771",
+              "player": "Morgan Moses",
+              "position": "OT",
               "status": "questionable",
-              "injury_type": "Chest",
-              "injury_location": "Torso",
+              "injury_type": "Foot",
+              "injury_location": "Leg",
               "return_date": "2026-10-22",
-              "reported_at": "2026-10-21T23:46Z",
+              "reported_at": "2026-10-22T01:41Z",
               "status_weight": 0.35,
-              "position_weight": 1.25,
-              "raw_impact": 0.4375
-            },
-            {
-              "team": "NE",
-              "player_id": "2574056",
-              "player": "Kevin Byard",
-              "position": "S",
-              "status": "questionable",
-              "injury_type": "Chest",
-              "injury_location": "Torso",
-              "return_date": "2026-10-22",
-              "reported_at": "2026-10-21T23:45Z",
-              "status_weight": 0.35,
-              "position_weight": 1.25,
-              "raw_impact": 0.4375
-            },
-            {
-              "team": "NE",
-              "player_id": "4428930",
-              "player": "Craig Woodson",
-              "position": "S",
-              "status": "questionable",
-              "injury_type": "Shoulder",
-              "injury_location": "Arm",
-              "return_date": "2026-10-22",
-              "reported_at": "2026-10-21T23:36Z",
-              "status_weight": 0.35,
-              "position_weight": 1.25,
-              "raw_impact": 0.4375
-            },
-            {
-              "team": "NE",
-              "player_id": "3916923",
-              "player": "Carlton Davis III",
-              "position": "CB",
-              "status": "out",
-              "injury_type": "Neck",
-              "injury_location": "Head",
-              "return_date": "2026-11-01",
-              "reported_at": "2026-10-21T23:27Z",
-              "status_weight": 1.0,
-              "position_weight": 1.5,
-              "raw_impact": 1.5
+              "position_weight": 1.75,
+              "raw_impact": 0.6124999999999999
             },
             {
               "team": "NE",
@@ -271,10 +229,52 @@
               "injury_type": "Hamstring",
               "injury_location": "Leg",
               "return_date": "2026-11-01",
-              "reported_at": "2026-10-21T18:32Z",
+              "reported_at": "2026-10-22T01:41Z",
               "status_weight": 1.0,
               "position_weight": 1.5,
               "raw_impact": 1.5
+            },
+            {
+              "team": "NE",
+              "player_id": "4606666",
+              "player": "Karon Prunty",
+              "position": "CB",
+              "status": "out",
+              "injury_type": "Hamstring",
+              "injury_location": "Leg",
+              "return_date": "2026-11-01",
+              "reported_at": "2026-10-22T01:37Z",
+              "status_weight": 1.0,
+              "position_weight": 1.5,
+              "raw_impact": 1.5
+            },
+            {
+              "team": "NE",
+              "player_id": "4362890",
+              "player": "Ben Brown",
+              "position": "C",
+              "status": "out",
+              "injury_type": "Knee",
+              "injury_location": "Leg",
+              "return_date": "2026-11-01",
+              "reported_at": "2026-10-22T01:33Z",
+              "status_weight": 1.0,
+              "position_weight": 1.5,
+              "raw_impact": 1.5
+            },
+            {
+              "team": "NE",
+              "player_id": "4259646",
+              "player": "Alijah Vera-Tucker",
+              "position": "G",
+              "status": "out",
+              "injury_type": "Hamstring",
+              "injury_location": "Leg",
+              "return_date": "2026-11-01",
+              "reported_at": "2026-10-22T01:30Z",
+              "status_weight": 1.0,
+              "position_weight": 1.25,
+              "raw_impact": 1.25
             }
           ]
         },
@@ -360,14 +360,28 @@
               "player_id": "4361748",
               "player": "Anthony Johnson Jr.",
               "position": "S",
-              "status": "injured reserve",
+              "status": "out",
               "injury_type": "Undisclosed",
               "injury_location": "Other",
               "return_date": "2026-10-18",
-              "reported_at": "2026-10-22T01:01Z",
-              "status_weight": 0.0,
+              "reported_at": "2026-10-22T04:00Z",
+              "status_weight": 1.0,
               "position_weight": 1.25,
-              "raw_impact": 0.0
+              "raw_impact": 1.25
+            },
+            {
+              "team": "CHI",
+              "player_id": "4372576",
+              "player": "Jack Sanborn",
+              "position": "LB",
+              "status": "out",
+              "injury_type": "Concussion",
+              "injury_location": "Head",
+              "return_date": "2026-11-02",
+              "reported_at": "2026-10-22T01:31Z",
+              "status_weight": 1.0,
+              "position_weight": 1.25,
+              "raw_impact": 1.25
             },
             {
               "team": "CHI",
@@ -412,74 +426,18 @@
               "raw_impact": 1.0
             },
             {
-              "team": "CHI",
-              "player_id": "4372576",
-              "player": "Jack Sanborn",
-              "position": "LB",
-              "status": "out",
-              "injury_type": "Concussion",
-              "injury_location": "Head",
-              "return_date": "2026-11-02",
-              "reported_at": "2026-10-21T00:30Z",
-              "status_weight": 1.0,
-              "position_weight": 1.25,
-              "raw_impact": 1.25
-            },
-            {
               "team": "NE",
-              "player_id": "4245273",
-              "player": "Christian Elliss",
-              "position": "LB",
+              "player_id": "16771",
+              "player": "Morgan Moses",
+              "position": "OT",
               "status": "questionable",
-              "injury_type": "Chest",
-              "injury_location": "Torso",
+              "injury_type": "Foot",
+              "injury_location": "Leg",
               "return_date": "2026-10-22",
-              "reported_at": "2026-10-21T23:46Z",
+              "reported_at": "2026-10-22T01:41Z",
               "status_weight": 0.35,
-              "position_weight": 1.25,
-              "raw_impact": 0.4375
-            },
-            {
-              "team": "NE",
-              "player_id": "2574056",
-              "player": "Kevin Byard",
-              "position": "S",
-              "status": "questionable",
-              "injury_type": "Chest",
-              "injury_location": "Torso",
-              "return_date": "2026-10-22",
-              "reported_at": "2026-10-21T23:45Z",
-              "status_weight": 0.35,
-              "position_weight": 1.25,
-              "raw_impact": 0.4375
-            },
-            {
-              "team": "NE",
-              "player_id": "4428930",
-              "player": "Craig Woodson",
-              "position": "S",
-              "status": "questionable",
-              "injury_type": "Shoulder",
-              "injury_location": "Arm",
-              "return_date": "2026-10-22",
-              "reported_at": "2026-10-21T23:36Z",
-              "status_weight": 0.35,
-              "position_weight": 1.25,
-              "raw_impact": 0.4375
-            },
-            {
-              "team": "NE",
-              "player_id": "3916923",
-              "player": "Carlton Davis III",
-              "position": "CB",
-              "status": "out",
-              "injury_type": "Neck",
-              "injury_location": "Head",
-              "return_date": "2026-11-01",
-              "reported_at": "2026-10-21T23:27Z",
-              "status_weight": 1.0,
-              "position_weight": 1.5,
-              "raw_impact": 1.5
+              "position_weight": 1.75,
+              "raw_impact": 0.6124999999999999
             },
             {
               "team": "NE",
@@ -490,10 +448,52 @@
               "injury_type": "Hamstring",
               "injury_location": "Leg",
               "return_date": "2026-11-01",
-              "reported_at": "2026-10-21T18:32Z",
+              "reported_at": "2026-10-22T01:41Z",
               "status_weight": 1.0,
               "position_weight": 1.5,
               "raw_impact": 1.5
+            },
+            {
+              "team": "NE",
+              "player_id": "4606666",
+              "player": "Karon Prunty",
+              "position": "CB",
+              "status": "out",
+              "injury_type": "Hamstring",
+              "injury_location": "Leg",
+              "return_date": "2026-11-01",
+              "reported_at": "2026-10-22T01:37Z",
+              "status_weight": 1.0,
+              "position_weight": 1.5,
+              "raw_impact": 1.5
+            },
+            {
+              "team": "NE",
+              "player_id": "4362890",
+              "player": "Ben Brown",
+              "position": "C",
+              "status": "out",
+              "injury_type": "Knee",
+              "injury_location": "Leg",
+              "return_date": "2026-11-01",
+              "reported_at": "2026-10-22T01:33Z",
+              "status_weight": 1.0,
+              "position_weight": 1.5,
+              "raw_impact": 1.5
+            },
+            {
+              "team": "NE",
+              "player_id": "4259646",
+              "player": "Alijah Vera-Tucker",
+              "position": "G",
+              "status": "out",
+              "injury_type": "Hamstring",
+              "injury_location": "Leg",
+              "return_date": "2026-11-01",
+              "reported_at": "2026-10-22T01:30Z",
+              "status_weight": 1.0,
+              "position_weight": 1.25,
+              "raw_impact": 1.25
             }
           ],
           "weather": {
@@ -513,8 +513,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:03.712006+00:00",
-      "locked_at": "2026-10-22T01:35:03.712006+00:00"
+      "prediction_run_at": "2026-10-22T04:34:20.470939+00:00",
+      "locked_at": "2026-10-22T04:34:20.470939+00:00"
     },
     {
       "season": 2026,
@@ -545,7 +545,7 @@
         "total": 44.5,
         "home_ml": 150,
         "away_ml": -180,
-        "captured_at": "2026-10-22T01:27:36.270246+00:00"
+        "captured_at": "2026-10-22T04:27:18.652518+00:00"
       },
       "model": {
         "pred_home": 21.0699,
@@ -576,7 +576,7 @@
         "market_margin": -3.5,
         "market_total": 44.5,
         "football_margin": -3.4347384744884737,
-        "football_total": 46.120803482247524,
+        "football_total": 46.12080348224754,
         "base_margin": -3.4934738474488474,
         "base_total": 44.581040174112374,
         "injury_margin_adjustment": 0.02099999999999999,
@@ -1027,8 +1027,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:05.180782+00:00",
-      "locked_at": "2026-10-22T01:35:05.180782+00:00"
+      "prediction_run_at": "2026-10-22T04:34:21.577053+00:00",
+      "locked_at": "2026-10-22T04:34:21.577053+00:00"
     },
     {
       "season": 2026,
@@ -1057,17 +1057,17 @@
         "spread": 3.0,
         "market_margin": -3.0,
         "total": 49.5,
-        "home_ml": 136,
-        "away_ml": -162,
-        "captured_at": "2026-10-22T01:27:36.333740+00:00"
+        "home_ml": 130,
+        "away_ml": -155,
+        "captured_at": "2026-10-22T04:27:18.788594+00:00"
       },
       "model": {
         "pred_home": 23.76628,
         "pred_away": 26.25966,
         "model_margin": -2.49338,
         "model_total": 50.02594,
-        "home_win_prob": 0.389742987956295,
-        "away_win_prob": 0.573517012043705,
+        "home_win_prob": 0.3972398814390842,
+        "away_win_prob": 0.5660201185609158,
         "tie_prob": 0.03674,
         "home_cover_prob": 0.50024,
         "away_cover_prob": 0.46094,
@@ -1075,14 +1075,14 @@
         "over_prob": 0.51578,
         "under_prob": 0.48422,
         "total_push_prob": 0.0,
-        "market_fair_home_prob": 0.4066302458405761,
-        "market_fair_away_prob": 0.593369754159424,
+        "market_fair_home_prob": 0.4170073589533933,
+        "market_fair_away_prob": 0.5829926410466066,
         "simulations": 50000,
         "raw_home_win_prob": 0.3839,
         "raw_away_win_prob": 0.57936,
         "moneyline_market_weight": 0.75,
-        "home_ml_expected_profit_10": -0.4346654842314379,
-        "away_ml_expected_profit_10": -0.3572014101573635,
+        "home_ml_expected_profit_10": -0.49608272690106414,
+        "away_ml_expected_profit_10": -0.320656113997837,
         "moneyline_value_side": null,
         "model_version": "v2.2.0",
         "football_weight": 0.1,
@@ -1541,8 +1541,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:06.745831+00:00",
-      "locked_at": "2026-10-22T01:35:06.745831+00:00"
+      "prediction_run_at": "2026-10-22T04:34:22.679770+00:00",
+      "locked_at": "2026-10-22T04:34:22.679770+00:00"
     },
     {
       "season": 2026,
@@ -1571,32 +1571,32 @@
         "spread": 1.5,
         "market_margin": -1.5,
         "total": 37.5,
-        "home_ml": 105,
+        "home_ml": 110,
         "away_ml": -130,
-        "captured_at": "2026-10-22T01:27:36.354353+00:00"
+        "captured_at": "2026-10-22T04:27:18.891079+00:00"
       },
       "model": {
-        "pred_home": 17.93236,
-        "pred_away": 19.32934,
-        "model_margin": -1.39698,
-        "model_total": 37.2617,
-        "home_win_prob": 0.4400762537764351,
-        "away_win_prob": 0.5205037462235649,
-        "tie_prob": 0.03942,
-        "home_cover_prob": 0.50362,
-        "away_cover_prob": 0.49638,
+        "pred_home": 17.96288,
+        "pred_away": 19.29724,
+        "model_margin": -1.33436,
+        "model_total": 37.26012,
+        "home_win_prob": 0.43648330019880716,
+        "away_win_prob": 0.5244166998011929,
+        "tie_prob": 0.0391,
+        "home_cover_prob": 0.50644,
+        "away_cover_prob": 0.49356,
         "spread_push_prob": 0.0,
-        "over_prob": 0.48904,
-        "under_prob": 0.51096,
+        "over_prob": 0.48892,
+        "under_prob": 0.51108,
         "total_push_prob": 0.0,
-        "market_fair_home_prob": 0.4632426988922458,
-        "market_fair_away_prob": 0.5367573011077543,
+        "market_fair_home_prob": 0.4572564612326044,
+        "market_fair_away_prob": 0.5427435387673957,
         "simulations": 50000,
-        "raw_home_win_prob": 0.42536,
-        "raw_away_win_prob": 0.53522,
+        "raw_home_win_prob": 0.4278,
+        "raw_away_win_prob": 0.5331,
         "moneyline_market_weight": 0.75,
-        "home_ml_expected_profit_10": -0.5842367975830802,
-        "away_ml_expected_profit_10": -0.3968875668138514,
+        "home_ml_expected_profit_10": -0.44285069582505,
+        "away_ml_expected_profit_10": -0.33085838813274204,
         "moneyline_value_side": null,
         "model_version": "v2.2.0",
         "football_weight": 0.1,
@@ -1607,9 +1607,9 @@
         "football_total": 40.042542975542986,
         "base_margin": -1.2733219236319235,
         "base_total": 37.62712714877715,
-        "injury_margin_adjustment": 0.06999999999999999,
+        "injury_margin_adjustment": 0.13299999999999998,
         "context_margin_adjustment": 0.0,
-        "weather_total_adjustment": 0.0,
+        "weather_total_adjustment": -0.0,
         "recent_form": {
           "home_recent": {
             "scored": 15.590163934426231,
@@ -1636,7 +1636,7 @@
         "recent_margin_adjustment": -0.12029508196721313,
         "recent_total_adjustment": -0.4235901639344257,
         "graph_margin_adjustment": -0.04125378131323112,
-        "expected_margin": -1.3648707869123677,
+        "expected_margin": -1.3018707869123678,
         "expected_total": 37.20353698484272,
         "qb": {
           "home_qb_id": "00-0040676",
@@ -1659,9 +1659,9 @@
             "away_injury_count": 5,
             "away_injury_out_count": 0,
             "away_injury_doubtful_count": 0,
-            "away_injury_questionable_count": 4,
-            "away_injury_total_impact": 1.8375,
-            "away_injury_offense_impact": 1.4,
+            "away_injury_questionable_count": 5,
+            "away_injury_total_impact": 2.3625,
+            "away_injury_offense_impact": 1.9249999999999998,
             "away_injury_defense_impact": 0.4375,
             "away_injury_qb_impact": 0.0,
             "away_injury_has_qb": 0.0,
@@ -1669,15 +1669,29 @@
             "diff_injury_count": 0,
             "diff_injury_out_count": 0,
             "diff_injury_doubtful_count": 0,
-            "diff_injury_questionable_count": -1,
-            "diff_injury_total_impact": -0.4375,
-            "diff_injury_offense_impact": -0.875,
+            "diff_injury_questionable_count": -2,
+            "diff_injury_total_impact": -0.9624999999999999,
+            "diff_injury_offense_impact": -1.4,
             "diff_injury_defense_impact": 0.4375,
             "diff_injury_qb_impact": 0.0,
             "diff_injury_has_qb": 0.0,
             "diff_injury_out_weight": 0.0
           },
           "players": [
+            {
+              "team": "TEN",
+              "player_id": "4573318",
+              "player": "Dorian Mausi",
+              "position": "LB",
+              "status": "injured reserve",
+              "injury_type": "Undisclosed",
+              "injury_location": "Other",
+              "return_date": "2026-10-25",
+              "reported_at": "2026-10-22T01:35Z",
+              "status_weight": 0.0,
+              "position_weight": 1.25,
+              "raw_impact": 0.0
+            },
             {
               "team": "TEN",
               "player_id": "4685617",
@@ -1735,20 +1749,6 @@
               "raw_impact": 0.0
             },
             {
-              "team": "TEN",
-              "player_id": "4710000",
-              "player": "Fernando Carmona",
-              "position": "G",
-              "status": "injured reserve",
-              "injury_type": "Ankle",
-              "injury_location": "Leg",
-              "return_date": "2026-11-01",
-              "reported_at": "2026-09-30T00:57Z",
-              "status_weight": 0.0,
-              "position_weight": 1.25,
-              "raw_impact": 0.0
-            },
-            {
               "team": "CLE",
               "player_id": "4876017",
               "player": "Carson Schwesinger",
@@ -1761,20 +1761,6 @@
               "status_weight": 0.35,
               "position_weight": 1.25,
               "raw_impact": 0.4375
-            },
-            {
-              "team": "CLE",
-              "player_id": "5081397",
-              "player": "Dylan Sampson",
-              "position": "RB",
-              "status": "injured reserve",
-              "injury_type": "Knee",
-              "injury_location": "Leg",
-              "return_date": "2026-10-25",
-              "reported_at": "2026-10-21T21:17Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
             },
             {
               "team": "CLE",
@@ -1817,10 +1803,42 @@
               "status_weight": 0.35,
               "position_weight": 1.0,
               "raw_impact": 0.35
+            },
+            {
+              "team": "CLE",
+              "player_id": "3115485",
+              "player": "Elgton Jenkins",
+              "position": "C",
+              "status": "questionable",
+              "injury_type": "Knee",
+              "injury_location": "Leg",
+              "return_date": "2026-10-25",
+              "reported_at": "2026-10-21T20:05Z",
+              "status_weight": 0.35,
+              "position_weight": 1.5,
+              "raw_impact": 0.5249999999999999
             }
           ]
         },
-        "context": {},
+        "context": {
+          "venue_indoor": 0.0,
+          "venue_grass": 0.0,
+          "temperature": 71.0,
+          "wind_gust": 2.0,
+          "precipitation_probability": 0.0,
+          "weather_cold_severity": 0.0,
+          "weather_heat_severity": 0.0,
+          "weather_wind_severity": 0.0,
+          "weather_precip_severity": 0.0,
+          "home_rest_days": 7.0,
+          "away_rest_days": 7.0,
+          "diff_rest_days": 0.0,
+          "home_short_week": 0.0,
+          "away_short_week": 0.0,
+          "home_extra_rest": 0.0,
+          "away_extra_rest": 0.0,
+          "diff_short_week": 0.0
+        },
         "analysis_context": {
           "home_team": "TEN",
           "away_team": "CLE",
@@ -1881,6 +1899,20 @@
           "injuries": [
             {
               "team": "TEN",
+              "player_id": "4573318",
+              "player": "Dorian Mausi",
+              "position": "LB",
+              "status": "injured reserve",
+              "injury_type": "Undisclosed",
+              "injury_location": "Other",
+              "return_date": "2026-10-25",
+              "reported_at": "2026-10-22T01:35Z",
+              "status_weight": 0.0,
+              "position_weight": 1.25,
+              "raw_impact": 0.0
+            },
+            {
+              "team": "TEN",
               "player_id": "4685617",
               "player": "Kevin Winston Jr.",
               "position": "S",
@@ -1936,20 +1968,6 @@
               "raw_impact": 0.0
             },
             {
-              "team": "TEN",
-              "player_id": "4710000",
-              "player": "Fernando Carmona",
-              "position": "G",
-              "status": "injured reserve",
-              "injury_type": "Ankle",
-              "injury_location": "Leg",
-              "return_date": "2026-11-01",
-              "reported_at": "2026-09-30T00:57Z",
-              "status_weight": 0.0,
-              "position_weight": 1.25,
-              "raw_impact": 0.0
-            },
-            {
               "team": "CLE",
               "player_id": "4876017",
               "player": "Carson Schwesinger",
@@ -1962,20 +1980,6 @@
               "status_weight": 0.35,
               "position_weight": 1.25,
               "raw_impact": 0.4375
-            },
-            {
-              "team": "CLE",
-              "player_id": "5081397",
-              "player": "Dylan Sampson",
-              "position": "RB",
-              "status": "injured reserve",
-              "injury_type": "Knee",
-              "injury_location": "Leg",
-              "return_date": "2026-10-25",
-              "reported_at": "2026-10-21T21:17Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
             },
             {
               "team": "CLE",
@@ -2018,17 +2022,31 @@
               "status_weight": 0.35,
               "position_weight": 1.0,
               "raw_impact": 0.35
+            },
+            {
+              "team": "CLE",
+              "player_id": "3115485",
+              "player": "Elgton Jenkins",
+              "position": "C",
+              "status": "questionable",
+              "injury_type": "Knee",
+              "injury_location": "Leg",
+              "return_date": "2026-10-25",
+              "reported_at": "2026-10-21T20:05Z",
+              "status_weight": 0.35,
+              "position_weight": 1.5,
+              "raw_impact": 0.5249999999999999
             }
           ],
           "weather": {
             "indoor": false,
-            "temperature": null,
-            "wind_gust": null,
-            "precipitation_probability": null
+            "temperature": 71.0,
+            "wind_gust": 2.0,
+            "precipitation_probability": 0.0
           },
           "rest": {
-            "home_days": null,
-            "away_days": null
+            "home_days": 7.0,
+            "away_days": 7.0
           }
         },
         "training_rows": 1180,
@@ -2037,8 +2055,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:28.063330+00:00",
-      "locked_at": "2026-10-22T01:35:28.063330+00:00"
+      "prediction_run_at": "2026-10-22T04:34:23.892742+00:00",
+      "locked_at": "2026-10-22T04:34:23.892742+00:00"
     },
     {
       "season": 2026,
@@ -2069,7 +2087,7 @@
         "total": 41.5,
         "home_ml": -278,
         "away_ml": 225,
-        "captured_at": "2026-10-22T01:27:36.381638+00:00"
+        "captured_at": "2026-10-22T04:27:18.970075+00:00"
       },
       "model": {
         "pred_home": 24.20024,
@@ -2099,7 +2117,7 @@
         "total_football_weight": 0.05,
         "market_margin": 6.5,
         "market_total": 41.5,
-        "football_margin": 5.678501515151516,
+        "football_margin": 5.678501515151517,
         "football_total": 42.4583795796796,
         "base_margin": 6.417850151515152,
         "base_total": 41.54791897898398,
@@ -2176,34 +2194,6 @@
           "players": [
             {
               "team": "MIN",
-              "player_id": "4036133",
-              "player": "T.J. Hockenson",
-              "position": "TE",
-              "status": "questionable",
-              "injury_type": "Concussion",
-              "injury_location": "Head",
-              "return_date": "2026-10-25",
-              "reported_at": "2026-10-21T21:42Z",
-              "status_weight": 0.35,
-              "position_weight": 1.25,
-              "raw_impact": 0.4375
-            },
-            {
-              "team": "MIN",
-              "player_id": "4360569",
-              "player": "Jordan Mason",
-              "position": "RB",
-              "status": "injured reserve",
-              "injury_type": "Thumb",
-              "injury_location": "Arm",
-              "return_date": "2026-10-25",
-              "reported_at": "2026-10-21T21:36Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
-            },
-            {
-              "team": "MIN",
               "player_id": "4262921",
               "player": "Justin Jefferson",
               "position": "WR",
@@ -2243,6 +2233,34 @@
               "status_weight": 0.35,
               "position_weight": 1.75,
               "raw_impact": 0.6124999999999999
+            },
+            {
+              "team": "MIN",
+              "player_id": "4036133",
+              "player": "T.J. Hockenson",
+              "position": "TE",
+              "status": "questionable",
+              "injury_type": "Concussion",
+              "injury_location": "Head",
+              "return_date": "2026-10-25",
+              "reported_at": "2026-10-21T18:39Z",
+              "status_weight": 0.35,
+              "position_weight": 1.25,
+              "raw_impact": 0.4375
+            },
+            {
+              "team": "MIN",
+              "player_id": "4360569",
+              "player": "Jordan Mason",
+              "position": "RB",
+              "status": "injured reserve",
+              "injury_type": "Thumb",
+              "injury_location": "Arm",
+              "return_date": "2026-10-25",
+              "reported_at": "2026-10-21T18:32Z",
+              "status_weight": 0.0,
+              "position_weight": 1.0,
+              "raw_impact": 0.0
             },
             {
               "team": "IND",
@@ -2395,34 +2413,6 @@
           "injuries": [
             {
               "team": "MIN",
-              "player_id": "4036133",
-              "player": "T.J. Hockenson",
-              "position": "TE",
-              "status": "questionable",
-              "injury_type": "Concussion",
-              "injury_location": "Head",
-              "return_date": "2026-10-25",
-              "reported_at": "2026-10-21T21:42Z",
-              "status_weight": 0.35,
-              "position_weight": 1.25,
-              "raw_impact": 0.4375
-            },
-            {
-              "team": "MIN",
-              "player_id": "4360569",
-              "player": "Jordan Mason",
-              "position": "RB",
-              "status": "injured reserve",
-              "injury_type": "Thumb",
-              "injury_location": "Arm",
-              "return_date": "2026-10-25",
-              "reported_at": "2026-10-21T21:36Z",
-              "status_weight": 0.0,
-              "position_weight": 1.0,
-              "raw_impact": 0.0
-            },
-            {
-              "team": "MIN",
               "player_id": "4262921",
               "player": "Justin Jefferson",
               "position": "WR",
@@ -2462,6 +2452,34 @@
               "status_weight": 0.35,
               "position_weight": 1.75,
               "raw_impact": 0.6124999999999999
+            },
+            {
+              "team": "MIN",
+              "player_id": "4036133",
+              "player": "T.J. Hockenson",
+              "position": "TE",
+              "status": "questionable",
+              "injury_type": "Concussion",
+              "injury_location": "Head",
+              "return_date": "2026-10-25",
+              "reported_at": "2026-10-21T18:39Z",
+              "status_weight": 0.35,
+              "position_weight": 1.25,
+              "raw_impact": 0.4375
+            },
+            {
+              "team": "MIN",
+              "player_id": "4360569",
+              "player": "Jordan Mason",
+              "position": "RB",
+              "status": "injured reserve",
+              "injury_type": "Thumb",
+              "injury_location": "Arm",
+              "return_date": "2026-10-25",
+              "reported_at": "2026-10-21T18:32Z",
+              "status_weight": 0.0,
+              "position_weight": 1.0,
+              "raw_impact": 0.0
             },
             {
               "team": "IND",
@@ -2551,8 +2569,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:29.516043+00:00",
-      "locked_at": "2026-10-22T01:35:29.516043+00:00"
+      "prediction_run_at": "2026-10-22T04:34:25.114707+00:00",
+      "locked_at": "2026-10-22T04:34:25.114707+00:00"
     },
     {
       "season": 2026,
@@ -2581,17 +2599,17 @@
         "spread": -4.5,
         "market_margin": 4.5,
         "total": 39.5,
-        "home_ml": -230,
-        "away_ml": 190,
-        "captured_at": "2026-10-22T01:27:36.400121+00:00"
+        "home_ml": -238,
+        "away_ml": 195,
+        "captured_at": "2026-10-22T04:27:19.071839+00:00"
       },
       "model": {
         "pred_home": 21.26792,
         "pred_away": 17.79498,
         "model_margin": 3.47294,
         "model_total": 39.0629,
-        "home_win_prob": 0.6388765145436309,
-        "away_win_prob": 0.3248034854563691,
+        "home_win_prob": 0.643230584078454,
+        "away_win_prob": 0.3204494159215461,
         "tie_prob": 0.03632,
         "home_cover_prob": 0.4591,
         "away_cover_prob": 0.5409,
@@ -2599,14 +2617,14 @@
         "over_prob": 0.48392,
         "under_prob": 0.51608,
         "total_push_prob": 0.0,
-        "market_fair_home_prob": 0.6690070210631895,
-        "market_fair_away_prob": 0.33099297893681046,
+        "market_fair_home_prob": 0.6750312469954812,
+        "market_fair_away_prob": 0.3249687530045188,
         "simulations": 50000,
         "raw_home_win_prob": 0.62138,
         "raw_away_win_prob": 0.3423,
         "moneyline_market_weight": 0.75,
-        "home_ml_expected_profit_10": -0.4703108782870351,
-        "away_ml_expected_profit_10": -0.21749892176529606,
+        "home_ml_expected_profit_10": -0.5018446462807797,
+        "away_ml_expected_profit_10": -0.18354223031439165,
         "moneyline_value_side": null,
         "model_version": "v2.2.0",
         "football_weight": 0.1,
@@ -3065,8 +3083,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:30.864646+00:00",
-      "locked_at": "2026-10-22T01:35:30.864646+00:00"
+      "prediction_run_at": "2026-10-22T04:34:26.194869+00:00",
+      "locked_at": "2026-10-22T04:34:26.194869+00:00"
     },
     {
       "season": 2026,
@@ -3097,7 +3115,7 @@
         "total": 44.5,
         "home_ml": -166,
         "away_ml": 140,
-        "captured_at": "2026-10-22T01:27:36.512426+00:00"
+        "captured_at": "2026-10-22T04:27:19.189677+00:00"
       },
       "model": {
         "pred_home": 24.50672,
@@ -3579,8 +3597,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:32.287888+00:00",
-      "locked_at": "2026-10-22T01:35:32.287888+00:00"
+      "prediction_run_at": "2026-10-22T04:34:27.267156+00:00",
+      "locked_at": "2026-10-22T04:34:27.267156+00:00"
     },
     {
       "season": 2026,
@@ -3611,41 +3629,41 @@
         "total": 48.5,
         "home_ml": 102,
         "away_ml": -122,
-        "captured_at": "2026-10-22T01:27:36.532021+00:00"
+        "captured_at": "2026-10-22T04:27:19.293074+00:00"
       },
       "model": {
-        "pred_home": 22.74966,
-        "pred_away": 25.46768,
-        "model_margin": -2.71802,
-        "model_total": 48.21734,
-        "home_win_prob": 0.4341900717274358,
-        "away_win_prob": 0.5260699282725644,
-        "tie_prob": 0.03974,
-        "home_cover_prob": 0.45074,
-        "away_cover_prob": 0.54926,
+        "pred_home": 23.129,
+        "pred_away": 25.08864,
+        "model_margin": -1.95964,
+        "model_total": 48.21764,
+        "home_win_prob": 0.44164405003842533,
+        "away_win_prob": 0.5187959499615746,
+        "tie_prob": 0.03956,
+        "home_cover_prob": 0.48156,
+        "away_cover_prob": 0.51844,
         "spread_push_prob": 0.0,
-        "over_prob": 0.49252,
-        "under_prob": 0.50748,
+        "over_prob": 0.49242,
+        "under_prob": 0.50758,
         "total_push_prob": 0.0,
         "market_fair_home_prob": 0.4739134147382802,
         "market_fair_away_prob": 0.5260865852617197,
         "simulations": 50000,
-        "raw_home_win_prob": 0.37152,
-        "raw_away_win_prob": 0.58874,
+        "raw_home_win_prob": 0.40108,
+        "raw_away_win_prob": 0.55936,
         "moneyline_market_weight": 0.75,
-        "home_ml_expected_profit_10": -0.8319605511057988,
-        "away_ml_expected_profit_10": -0.029852124876288855,
+        "home_ml_expected_profit_10": -0.6831901892238079,
+        "away_ml_expected_profit_10": -0.1640146810270835,
         "moneyline_value_side": null,
         "model_version": "v2.2.0",
         "football_weight": 0.1,
         "total_football_weight": 0.05,
         "market_margin": -1.5,
         "market_total": 48.5,
-        "football_margin": -0.09850847855847858,
+        "football_margin": -0.09850847855847862,
         "football_total": 48.273101961001984,
         "base_margin": -1.359850847855848,
         "base_total": 48.4886550980501,
-        "injury_margin_adjustment": -0.938,
+        "injury_margin_adjustment": -0.17849999999999996,
         "context_margin_adjustment": -0.56,
         "weather_total_adjustment": -0.0,
         "recent_form": {
@@ -3674,7 +3692,7 @@
         "recent_margin_adjustment": -0.0010163934426232935,
         "recent_total_adjustment": -0.2790983606557367,
         "graph_margin_adjustment": 0.15617094268482626,
-        "expected_margin": -2.7026962986136454,
+        "expected_margin": -1.9431962986136446,
         "expected_total": 48.209556737394365,
         "qb": {
           "home_qb_id": "00-0035993",
@@ -3688,11 +3706,11 @@
             "home_injury_out_count": 0,
             "home_injury_doubtful_count": 0,
             "home_injury_questionable_count": 4,
-            "home_injury_total_impact": 3.15,
-            "home_injury_offense_impact": 2.7125,
+            "home_injury_total_impact": 1.9249999999999998,
+            "home_injury_offense_impact": 1.4874999999999998,
             "home_injury_defense_impact": 0.4375,
-            "home_injury_qb_impact": 1.75,
-            "home_injury_has_qb": 1.0,
+            "home_injury_qb_impact": 0.0,
+            "home_injury_has_qb": 0.0,
             "home_injury_out_weight": 0.0,
             "away_injury_count": 5,
             "away_injury_out_count": 0,
@@ -3708,14 +3726,28 @@
             "diff_injury_out_count": 0,
             "diff_injury_doubtful_count": 0,
             "diff_injury_questionable_count": 3,
-            "diff_injury_total_impact": 2.7125,
-            "diff_injury_offense_impact": 2.7125,
+            "diff_injury_total_impact": 1.4874999999999998,
+            "diff_injury_offense_impact": 1.4874999999999998,
             "diff_injury_defense_impact": 0.0,
-            "diff_injury_qb_impact": 1.75,
-            "diff_injury_has_qb": 1.0,
+            "diff_injury_qb_impact": 0.0,
+            "diff_injury_has_qb": 0.0,
             "diff_injury_out_weight": 0.0
           },
           "players": [
+            {
+              "team": "BAL",
+              "player_id": "4361178",
+              "player": "Cam Jurgens",
+              "position": "C",
+              "status": "questionable",
+              "injury_type": "Concussion",
+              "injury_location": "Head",
+              "return_date": "2026-10-25",
+              "reported_at": "2026-10-22T01:47Z",
+              "status_weight": 0.35,
+              "position_weight": 1.5,
+              "raw_impact": 0.5249999999999999
+            },
             {
               "team": "BAL",
               "player_id": "4575483",
@@ -3771,20 +3803,6 @@
               "status_weight": 0.35,
               "position_weight": 1.25,
               "raw_impact": 0.4375
-            },
-            {
-              "team": "BAL",
-              "player_id": "3916387",
-              "player": "Lamar Jackson",
-              "position": "QB",
-              "status": "questionable",
-              "injury_type": "Ankle",
-              "injury_location": "Leg",
-              "return_date": "2026-10-25",
-              "reported_at": "2026-10-21T20:37Z",
-              "status_weight": 0.35,
-              "position_weight": 5.0,
-              "raw_impact": 1.75
             },
             {
               "team": "CIN",
@@ -3937,6 +3955,20 @@
           "injuries": [
             {
               "team": "BAL",
+              "player_id": "4361178",
+              "player": "Cam Jurgens",
+              "position": "C",
+              "status": "questionable",
+              "injury_type": "Concussion",
+              "injury_location": "Head",
+              "return_date": "2026-10-25",
+              "reported_at": "2026-10-22T01:47Z",
+              "status_weight": 0.35,
+              "position_weight": 1.5,
+              "raw_impact": 0.5249999999999999
+            },
+            {
+              "team": "BAL",
               "player_id": "4575483",
               "player": "T.J. Tampa",
               "position": "CB",
@@ -3990,20 +4022,6 @@
               "status_weight": 0.35,
               "position_weight": 1.25,
               "raw_impact": 0.4375
-            },
-            {
-              "team": "BAL",
-              "player_id": "3916387",
-              "player": "Lamar Jackson",
-              "position": "QB",
-              "status": "questionable",
-              "injury_type": "Ankle",
-              "injury_location": "Leg",
-              "return_date": "2026-10-25",
-              "reported_at": "2026-10-21T20:37Z",
-              "status_weight": 0.35,
-              "position_weight": 5.0,
-              "raw_impact": 1.75
             },
             {
               "team": "CIN",
@@ -4093,8 +4111,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:33.588476+00:00",
-      "locked_at": "2026-10-22T01:35:33.588476+00:00"
+      "prediction_run_at": "2026-10-22T04:34:28.305469+00:00",
+      "locked_at": "2026-10-22T04:34:28.305469+00:00"
     },
     {
       "season": 2026,
@@ -4125,7 +4143,7 @@
         "total": 42.5,
         "home_ml": -520,
         "away_ml": 390,
-        "captured_at": "2026-10-22T01:27:36.550786+00:00"
+        "captured_at": "2026-10-22T04:27:19.370834+00:00"
       },
       "model": {
         "pred_home": 26.3212,
@@ -4309,7 +4327,7 @@
               "injury_type": "Calf",
               "injury_location": "Leg",
               "return_date": "2026-10-25",
-              "reported_at": "2026-10-22T01:01Z",
+              "reported_at": "2026-10-22T04:00Z",
               "status_weight": 0.35,
               "position_weight": 1.75,
               "raw_impact": 0.6124999999999999
@@ -4528,7 +4546,7 @@
               "injury_type": "Calf",
               "injury_location": "Leg",
               "return_date": "2026-10-25",
-              "reported_at": "2026-10-22T01:01Z",
+              "reported_at": "2026-10-22T04:00Z",
               "status_weight": 0.35,
               "position_weight": 1.75,
               "raw_impact": 0.6124999999999999
@@ -4607,8 +4625,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:35.023669+00:00",
-      "locked_at": "2026-10-22T01:35:35.023669+00:00"
+      "prediction_run_at": "2026-10-22T04:34:29.388147+00:00",
+      "locked_at": "2026-10-22T04:34:29.388147+00:00"
     },
     {
       "season": 2026,
@@ -4639,7 +4657,7 @@
         "total": 43.5,
         "home_ml": 190,
         "away_ml": -230,
-        "captured_at": "2026-10-22T01:27:36.592533+00:00"
+        "captured_at": "2026-10-22T04:27:19.449726+00:00"
       },
       "model": {
         "pred_home": 19.12828,
@@ -4669,7 +4687,7 @@
         "total_football_weight": 0.05,
         "market_margin": -4.5,
         "market_total": 43.5,
-        "football_margin": -1.8999634624634616,
+        "football_margin": -1.8999634624634618,
         "football_total": 43.884948793798735,
         "base_margin": -4.239996346246346,
         "base_total": 43.519247439689934,
@@ -4753,7 +4771,7 @@
               "injury_type": "Groin",
               "injury_location": "Groin",
               "return_date": "2026-10-25",
-              "reported_at": "2026-10-22T01:00Z",
+              "reported_at": "2026-10-22T02:06Z",
               "status_weight": 0.35,
               "position_weight": 1.25,
               "raw_impact": 0.4375
@@ -4972,7 +4990,7 @@
               "injury_type": "Groin",
               "injury_location": "Groin",
               "return_date": "2026-10-25",
-              "reported_at": "2026-10-22T01:00Z",
+              "reported_at": "2026-10-22T02:06Z",
               "status_weight": 0.35,
               "position_weight": 1.25,
               "raw_impact": 0.4375
@@ -5121,8 +5139,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:36.492883+00:00",
-      "locked_at": "2026-10-22T01:35:36.492883+00:00"
+      "prediction_run_at": "2026-10-22T04:34:30.485048+00:00",
+      "locked_at": "2026-10-22T04:34:30.485048+00:00"
     },
     {
       "season": 2026,
@@ -5153,7 +5171,7 @@
         "total": 53.5,
         "home_ml": -166,
         "away_ml": 140,
-        "captured_at": "2026-10-22T01:27:36.631352+00:00"
+        "captured_at": "2026-10-22T04:27:19.528412+00:00"
       },
       "model": {
         "pred_home": 28.62042,
@@ -5183,8 +5201,8 @@
         "total_football_weight": 0.05,
         "market_margin": 3.0,
         "market_total": 53.5,
-        "football_margin": 4.744423557923558,
-        "football_total": 51.00084334554334,
+        "football_margin": 4.744423557923559,
+        "football_total": 51.00084334554333,
         "base_margin": 3.174442355792356,
         "base_total": 53.375042167277165,
         "injury_margin_adjustment": 0.09399999999999994,
@@ -5635,8 +5653,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:37.856603+00:00",
-      "locked_at": "2026-10-22T01:35:37.856603+00:00"
+      "prediction_run_at": "2026-10-22T04:34:31.594455+00:00",
+      "locked_at": "2026-10-22T04:34:31.594455+00:00"
     },
     {
       "season": 2026,
@@ -5667,7 +5685,7 @@
         "total": 48.5,
         "home_ml": 180,
         "away_ml": -218,
-        "captured_at": "2026-10-22T01:27:36.651859+00:00"
+        "captured_at": "2026-10-22T04:27:19.606749+00:00"
       },
       "model": {
         "pred_home": 22.35818,
@@ -6149,8 +6167,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:39.400433+00:00",
-      "locked_at": "2026-10-22T01:35:39.400433+00:00"
+      "prediction_run_at": "2026-10-22T04:34:32.639476+00:00",
+      "locked_at": "2026-10-22T04:34:32.639476+00:00"
     },
     {
       "season": 2026,
@@ -6181,43 +6199,43 @@
         "total": 42.5,
         "home_ml": -148,
         "away_ml": 124,
-        "captured_at": "2026-10-22T01:27:36.672401+00:00"
+        "captured_at": "2026-10-22T04:27:19.693749+00:00"
       },
       "model": {
-        "pred_home": 21.99312,
-        "pred_away": 21.2712,
-        "model_margin": 0.72192,
-        "model_total": 43.26432,
-        "home_win_prob": 0.5402298205411374,
-        "away_win_prob": 0.42073017945886254,
-        "tie_prob": 0.03904,
-        "home_cover_prob": 0.42926,
-        "away_cover_prob": 0.57074,
+        "pred_home": 22.0937,
+        "pred_away": 21.37192,
+        "model_margin": 0.72178,
+        "model_total": 43.46562,
+        "home_win_prob": 0.5401489453340695,
+        "away_win_prob": 0.42047105466593043,
+        "tie_prob": 0.03938,
+        "home_cover_prob": 0.42906,
+        "away_cover_prob": 0.57094,
         "spread_push_prob": 0.0,
-        "over_prob": 0.52498,
-        "under_prob": 0.47502,
+        "over_prob": 0.53068,
+        "under_prob": 0.46932,
         "total_push_prob": 0.0,
         "market_fair_home_prob": 0.5720596355604638,
         "market_fair_away_prob": 0.42794036443953615,
         "simulations": 50000,
-        "raw_home_win_prob": 0.51174,
-        "raw_away_win_prob": 0.44922,
+        "raw_home_win_prob": 0.512,
+        "raw_away_win_prob": 0.44862,
         "moneyline_market_weight": 0.75,
-        "home_ml_expected_profit_10": -0.5571003044458052,
-        "away_ml_expected_profit_10": -0.1852439801214789,
+        "home_ml_expected_profit_10": -0.5550555106182937,
+        "away_ml_expected_profit_10": -0.18764837548315771,
         "moneyline_value_side": null,
         "model_version": "v2.2.0",
         "football_weight": 0.1,
         "total_football_weight": 0.05,
         "market_margin": 2.5,
         "market_total": 42.5,
-        "football_margin": -2.5986212787212777,
+        "football_margin": -2.5986212787212772,
         "football_total": 47.49891953046956,
-        "base_margin": 1.9901378721278722,
+        "base_margin": 1.9901378721278724,
         "base_total": 42.74994597652348,
         "injury_margin_adjustment": -0.7769999999999999,
         "context_margin_adjustment": 0.22722222222222216,
-        "weather_total_adjustment": -0.255,
+        "weather_total_adjustment": -0.052500000000000005,
         "recent_form": {
           "home_recent": {
             "scored": 24.688524590163937,
@@ -6244,8 +6262,8 @@
         "recent_margin_adjustment": -0.5016065573770492,
         "recent_total_adjustment": 0.7822131147540995,
         "graph_margin_adjustment": -0.2307061217238786,
-        "expected_margin": 0.7080474152491667,
-        "expected_total": 43.277159091277575,
+        "expected_margin": 0.7080474152491669,
+        "expected_total": 43.479659091277576,
         "qb": {
           "home_qb_id": "00-0034869",
           "home_qb_name": "S.Darnold",
@@ -6433,11 +6451,11 @@
           "venue_grass": 0.0,
           "temperature": 56.0,
           "wind_gust": 14.0,
-          "precipitation_probability": 34.0,
+          "precipitation_probability": 7.0,
           "weather_cold_severity": 0.0,
           "weather_heat_severity": 0.0,
           "weather_wind_severity": 0.0,
-          "weather_precip_severity": 0.34,
+          "weather_precip_severity": 0.07,
           "home_rest_days": 10.003472222222221,
           "away_rest_days": 7.163194444444445,
           "diff_rest_days": 2.840277777777777,
@@ -6650,7 +6668,7 @@
             "indoor": false,
             "temperature": 56.0,
             "wind_gust": 14.0,
-            "precipitation_probability": 34.0
+            "precipitation_probability": 7.0
           },
           "rest": {
             "home_days": 10.003472222222221,
@@ -6663,8 +6681,8 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:40.817163+00:00",
-      "locked_at": "2026-10-22T01:35:40.817163+00:00"
+      "prediction_run_at": "2026-10-22T04:34:33.762710+00:00",
+      "locked_at": "2026-10-22T04:34:33.762710+00:00"
     },
     {
       "season": 2026,
@@ -6695,7 +6713,7 @@
         "total": 44.5,
         "home_ml": 185,
         "away_ml": -225,
-        "captured_at": "2026-10-22T01:27:36.709689+00:00"
+        "captured_at": "2026-10-22T04:27:19.784819+00:00"
       },
       "model": {
         "pred_home": 20.17754,
@@ -6725,7 +6743,7 @@
         "total_football_weight": 0.05,
         "market_margin": -4.5,
         "market_total": 44.5,
-        "football_margin": -3.2801944351944368,
+        "football_margin": -3.280194435194437,
         "football_total": 46.102189121989156,
         "base_margin": -4.3780194435194435,
         "base_total": 44.58010945609946,
@@ -7177,9 +7195,9 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-22T01:35:42.194049+00:00",
-      "locked_at": "2026-10-22T01:35:42.194049+00:00"
+      "prediction_run_at": "2026-10-22T04:34:34.926503+00:00",
+      "locked_at": "2026-10-22T04:34:34.926503+00:00"
     }
   ],
-  "updated_at": "2026-10-22T01:35:42.197200+00:00"
+  "updated_at": "2026-10-22T04:34:34.929386+00:00"
 }
