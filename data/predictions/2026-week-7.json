@@ -6713,7 +6713,7 @@
         "total": 43.5,
         "home_ml": 180,
         "away_ml": -218,
-        "captured_at": "2026-10-25T04:27:00.060472+00:00"
+        "captured_at": "2026-10-26T04:29:38.271526+00:00"
       },
       "model": {
         "pred_home": 19.84666,
@@ -6765,17 +6765,17 @@
             "last3_allowed": 25.666666666666668,
             "games": 5
           },
-          "home_graph_rating": -2.935573304618532,
+          "home_graph_rating": -2.935573304618533,
           "away_graph_rating": -1.3078072109320293,
           "completed_history_games": 93,
           "recent_margin": -3.3040983606557384,
           "recent_total": 40.20163934426229,
           "sample_reliability": 1.0,
-          "graph_expected_home_margin": -0.1277660936865026
+          "graph_expected_home_margin": -0.1277660936865035
         },
         "recent_margin_adjustment": 0.09567213114754093,
         "recent_total_adjustment": -0.3958032786885252,
-        "graph_margin_adjustment": 0.26233403437880987,
+        "graph_margin_adjustment": 0.2623340343788098,
         "expected_margin": -3.7255688335486488,
         "expected_total": 43.234306177410936,
         "qb": {
@@ -6890,6 +6890,34 @@
             },
             {
               "team": "DAL",
+              "player_id": "3929850",
+              "player": "P.J. Locke",
+              "position": "S",
+              "status": "injured reserve",
+              "injury_type": "Foot",
+              "injury_location": "Leg",
+              "return_date": "2026-11-01",
+              "reported_at": "2026-10-25T18:33Z",
+              "status_weight": 0.0,
+              "position_weight": 1.25,
+              "raw_impact": 0.0
+            },
+            {
+              "team": "DAL",
+              "player_id": "4427816",
+              "player": "Marist Liufau",
+              "position": "LB",
+              "status": "injured reserve",
+              "injury_type": "Forearm",
+              "injury_location": "Arm",
+              "return_date": "2026-11-01",
+              "reported_at": "2026-10-25T18:30Z",
+              "status_weight": 0.0,
+              "position_weight": 1.25,
+              "raw_impact": 0.0
+            },
+            {
+              "team": "DAL",
               "player_id": "4685554",
               "player": "Drew Shelton",
               "position": "OT",
@@ -6901,20 +6929,6 @@
               "status_weight": 1.0,
               "position_weight": 1.75,
               "raw_impact": 1.75
-            },
-            {
-              "team": "DAL",
-              "player_id": "4427816",
-              "player": "Marist Liufau",
-              "position": "LB",
-              "status": "injured reserve",
-              "injury_type": "Forearm",
-              "injury_location": "Arm",
-              "return_date": "2026-10-26",
-              "reported_at": "2026-10-25T00:35Z",
-              "status_weight": 0.0,
-              "position_weight": 1.25,
-              "raw_impact": 0.0
             },
             {
               "team": "DAL",
@@ -6943,20 +6957,6 @@
               "status_weight": 1.0,
               "position_weight": 1.5,
               "raw_impact": 1.5
-            },
-            {
-              "team": "DAL",
-              "player_id": "3929850",
-              "player": "P.J. Locke",
-              "position": "S",
-              "status": "injured reserve",
-              "injury_type": "Foot",
-              "injury_location": "Leg",
-              "return_date": "2026-10-26",
-              "reported_at": "2026-10-24T01:37Z",
-              "status_weight": 0.0,
-              "position_weight": 1.25,
-              "raw_impact": 0.0
             }
           ]
         },
@@ -6964,7 +6964,7 @@
           "venue_indoor": 0.0,
           "venue_grass": 1.0,
           "temperature": 59.0,
-          "wind_gust": 13.0,
+          "wind_gust": 12.0,
           "precipitation_probability": 0.0,
           "weather_cold_severity": 0.0,
           "weather_heat_severity": 0.0,
@@ -7109,6 +7109,34 @@
             },
             {
               "team": "DAL",
+              "player_id": "3929850",
+              "player": "P.J. Locke",
+              "position": "S",
+              "status": "injured reserve",
+              "injury_type": "Foot",
+              "injury_location": "Leg",
+              "return_date": "2026-11-01",
+              "reported_at": "2026-10-25T18:33Z",
+              "status_weight": 0.0,
+              "position_weight": 1.25,
+              "raw_impact": 0.0
+            },
+            {
+              "team": "DAL",
+              "player_id": "4427816",
+              "player": "Marist Liufau",
+              "position": "LB",
+              "status": "injured reserve",
+              "injury_type": "Forearm",
+              "injury_location": "Arm",
+              "return_date": "2026-11-01",
+              "reported_at": "2026-10-25T18:30Z",
+              "status_weight": 0.0,
+              "position_weight": 1.25,
+              "raw_impact": 0.0
+            },
+            {
+              "team": "DAL",
               "player_id": "4685554",
               "player": "Drew Shelton",
               "position": "OT",
@@ -7120,20 +7148,6 @@
               "status_weight": 1.0,
               "position_weight": 1.75,
               "raw_impact": 1.75
-            },
-            {
-              "team": "DAL",
-              "player_id": "4427816",
-              "player": "Marist Liufau",
-              "position": "LB",
-              "status": "injured reserve",
-              "injury_type": "Forearm",
-              "injury_location": "Arm",
-              "return_date": "2026-10-26",
-              "reported_at": "2026-10-25T00:35Z",
-              "status_weight": 0.0,
-              "position_weight": 1.25,
-              "raw_impact": 0.0
             },
             {
               "team": "DAL",
@@ -7162,26 +7176,12 @@
               "status_weight": 1.0,
               "position_weight": 1.5,
               "raw_impact": 1.5
-            },
-            {
-              "team": "DAL",
-              "player_id": "3929850",
-              "player": "P.J. Locke",
-              "position": "S",
-              "status": "injured reserve",
-              "injury_type": "Foot",
-              "injury_location": "Leg",
-              "return_date": "2026-10-26",
-              "reported_at": "2026-10-24T01:37Z",
-              "status_weight": 0.0,
-              "position_weight": 1.25,
-              "raw_impact": 0.0
             }
           ],
           "weather": {
             "indoor": false,
             "temperature": 59.0,
-            "wind_gust": 13.0,
+            "wind_gust": 12.0,
             "precipitation_probability": 0.0
           },
           "rest": {
@@ -7195,9 +7195,9 @@
         "training_cutoff": "2026-W6"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-10-25T04:34:39.570040+00:00",
-      "locked_at": "2026-10-25T04:34:39.570040+00:00"
+      "prediction_run_at": "2026-10-26T04:34:47.148618+00:00",
+      "locked_at": "2026-10-26T04:34:47.148618+00:00"
     }
   ],
-  "updated_at": "2026-10-25T04:34:39.572810+00:00"
+  "updated_at": "2026-10-26T04:34:47.148977+00:00"
 }
