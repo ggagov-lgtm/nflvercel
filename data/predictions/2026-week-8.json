@@ -6713,7 +6713,7 @@
         "total": 46.5,
         "home_ml": -170,
         "away_ml": 142,
-        "captured_at": "2026-11-01T05:48:00.291076+00:00"
+        "captured_at": "2026-11-02T05:47:18.103961+00:00"
       },
       "model": {
         "pred_home": 23.86798,
@@ -6743,7 +6743,7 @@
         "total_football_weight": 0.05,
         "market_margin": 3.0,
         "market_total": 46.5,
-        "football_margin": 3.499816722166723,
+        "football_margin": 3.4998167221667233,
         "football_total": 45.585074014874,
         "base_margin": 3.0499816722166724,
         "base_total": 46.4542537007437,
@@ -6765,8 +6765,8 @@
             "last3_allowed": 26.0,
             "games": 5
           },
-          "home_graph_rating": 2.953937125520768,
-          "away_graph_rating": 2.643982007884245,
+          "home_graph_rating": 2.9539371255207674,
+          "away_graph_rating": 2.6439820078842446,
           "completed_history_games": 107,
           "recent_margin": 0.28237704918032247,
           "recent_total": 45.54303278688525,
@@ -6963,7 +6963,7 @@
         "context": {
           "venue_indoor": 0.0,
           "venue_grass": 0.0,
-          "temperature": 51.0,
+          "temperature": 50.0,
           "wind_gust": 5.0,
           "precipitation_probability": 0.0,
           "weather_cold_severity": 0.0,
@@ -7180,7 +7180,7 @@
           ],
           "weather": {
             "indoor": false,
-            "temperature": 51.0,
+            "temperature": 50.0,
             "wind_gust": 5.0,
             "precipitation_probability": 0.0
           },
@@ -7195,9 +7195,9 @@
         "training_cutoff": "2026-W7"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-01T05:57:46.504093+00:00",
-      "locked_at": "2026-11-01T05:57:46.504093+00:00"
+      "prediction_run_at": "2026-11-02T05:54:26.488644+00:00",
+      "locked_at": "2026-11-02T05:54:26.488644+00:00"
     }
   ],
-  "updated_at": "2026-11-01T05:57:46.506539+00:00"
+  "updated_at": "2026-11-02T05:54:26.489062+00:00"
 }
