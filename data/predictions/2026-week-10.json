@@ -6707,36 +6707,36 @@
         }
       },
       "market": {
-        "provider": "Draft Kings",
+        "provider": "DraftKings",
         "spread": -4.5,
         "market_margin": 4.5,
         "total": 38.5,
         "home_ml": -225,
         "away_ml": 185,
-        "captured_at": "2026-11-15T06:08:49.749021+00:00"
+        "captured_at": "2026-11-16T06:07:44.838804+00:00"
       },
       "model": {
-        "pred_home": 21.34532,
-        "pred_away": 16.87058,
-        "model_margin": 4.47474,
-        "model_total": 38.2159,
-        "home_win_prob": 0.6454846959896506,
-        "away_win_prob": 0.3197953040103494,
-        "tie_prob": 0.03472,
-        "home_cover_prob": 0.49964,
-        "away_cover_prob": 0.50036,
+        "pred_home": 21.37454,
+        "pred_away": 16.84048,
+        "model_margin": 4.53406,
+        "model_total": 38.21502,
+        "home_win_prob": 0.6459351034928847,
+        "away_win_prob": 0.3191648965071152,
+        "tie_prob": 0.0349,
+        "home_cover_prob": 0.50224,
+        "away_cover_prob": 0.49776,
         "spread_push_prob": 0.0,
-        "over_prob": 0.49206,
-        "under_prob": 0.50794,
+        "over_prob": 0.4917,
+        "under_prob": 0.5083,
         "total_push_prob": 0.0,
         "market_fair_home_prob": 0.6636481241914618,
         "market_fair_away_prob": 0.33635187580853815,
         "simulations": 50000,
-        "raw_home_win_prob": 0.66012,
-        "raw_away_win_prob": 0.30516,
+        "raw_home_win_prob": 0.66228,
+        "raw_away_win_prob": 0.30282,
         "moneyline_market_weight": 0.75,
-        "home_ml_expected_profit_10": -0.3291321690383797,
-        "away_ml_expected_profit_10": -0.5386338357050429,
+        "home_ml_expected_profit_10": -0.32082628288055304,
+        "away_ml_expected_profit_10": -0.5548004495472156,
         "moneyline_value_side": null,
         "model_version": "v2.2.0",
         "football_weight": 0.1,
@@ -6747,7 +6747,7 @@
         "football_total": 43.16081847564203,
         "base_margin": 4.502628656528657,
         "base_total": 38.7330409237821,
-        "injury_margin_adjustment": 0.2875,
+        "injury_margin_adjustment": 0.34750000000000003,
         "context_margin_adjustment": 0.22611111111111115,
         "weather_total_adjustment": -0.0,
         "recent_form": {
@@ -6765,18 +6765,18 @@
             "last3_allowed": 30.0,
             "games": 5
           },
-          "home_graph_rating": -4.262237759847992,
-          "away_graph_rating": -6.642625922642816,
+          "home_graph_rating": -4.2622377598479915,
+          "away_graph_rating": -6.642625922642814,
           "completed_history_games": 136,
           "recent_margin": -1.818442622950818,
           "recent_total": 33.02909836065574,
           "sample_reliability": 1.0,
-          "graph_expected_home_margin": 3.880388162794824
+          "graph_expected_home_margin": 3.880388162794823
         },
         "recent_margin_adjustment": -0.5054754098360654,
         "recent_total_adjustment": -0.6565081967213114,
-        "graph_margin_adjustment": -0.03717671023231057,
-        "expected_margin": 4.473587647571391,
+        "graph_margin_adjustment": -0.037176710232310624,
+        "expected_margin": 4.533587647571392,
         "expected_total": 38.07653272706079,
         "qb": {
           "home_qb_id": "00-0032764",
@@ -6801,8 +6801,8 @@
             "away_injury_doubtful_count": 0,
             "away_injury_questionable_count": 1,
             "away_injury_total_impact": 4.4375,
-            "away_injury_offense_impact": 1.6875,
-            "away_injury_defense_impact": 2.75,
+            "away_injury_offense_impact": 3.1875,
+            "away_injury_defense_impact": 1.25,
             "away_injury_qb_impact": 0.0,
             "away_injury_has_qb": 0.0,
             "away_injury_out_weight": 4.0,
@@ -6811,8 +6811,8 @@
             "diff_injury_doubtful_count": 0,
             "diff_injury_questionable_count": 0,
             "diff_injury_total_impact": -2.75,
-            "diff_injury_offense_impact": -1.6875,
-            "diff_injury_defense_impact": -1.0625,
+            "diff_injury_offense_impact": -3.1875,
+            "diff_injury_defense_impact": 0.4375,
             "diff_injury_qb_impact": 0.0,
             "diff_injury_has_qb": 0.0,
             "diff_injury_out_weight": -2.75
@@ -6890,6 +6890,20 @@
             },
             {
               "team": "LAC",
+              "player_id": "4612826",
+              "player": "Ladd McConkey",
+              "position": "WR",
+              "status": "out",
+              "injury_type": "Back",
+              "injury_location": "Torso",
+              "return_date": "2026-11-22",
+              "reported_at": "2026-11-15T19:52Z",
+              "status_weight": 1.0,
+              "position_weight": 1.5,
+              "raw_impact": 1.5
+            },
+            {
+              "team": "LAC",
               "player_id": "4433914",
               "player": "Branson Taylor",
               "position": "G",
@@ -6943,27 +6957,13 @@
               "status_weight": 1.0,
               "position_weight": 1.25,
               "raw_impact": 1.25
-            },
-            {
-              "team": "LAC",
-              "player_id": "4574105",
-              "player": "Isas Waxter",
-              "position": "CB",
-              "status": "out",
-              "injury_type": "Ankle",
-              "injury_location": "Leg",
-              "return_date": "2026-11-22",
-              "reported_at": "2026-11-15T01:11Z",
-              "status_weight": 1.0,
-              "position_weight": 1.5,
-              "raw_impact": 1.5
             }
           ]
         },
         "context": {
           "venue_indoor": 0.0,
           "venue_grass": 1.0,
-          "temperature": 41.0,
+          "temperature": 43.0,
           "wind_gust": 6.0,
           "precipitation_probability": 0.0,
           "weather_cold_severity": 0.0,
@@ -7109,6 +7109,20 @@
             },
             {
               "team": "LAC",
+              "player_id": "4612826",
+              "player": "Ladd McConkey",
+              "position": "WR",
+              "status": "out",
+              "injury_type": "Back",
+              "injury_location": "Torso",
+              "return_date": "2026-11-22",
+              "reported_at": "2026-11-15T19:52Z",
+              "status_weight": 1.0,
+              "position_weight": 1.5,
+              "raw_impact": 1.5
+            },
+            {
+              "team": "LAC",
               "player_id": "4433914",
               "player": "Branson Taylor",
               "position": "G",
@@ -7162,25 +7176,11 @@
               "status_weight": 1.0,
               "position_weight": 1.25,
               "raw_impact": 1.25
-            },
-            {
-              "team": "LAC",
-              "player_id": "4574105",
-              "player": "Isas Waxter",
-              "position": "CB",
-              "status": "out",
-              "injury_type": "Ankle",
-              "injury_location": "Leg",
-              "return_date": "2026-11-22",
-              "reported_at": "2026-11-15T01:11Z",
-              "status_weight": 1.0,
-              "position_weight": 1.5,
-              "raw_impact": 1.5
             }
           ],
           "weather": {
             "indoor": false,
-            "temperature": 41.0,
+            "temperature": 43.0,
             "wind_gust": 6.0,
             "precipitation_probability": 0.0
           },
@@ -7195,9 +7195,9 @@
         "training_cutoff": "2026-W9"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-15T06:17:04.460167+00:00",
-      "locked_at": "2026-11-15T06:17:04.460167+00:00"
+      "prediction_run_at": "2026-11-16T06:13:09.525146+00:00",
+      "locked_at": "2026-11-16T06:13:09.525146+00:00"
     }
   ],
-  "updated_at": "2026-11-15T06:17:04.462900+00:00"
+  "updated_at": "2026-11-16T06:13:09.525510+00:00"
 }
