@@ -31,7 +31,7 @@
         "total": 44.5,
         "home_ml": -750,
         "away_ml": 525,
-        "captured_at": "2026-11-18T07:07:00.135169+00:00"
+        "captured_at": "2026-11-18T07:14:57.133884+00:00"
       },
       "model": {
         "pred_home": 28.05062,
@@ -83,17 +83,17 @@
             "last3_allowed": 30.333333333333332,
             "games": 5
           },
-          "home_graph_rating": 1.7081919587931451,
-          "away_graph_rating": -3.280987807874052,
+          "home_graph_rating": 1.708191958793145,
+          "away_graph_rating": -3.2809878078740513,
           "completed_history_games": 150,
           "recent_margin": 8.908606557377048,
           "recent_total": 48.675000000000004,
           "sample_reliability": 1.0,
-          "graph_expected_home_margin": 6.489179766667197
+          "graph_expected_home_margin": 6.489179766667196
         },
         "recent_margin_adjustment": -0.28731147540983615,
         "recent_total_adjustment": 0.5010000000000004,
-        "graph_margin_adjustment": -0.36064921399996813,
+        "graph_margin_adjustment": -0.3606492139999682,
         "expected_margin": 11.000238762521706,
         "expected_total": 45.04749693260443,
         "qb": {
@@ -513,8 +513,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:41.212850+00:00",
-      "locked_at": "2026-11-18T07:13:41.212850+00:00"
+      "prediction_run_at": "2026-11-18T07:23:00.592846+00:00",
+      "locked_at": "2026-11-18T07:23:00.592846+00:00"
     },
     {
       "season": 2026,
@@ -545,7 +545,7 @@
         "total": 45.5,
         "home_ml": -1450,
         "away_ml": 850,
-        "captured_at": "2026-11-18T07:07:00.173793+00:00"
+        "captured_at": "2026-11-18T07:14:57.285143+00:00"
       },
       "model": {
         "pred_home": 30.4506,
@@ -576,7 +576,7 @@
         "market_margin": 16.5,
         "market_total": 45.5,
         "football_margin": 10.633139534539536,
-        "football_total": 47.12734706774708,
+        "football_total": 47.1273470677471,
         "base_margin": 15.913313953453954,
         "base_total": 45.58136735338736,
         "injury_margin_adjustment": -0.11000000000000003,
@@ -597,17 +597,17 @@
             "last3_allowed": 22.333333333333332,
             "games": 5
           },
-          "home_graph_rating": 6.45544003763022,
+          "home_graph_rating": 6.455440037630219,
           "away_graph_rating": -3.698438238456216,
           "completed_history_games": 150,
           "recent_margin": 11.11270491803279,
           "recent_total": 47.34877049180329,
           "sample_reliability": 1.0,
-          "graph_expected_home_margin": 11.653878276086436
+          "graph_expected_home_margin": 11.653878276086434
         },
         "recent_margin_adjustment": -0.4309836065573768,
         "recent_total_adjustment": 0.2218524590163952,
-        "graph_margin_adjustment": -0.29076730343481383,
+        "graph_margin_adjustment": -0.29076730343481394,
         "expected_margin": 15.081563043461765,
         "expected_total": 45.80321981240375,
         "qb": {
@@ -1027,8 +1027,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:42.572676+00:00",
-      "locked_at": "2026-11-18T07:13:42.572676+00:00"
+      "prediction_run_at": "2026-11-18T07:23:01.968784+00:00",
+      "locked_at": "2026-11-18T07:23:01.968784+00:00"
     },
     {
       "season": 2026,
@@ -1059,7 +1059,7 @@
         "total": 49.5,
         "home_ml": -650,
         "away_ml": 470,
-        "captured_at": "2026-11-18T07:07:00.208447+00:00"
+        "captured_at": "2026-11-18T07:14:57.366956+00:00"
       },
       "model": {
         "pred_home": 29.18148,
@@ -1089,8 +1089,8 @@
         "total_football_weight": 0.05,
         "market_margin": 11.5,
         "market_total": 49.5,
-        "football_margin": 6.518511659582249,
-        "football_total": 45.90440500795501,
+        "football_margin": 6.5185116595822485,
+        "football_total": 45.90440500795503,
         "base_margin": 11.001851165958225,
         "base_total": 49.32022025039775,
         "injury_margin_adjustment": 0.4115,
@@ -1111,8 +1111,8 @@
             "last3_allowed": 19.333333333333332,
             "games": 5
           },
-          "home_graph_rating": 3.0917456773080096,
-          "away_graph_rating": -2.9325770656273558,
+          "home_graph_rating": 3.09174567730801,
+          "away_graph_rating": -2.9325770656273553,
           "completed_history_games": 150,
           "recent_margin": 5.855327868852459,
           "recent_total": 46.360245901639345,
@@ -1541,8 +1541,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:43.895097+00:00",
-      "locked_at": "2026-11-18T07:13:43.895097+00:00"
+      "prediction_run_at": "2026-11-18T07:23:03.200414+00:00",
+      "locked_at": "2026-11-18T07:23:03.200414+00:00"
     },
     {
       "season": 2026,
@@ -1573,7 +1573,7 @@
         "total": 54.5,
         "home_ml": -380,
         "away_ml": 300,
-        "captured_at": "2026-11-18T07:07:00.310079+00:00"
+        "captured_at": "2026-11-18T07:14:57.449909+00:00"
       },
       "model": {
         "pred_home": 31.45412,
@@ -1603,8 +1603,8 @@
         "total_football_weight": 0.05,
         "market_margin": 8.5,
         "market_total": 54.5,
-        "football_margin": 8.200692990342981,
-        "football_total": 51.353180752580705,
+        "football_margin": 8.200692990342983,
+        "football_total": 51.35318075258069,
         "base_margin": 8.470069299034298,
         "base_total": 54.34265903762903,
         "injury_margin_adjustment": -0.12,
@@ -1625,17 +1625,17 @@
             "last3_allowed": 36.666666666666664,
             "games": 5
           },
-          "home_graph_rating": -0.5488011686219919,
-          "away_graph_rating": -4.691280441028487,
+          "home_graph_rating": -0.5488011686219918,
+          "away_graph_rating": -4.691280441028488,
           "completed_history_games": 150,
           "recent_margin": 5.207377049180331,
           "recent_total": 59.036885245901644,
           "sample_reliability": 1.0,
-          "graph_expected_home_margin": 5.642479272406495
+          "graph_expected_home_margin": 5.642479272406496
         },
         "recent_margin_adjustment": -0.2634098360655735,
         "recent_total_adjustment": 0.5444262295081972,
-        "graph_margin_adjustment": -0.17145124365561026,
+        "graph_margin_adjustment": -0.1714512436556102,
         "expected_margin": 7.903819330424227,
         "expected_total": 54.88708526713723,
         "qb": {
@@ -2055,8 +2055,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:45.220427+00:00",
-      "locked_at": "2026-11-18T07:13:45.220427+00:00"
+      "prediction_run_at": "2026-11-18T07:23:04.440814+00:00",
+      "locked_at": "2026-11-18T07:23:04.440814+00:00"
     },
     {
       "season": 2026,
@@ -2087,7 +2087,7 @@
         "total": 43.5,
         "home_ml": -345,
         "away_ml": 275,
-        "captured_at": "2026-11-18T07:07:00.422719+00:00"
+        "captured_at": "2026-11-18T07:14:57.565007+00:00"
       },
       "model": {
         "pred_home": 25.31478,
@@ -2117,7 +2117,7 @@
         "total_football_weight": 0.05,
         "market_margin": 7.0,
         "market_total": 43.5,
-        "football_margin": 7.210699308099304,
+        "football_margin": 7.210699308099305,
         "football_total": 48.29296493321494,
         "base_margin": 7.02106993080993,
         "base_total": 43.73964824666075,
@@ -2569,8 +2569,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:46.518332+00:00",
-      "locked_at": "2026-11-18T07:13:46.518332+00:00"
+      "prediction_run_at": "2026-11-18T07:23:05.626189+00:00",
+      "locked_at": "2026-11-18T07:23:05.626189+00:00"
     },
     {
       "season": 2026,
@@ -2601,7 +2601,7 @@
         "total": 41.5,
         "home_ml": -1450,
         "away_ml": 850,
-        "captured_at": "2026-11-18T07:07:00.480359+00:00"
+        "captured_at": "2026-11-18T07:14:57.656827+00:00"
       },
       "model": {
         "pred_home": 28.33884,
@@ -2653,17 +2653,17 @@
             "last3_allowed": 27.0,
             "games": 5
           },
-          "home_graph_rating": 4.59318159889005,
+          "home_graph_rating": 4.593181598890049,
           "away_graph_rating": -5.262515957062437,
           "completed_history_games": 150,
           "recent_margin": 13.445081967213115,
           "recent_total": 41.34918032786886,
           "sample_reliability": 1.0,
-          "graph_expected_home_margin": 11.355697555952487
+          "graph_expected_home_margin": 11.355697555952485
         },
         "recent_margin_adjustment": -0.24439344262295082,
         "recent_total_adjustment": -0.018098360655737052,
-        "graph_margin_adjustment": -0.3086581466428508,
+        "graph_margin_adjustment": -0.3086581466428509,
         "expected_margin": 15.341143286044074,
         "expected_total": 41.52061986282013,
         "qb": {
@@ -3083,8 +3083,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:47.857395+00:00",
-      "locked_at": "2026-11-18T07:13:47.857395+00:00"
+      "prediction_run_at": "2026-11-18T07:23:06.795774+00:00",
+      "locked_at": "2026-11-18T07:23:06.795774+00:00"
     },
     {
       "season": 2026,
@@ -3115,7 +3115,7 @@
         "total": 38.5,
         "home_ml": 180,
         "away_ml": -218,
-        "captured_at": "2026-11-18T07:07:00.518918+00:00"
+        "captured_at": "2026-11-18T07:14:57.758440+00:00"
       },
       "model": {
         "pred_home": 16.98602,
@@ -3167,8 +3167,8 @@
             "last3_allowed": 18.0,
             "games": 5
           },
-          "home_graph_rating": -5.281835956144206,
-          "away_graph_rating": 1.2106752596176984,
+          "home_graph_rating": -5.281835956144205,
+          "away_graph_rating": 1.2106752596176988,
           "completed_history_games": 150,
           "recent_margin": -7.558606557377047,
           "recent_total": 37.63893442622951,
@@ -3597,8 +3597,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:49.125966+00:00",
-      "locked_at": "2026-11-18T07:13:49.125966+00:00"
+      "prediction_run_at": "2026-11-18T07:23:07.937000+00:00",
+      "locked_at": "2026-11-18T07:23:07.937000+00:00"
     },
     {
       "season": 2026,
@@ -3629,7 +3629,7 @@
         "total": 44.5,
         "home_ml": -142,
         "away_ml": 120,
-        "captured_at": "2026-11-18T07:07:00.649796+00:00"
+        "captured_at": "2026-11-18T07:14:57.902839+00:00"
       },
       "model": {
         "pred_home": 23.32668,
@@ -4111,8 +4111,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:50.412849+00:00",
-      "locked_at": "2026-11-18T07:13:50.412849+00:00"
+      "prediction_run_at": "2026-11-18T07:23:09.166340+00:00",
+      "locked_at": "2026-11-18T07:23:09.166340+00:00"
     },
     {
       "season": 2026,
@@ -4143,7 +4143,7 @@
         "total": 41.5,
         "home_ml": -185,
         "away_ml": 154,
-        "captured_at": "2026-11-18T07:07:00.692782+00:00"
+        "captured_at": "2026-11-18T07:14:58.033557+00:00"
       },
       "model": {
         "pred_home": 22.2325,
@@ -4173,9 +4173,9 @@
         "total_football_weight": 0.05,
         "market_margin": 3.5,
         "market_total": 41.5,
-        "football_margin": -1.5632822732822749,
-        "football_total": 41.75196808931808,
-        "base_margin": 2.9936717726717723,
+        "football_margin": -1.5632822732822744,
+        "football_total": 41.75196808931809,
+        "base_margin": 2.9936717726717728,
         "base_total": 41.512598404465905,
         "injury_margin_adjustment": 0.77,
         "context_margin_adjustment": -0.30416666666666664,
@@ -4195,18 +4195,18 @@
             "last3_allowed": 34.666666666666664,
             "games": 5
           },
-          "home_graph_rating": -5.464272020915664,
+          "home_graph_rating": -5.464272020915666,
           "away_graph_rating": -4.608314470114771,
           "completed_history_games": 150,
           "recent_margin": 0.8483606557377062,
           "recent_total": 40.14999999999999,
           "sample_reliability": 1.0,
-          "graph_expected_home_margin": 0.644042449199107
+          "graph_expected_home_margin": 0.6440424491991052
         },
         "recent_margin_adjustment": -0.2121311475409835,
         "recent_total_adjustment": -0.162000000000001,
-        "graph_margin_adjustment": -0.17135745304805358,
-        "expected_margin": 3.076016505416068,
+        "graph_margin_adjustment": -0.17135745304805367,
+        "expected_margin": 3.076016505416069,
         "expected_total": 41.350598404465906,
         "qb": {
           "home_qb_id": "00-0036355",
@@ -4625,8 +4625,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:51.734000+00:00",
-      "locked_at": "2026-11-18T07:13:51.734000+00:00"
+      "prediction_run_at": "2026-11-18T07:23:10.465470+00:00",
+      "locked_at": "2026-11-18T07:23:10.465470+00:00"
     },
     {
       "season": 2026,
@@ -4657,7 +4657,7 @@
         "total": 40.5,
         "home_ml": -600,
         "away_ml": 440,
-        "captured_at": "2026-11-18T07:07:00.744023+00:00"
+        "captured_at": "2026-11-18T07:14:58.122011+00:00"
       },
       "model": {
         "pred_home": 25.82124,
@@ -4688,7 +4688,7 @@
         "market_margin": 10.0,
         "market_total": 40.5,
         "football_margin": 8.886386197136204,
-        "football_total": 43.8601212713213,
+        "football_total": 43.860121271321304,
         "base_margin": 9.888638619713621,
         "base_total": 40.66800606356607,
         "injury_margin_adjustment": -0.0245,
@@ -4709,17 +4709,17 @@
             "last3_allowed": 30.666666666666668,
             "games": 5
           },
-          "home_graph_rating": 2.280694693307764,
+          "home_graph_rating": 2.280694693307763,
           "away_graph_rating": -3.0287207728876924,
           "completed_history_games": 150,
           "recent_margin": 6.556967213114753,
           "recent_total": 48.20860655737705,
           "sample_reliability": 1.0,
-          "graph_expected_home_margin": 6.809415466195457
+          "graph_expected_home_margin": 6.809415466195455
         },
         "recent_margin_adjustment": -0.2754426229508198,
         "recent_total_adjustment": 0.9250327868852463,
-        "graph_margin_adjustment": -0.1914350720282726,
+        "graph_margin_adjustment": -0.19143507202827267,
         "expected_margin": 9.967538702512305,
         "expected_total": 41.593038850451315,
         "qb": {
@@ -5139,8 +5139,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:53.017563+00:00",
-      "locked_at": "2026-11-18T07:13:53.017563+00:00"
+      "prediction_run_at": "2026-11-18T07:23:11.683093+00:00",
+      "locked_at": "2026-11-18T07:23:11.683093+00:00"
     },
     {
       "season": 2026,
@@ -5171,7 +5171,7 @@
         "total": 46.5,
         "home_ml": 215,
         "away_ml": -265,
-        "captured_at": "2026-11-18T07:07:00.804907+00:00"
+        "captured_at": "2026-11-18T07:14:58.290693+00:00"
       },
       "model": {
         "pred_home": 20.61172,
@@ -5201,8 +5201,8 @@
         "total_football_weight": 0.05,
         "market_margin": -6.0,
         "market_total": 46.5,
-        "football_margin": -7.2569176323676325,
-        "football_total": 45.133082206682204,
+        "football_margin": -7.256917632367634,
+        "football_total": 45.1330822066822,
         "base_margin": -6.125691763236763,
         "base_total": 46.43165411033411,
         "injury_margin_adjustment": 0.034999999999999976,
@@ -5223,18 +5223,18 @@
             "last3_allowed": 13.333333333333334,
             "games": 5
           },
-          "home_graph_rating": -0.5617238388829188,
-          "away_graph_rating": 6.8861908234313995,
+          "home_graph_rating": -0.5617238388829189,
+          "away_graph_rating": 6.8861908234314,
           "completed_history_games": 150,
           "recent_margin": -10.136475409836065,
           "recent_total": 55.18729508196721,
           "sample_reliability": 1.0,
-          "graph_expected_home_margin": -5.947914662314318
+          "graph_expected_home_margin": -5.94791466231432
         },
         "recent_margin_adjustment": -0.3309180327868852,
         "recent_total_adjustment": 1.042475409836065,
-        "graph_margin_adjustment": 0.0031251202611409213,
-        "expected_margin": -6.202651342429173,
+        "graph_margin_adjustment": 0.0031251202611408146,
+        "expected_margin": -6.202651342429174,
         "expected_total": 47.42162952017017,
         "qb": {
           "home_qb_id": "00-0039923",
@@ -5653,8 +5653,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:54.470043+00:00",
-      "locked_at": "2026-11-18T07:13:54.470043+00:00"
+      "prediction_run_at": "2026-11-18T07:23:12.863794+00:00",
+      "locked_at": "2026-11-18T07:23:12.863794+00:00"
     },
     {
       "season": 2026,
@@ -5685,7 +5685,7 @@
         "total": 45.5,
         "home_ml": -162,
         "away_ml": 136,
-        "captured_at": "2026-11-18T07:07:00.881687+00:00"
+        "captured_at": "2026-11-18T07:14:58.406153+00:00"
       },
       "model": {
         "pred_home": 25.2429,
@@ -5738,16 +5738,16 @@
             "games": 5
           },
           "home_graph_rating": 4.358366358057871,
-          "away_graph_rating": 3.557763705801663,
+          "away_graph_rating": 3.557763705801664,
           "completed_history_games": 150,
           "recent_margin": 6.900819672131148,
           "recent_total": 51.283606557377055,
           "sample_reliability": 1.0,
-          "graph_expected_home_margin": 2.3006026522562077
+          "graph_expected_home_margin": 2.300602652256207
         },
         "recent_margin_adjustment": 0.3120655737704919,
         "recent_total_adjustment": 0.6940327868852466,
-        "graph_margin_adjustment": -0.04196384086462753,
+        "graph_margin_adjustment": -0.04196384086462759,
         "expected_margin": 4.297674302558434,
         "expected_total": 46.12966953025081,
         "qb": {
@@ -6167,8 +6167,8 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:55.866232+00:00",
-      "locked_at": "2026-11-18T07:13:55.866232+00:00"
+      "prediction_run_at": "2026-11-18T07:23:14.154098+00:00",
+      "locked_at": "2026-11-18T07:23:14.154098+00:00"
     },
     {
       "season": 2026,
@@ -6199,7 +6199,7 @@
         "total": 53.5,
         "home_ml": 240,
         "away_ml": -298,
-        "captured_at": "2026-11-18T07:07:00.984310+00:00"
+        "captured_at": "2026-11-18T07:14:58.502190+00:00"
       },
       "model": {
         "pred_home": 23.55218,
@@ -6230,9 +6230,9 @@
         "market_margin": -6.5,
         "market_total": 53.5,
         "football_margin": -4.5861258870758865,
-        "football_total": 47.201910039960055,
+        "football_total": 47.20191003996005,
         "base_margin": -6.308612588707589,
-        "base_total": 53.185095501998006,
+        "base_total": 53.185095501998,
         "injury_margin_adjustment": 0.09099999999999998,
         "context_margin_adjustment": 0.24027777777777778,
         "weather_total_adjustment": -0.115,
@@ -6251,7 +6251,7 @@
             "last3_allowed": 23.666666666666668,
             "games": 5
           },
-          "home_graph_rating": -1.3212877161198344,
+          "home_graph_rating": -1.3212877161198342,
           "away_graph_rating": 6.164542283551982,
           "completed_history_games": 150,
           "recent_margin": -9.96106557377049,
@@ -6263,7 +6263,7 @@
         "recent_total_adjustment": 0.20395081967213172,
         "graph_margin_adjustment": 0.03085020001969102,
         "expected_margin": -6.223369856811759,
-        "expected_total": 53.274046321670134,
+        "expected_total": 53.27404632167013,
         "qb": {
           "home_qb_id": "00-0039910",
           "home_qb_name": "J.Daniels",
@@ -6681,9 +6681,9 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-18T07:13:57.168055+00:00",
-      "locked_at": "2026-11-18T07:13:57.168055+00:00"
+      "prediction_run_at": "2026-11-18T07:23:15.332972+00:00",
+      "locked_at": "2026-11-18T07:23:15.332972+00:00"
     }
   ],
-  "updated_at": "2026-11-18T07:13:57.170250+00:00"
+  "updated_at": "2026-11-18T07:23:15.336071+00:00"
 }
