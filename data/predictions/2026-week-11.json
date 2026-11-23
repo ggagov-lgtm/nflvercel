@@ -6193,36 +6193,36 @@
         }
       },
       "market": {
-        "provider": "DraftKings",
+        "provider": "Draft Kings",
         "spread": 6.0,
         "market_margin": -6.0,
         "total": 54.5,
-        "home_ml": 244,
-        "away_ml": -300,
-        "captured_at": "2026-11-22T06:27:57.161873+00:00"
+        "home_ml": 240,
+        "away_ml": -294,
+        "captured_at": "2026-11-23T07:18:54.345833+00:00"
       },
       "model": {
-        "pred_home": 24.10696,
-        "pred_away": 29.94962,
-        "model_margin": -5.84266,
-        "model_total": 54.05658,
-        "home_win_prob": 0.2678220111731843,
-        "away_win_prob": 0.6983579888268157,
-        "tie_prob": 0.03382,
-        "home_cover_prob": 0.48478,
-        "away_cover_prob": 0.47452,
-        "spread_push_prob": 0.0407,
-        "over_prob": 0.48738,
-        "under_prob": 0.51262,
+        "pred_home": 24.1665,
+        "pred_away": 30.00796,
+        "model_margin": -5.84146,
+        "model_total": 54.17446,
+        "home_win_prob": 0.27043163318025265,
+        "away_win_prob": 0.6960883668197475,
+        "tie_prob": 0.03348,
+        "home_cover_prob": 0.48446,
+        "away_cover_prob": 0.47464,
+        "spread_push_prob": 0.0409,
+        "over_prob": 0.4912,
+        "under_prob": 0.5088,
         "total_push_prob": 0.0,
-        "market_fair_home_prob": 0.27932960893854747,
-        "market_fair_away_prob": 0.7206703910614525,
+        "market_fair_home_prob": 0.28272101033295066,
+        "market_fair_away_prob": 0.7172789896670494,
         "simulations": 50000,
-        "raw_home_win_prob": 0.26164,
-        "raw_away_win_prob": 0.70454,
+        "raw_home_win_prob": 0.26196,
+        "raw_away_win_prob": 0.70456,
         "moneyline_market_weight": 0.75,
-        "home_ml_expected_profit_10": -0.4487228156424594,
-        "away_ml_expected_profit_10": -0.3503601489757915,
+        "home_ml_expected_profit_10": -0.47052447187141144,
+        "away_ml_expected_profit_10": -0.3366688256129091,
         "moneyline_value_side": null,
         "model_version": "v2.2.0",
         "football_weight": 0.1,
@@ -6235,7 +6235,7 @@
         "base_total": 54.135095501998,
         "injury_margin_adjustment": 0.0905,
         "context_margin_adjustment": 0.24027777777777778,
-        "weather_total_adjustment": -0.21500000000000002,
+        "weather_total_adjustment": -0.1,
         "recent_form": {
           "home_recent": {
             "scored": 21.196721311475414,
@@ -6263,7 +6263,7 @@
         "recent_total_adjustment": 0.08395081967213172,
         "graph_margin_adjustment": 0.0008502000196910231,
         "expected_margin": -5.843869856811759,
-        "expected_total": 54.00404632167013,
+        "expected_total": 54.11904632167013,
         "qb": {
           "home_qb_id": "00-0039910",
           "home_qb_name": "J.Daniels",
@@ -6449,13 +6449,13 @@
         "context": {
           "venue_indoor": 0.0,
           "venue_grass": 1.0,
-          "temperature": 52.0,
-          "wind_gust": 17.0,
-          "precipitation_probability": 2.0,
+          "temperature": 54.0,
+          "wind_gust": 16.0,
+          "precipitation_probability": 0.0,
           "weather_cold_severity": 0.0,
           "weather_heat_severity": 0.0,
-          "weather_wind_severity": 2.0,
-          "weather_precip_severity": 0.02,
+          "weather_wind_severity": 1.0,
+          "weather_precip_severity": 0.0,
           "home_rest_days": 11.0,
           "away_rest_days": 7.996527777777778,
           "diff_rest_days": 3.0034722222222223,
@@ -6666,9 +6666,9 @@
           ],
           "weather": {
             "indoor": false,
-            "temperature": 52.0,
-            "wind_gust": 17.0,
-            "precipitation_probability": 2.0
+            "temperature": 54.0,
+            "wind_gust": 16.0,
+            "precipitation_probability": 0.0
           },
           "rest": {
             "home_days": 11.0,
@@ -6681,9 +6681,9 @@
         "training_cutoff": "2026-W10"
       },
       "model_version": "v2.2.0",
-      "prediction_run_at": "2026-11-22T06:34:18.335272+00:00",
-      "locked_at": "2026-11-22T06:34:18.335272+00:00"
+      "prediction_run_at": "2026-11-23T07:25:35.789378+00:00",
+      "locked_at": "2026-11-23T07:25:35.789378+00:00"
     }
   ],
-  "updated_at": "2026-11-22T06:34:18.337106+00:00"
+  "updated_at": "2026-11-23T07:25:35.789849+00:00"
 }
