@@ -23,6 +23,11 @@ on:
     - cron: '7 6,12,18 * * 2,3'
       timezone: "America/Chicago"
 
+# Serialize prediction writers; never interrupt a running model.
+concurrency:
+  group: nfl-prediction-writer-main
+  cancel-in-progress: false
+
 jobs:
   model:
     runs-on: ubuntu-latest
@@ -33,6 +38,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
+          ref: main
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -118,6 +125,19 @@ jobs:
       - name: Reconcile final results and performance
         if: always()
         run: python python/file_settlement.py
+
+      - name: Back up generated prediction files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-predictions-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            data/predictions
+            data/prediction-history
+            data/performance
+            data/results
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Commit updated prediction files
         if: always()
